@@ -11,8 +11,6 @@ Specialized for XDU SE students.
 
 感谢其他为此项目做出贡献的同学：[@luy-0](https://github.com/luy-0) [@Glonee](https://github.com/Glonee) [@ZCWzy](https://github.com/ZCWzy) 赵一晨
 
-
-
 ## 目前包含
 
 > - 大二下
