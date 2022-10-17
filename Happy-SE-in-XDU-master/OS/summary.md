@@ -86,7 +86,7 @@
 > - MMU
 > - How do we convert virtual address to physical memory address? (Usage of MMU)
 >
-> ![image-20200719112127886](.\img\image-20200719112127886.png)
+> ![[image-20200719112127886.png]]
 >
 > - What is page, page frame, page fault?
 >
@@ -96,7 +96,7 @@
 >
 > - How is page table used ?
 >
->   ![image-20200719112306987](.\img\image-20200719112306987.png)
+>   ![[image-20200719112306987.png]]
 >
 > - Page table entry
 >
@@ -149,7 +149,7 @@
 >
 > - I/O software layers
 >
->   ![image-20200716195242745](.\img\image-20200716195242745.png)
+>   ![[image-20200716195242745.png]]
 
 ### Disk
 
@@ -196,11 +196,12 @@
 >
 >   - **A monitor** is a collection of procedures, variables, and data structures that are all grouped together in a special kind of module or package. (via PPT chp2-2 slide27)
 >   - shown below
->     <img src="./img/image-20200730162123912.png" alt="image-20200730162123912" style="zoom: 60%;" />
+>
+> ![[image-20200730162123912.png|400]]
 >
 > - Please describe the diagram of Process State.（往年题）
 >
->   - <img src="./img/image-20200730170021724.png" alt="image-20200730170021724" style="zoom:67%;" />
+>   ![[image-20200730170021724.png]]
 >
 >   - Running (actually using the CPU at that instant).
 >
