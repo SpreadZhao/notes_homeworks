@@ -2,11 +2,11 @@
 
 > 本文包含部分老师课后题答案。
 
-![image-20201230124252736](C:\Users\Levick\source\github\HSIXDU\database\img\image-20201230124252736.png)
+![[image-20201230124252736.png]]
 
 3.2 Suppose you are given a relation ***grade_points(grade, points)***(**<u>根据此relation来将等级成绩转换成数据成绩</u>**), which provides a conversion from letter grades in the takes relation to numeric scores; for example an “A” grade could be specified to correspond to 4 points, an “A-” to 3.7 points, a “B+” to 3.3 points, a “B” to 3 points, and so on. **<u>The grade points earned by a student for a course offering (section) is defined as the number of credits for the course multiplied by the numeric points for the grade that the student received.</u>**
 
-<font color= red>(这句的意思是：$Grade\ points=credits\times numeric\  points$，e.g. 小明数据库等级是A，则根据题目所给***grade points***relation 得到分数[numeric points]是4，根据，数据库学分4分[credits]，那么小明数据库这门课的Grade points是$4\times 4=16$)</font>
+(这句的意思是：$Grade\ points=credits\times numeric\  points$，e.g. 小明数据库等级是A，则根据题目所给***grade points***relation 得到分数[numeric points]是4，根据，数据库学分4分[credits]，那么小明数据库这门课的Grade points是$4\times 4=16$)
 
 Given the above relation, and our university schema, write each of the following queries in SQL. You can assume for simplicity that no takes tuple has the null value for grade.
 
