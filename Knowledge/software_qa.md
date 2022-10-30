@@ -92,7 +92,7 @@ httpd -k install -n "Apache24"
 
 * 这时候会看到这样的情况
 
-![img](img/gitst.png)
+![[gitst.png]]
 
 * 然后，提交这次改动
 
@@ -112,15 +112,15 @@ httpd -k install -n "Apache24"
 
 * 如图添加键值对
 
-![img](img/gitbash.png)
+![[gitbash.png]]
 
 * ~~然后再添加图标和程序目录就好了~~
 
-![img](img/gitbash2.png)
+![[gitbash2.png]]
 
 * 上面这么做是错的！`command`应该建在子项中，参考`cmd`是咋做的
 
-![img](img/gitbash3.png)
+![[gitbash3.png]]
 
   不过`icon`确实是加在那里
 
@@ -146,17 +146,17 @@ httpd -k install -n "Apache24"
 
 * 然后在本地的`.git`里加上另一个的url
 
-  ![img](img/newurl.png)
+  ![[newurl.png]]
 
 * 这样在`remote -v`的时候就能看到多个地址
 
-  ![img](img/remote.png)
+  ![[remote.png]]
 
   > 我们能看到github的只支持push操作不支持pull操作
 
 * 然后在修改提交过后就会有两次提交记录在shell中了
 
-![img](img/push.png)
+![[push.png]]
 
 # 3. Obsidian
 
@@ -278,7 +278,7 @@ httpd -k install -n "Apache24"
 
 下载MySQL的绿色版。然后解压缩，在里面会发现下面的结构：
 
-![img](img/sql1.png)
+![[sql1.png]]
 
 * 注：`my.ini`本来是没有的。
 
@@ -349,8 +349,6 @@ mysql> alter user 'root'@'localhost' identified with mysql_native_password by 'N
 ```shell
 quit
 ```
-
-
 
 # 5. Windows
 
