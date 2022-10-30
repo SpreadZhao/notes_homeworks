@@ -1,7 +1,7 @@
 当时想把仓库从typora迁移到obsidian，但是obsidian居然不支持这样的html语法：
 
 ```html
-<img src="xxx">xxx</img>
+<img src="xxx" alt="yyy"/>
 ```
 
 所以图片在obsidian里根本显示不了。所以我只能把图片改成下面的形式：
