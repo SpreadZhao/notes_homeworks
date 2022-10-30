@@ -274,7 +274,9 @@ httpd -k install -n "Apache24"
 #TODO 
 - [ ] 学习Dataview插件的使用
 
-# 4. MySQL的配置
+# 4. MySQL
+
+## MySQL的配置
 
 下载MySQL的绿色版。然后解压缩，在里面会发现下面的结构：
 
@@ -349,6 +351,20 @@ mysql> alter user 'root'@'localhost' identified with mysql_native_password by 'N
 ```shell
 quit
 ```
+
+## MySQL恢复备份
+
+MySQL的逻辑备份是`.sql`文件，使用如下命令可以恢复。
+
+首先进入mysql后，创建要恢复的数据库文件，比如`store`。然后在store下使用如下命令：
+
+```sql
+source <filename>
+```
+
+这样就能够恢复了。当然，还有其他的方式，这里贴出一个网址：
+
+[How to Restore MySQL Database from Backup (Different ways) (devart.com)](https://blog.devart.com/how-to-restore-mysql-database-from-backup.html#use_mysql_command_to_restore_database)
 
 # 5. Windows
 
