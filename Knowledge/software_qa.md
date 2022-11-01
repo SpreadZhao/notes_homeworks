@@ -390,6 +390,14 @@ Export-WindowsDriver -Online -Destination D:\DriverBackup
 
 恢复在设备管理器那里就能恢复了，自动搜索。
 
+## Hyper-V和VM-Ware共存
+
+因为WSA需要依靠Hyper-V启动，所以才会这样做。
+
+它俩其实本来就能共存，只需要让VM-Ware里虚拟机的设置里的Processor那里的第一个勾，就是Intel什么什么的勾掉，这样就是以HyperV模式在运行，这样就可以启动虚拟机，并且可以同时运行WSA了。另外附上一个网址：
+
+[www.reddit.com](https://www.reddit.com/r/vmware/comments/swjp4t/running_vmware_workstation_on_a_hyperv_enabled/)
+
 # 6. Linux
 
 ## Ubuntu调整字体大小
