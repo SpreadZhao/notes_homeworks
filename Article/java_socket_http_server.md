@@ -90,6 +90,8 @@ public class ClientSocketHandlingTask implements Runnable{
 }
 ```
 
+^25f69e
+
 在构造这个任务的时候，我们最重要的任务就是拿到客户端的输入流和输出流，借助这两个流我们就能从客户端读信息和向客户端写信息了。
 
 当这个任务被执行的时候，它会调用输入流的`readObject`方法(注意，客户端的输入流是服务端的输出流)，为了弄清楚这段代码到底是怎么运行的，我重写了一下：
@@ -191,6 +193,401 @@ if(returnMsg instanceof File) {
 
 # 2. 开始搭建
 
+## 2.1 重复工作
+
 有了这个小爱同学的例子，我们已经对socket编程有了一个最最基本的认识。那么接下来就开始用java来手撸一个服务器罢！
 
 首先是最基础的类：`HttpServer`，这个类做的事就和小爱同学中的`Server`是一样的——**去监听一个端口，并等待客户登入**。
+
+```java
+public class HttpServer {  
+    private ServerSocket serverSocket;  
+    private Socket clientSocket;  
+    private int port;  
+  
+    public HttpServer(int port){  
+        this.port = port;  
+    }  
+  
+    public void start() throws IOException{  
+        serverSocket = new ServerSocket(port);  
+        System.out.println("[Server]Listening port " + serverSocket.getLocalPort());  
+        while((clientSocket = serverSocket.accept()) != null){  
+            System.out.println("[Server]User " + clientSocket.getRemoteSocketAddress().toString() + " log in!");  
+  
+        }  
+    }  
+}
+```
+
+这个while循环还没写完，接下来的事情就是去处理用户的连接了。在做这件事之前，我们先要明确一件事：我们是要处理http请求，而Socket传输的通常都是Object。因此我们要单独定义一些方法去将从客户端接收过来的object变成http请求的接口。
+
+## 2.2 Request简单介绍
+
+我们都知道，http请求分为Request和Response。前者是客户端发给服务端；后者反过来。那么我们就先从这两个对象开始说起。首先是Request，它的本质其实就是一个`BufferedReader`：
+
+```java
+private BufferedReader in;
+```
+
+我们从最简单的开始一步步来，首先给出Request的部分简单代码：
+
+```java
+public class Request {  
+    private BufferedReader in;  
+  
+    public Request(BufferedReader in){  
+        this.in = in;  
+    }  
+  
+    public boolean parse() throws IOException{  
+        String initialLine = in.readLine();  
+        log(initialLine);  
+        return false;  
+    }  
+  
+    private void log(String msg){  
+        System.out.println(msg);  
+    }  
+}
+```
+
+这里非常简单，只是将从in这个对象读出来的东西打印在终端上而已。那么接下来，我们来测试一下这个功能，也就是实现SocketHandler类：
+
+```java
+public class SocketHandler implements Runnable{  
+  
+    private Socket clientSocket;  
+  
+    public SocketHandler(Socket socket){  
+        this.clientSocket = socket;  
+    }  
+  
+    @Override  
+    public void run() {  
+        BufferedReader in = null;  
+        OutputStream out = null;  
+  
+        try {  
+            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));  
+            out = clientSocket.getOutputStream();  
+  
+            Request request = new Request(in);  
+            request.parse();  
+        }catch (IOException e){  
+            e.printStackTrace();  
+        }  
+    }  
+}
+```
+
+这段代码对应的是小爱同学中的[[#^25f69e|这里]]。而我们现在的操作很显然更高级一点：之前我们将客户端的输入流和输出流都放在了Handler里，这导致我们对于所有的请求都要使用同一种处理方法。但是，http请求本身就是多样的，有GET，POST，DELETE等等。因此我们对于不同的请求需要做不同的处理。这里的做法就是将客户端的输入流直接封装到Request对象中，当需要读取其中的数据时，只需要在Request中调用这个in的readLine方法就可以了。
+
+好了，现在设想一下：如果我们用在浏览器中输入`http://localhost:1234`的话，这里就会接收到这个连接(前提是服务器要监听这个端口)，然后在HttpServer中就会启动一个线程来执行SocketHandler中的代码，自然就会首先构造出一个Request对象，当调用parse方法时，自然就会调用其中的log方法，将我们readLine读出来的结果打印到终端上！好！说干就干，接下来只需要完善一下HttpServer并且写一个测试类，就能工作了：
+
+```java
+public class HttpServer {  
+    private ServerSocket serverSocket;  
+    private Socket clientSocket;  
+    private int port;  
+  
+    public HttpServer(int port){  
+        this.port = port;  
+    }  
+  
+    public void start() throws IOException{  
+        serverSocket = new ServerSocket(port);  
+        System.out.println("[Server]Listening port " + serverSocket.getLocalPort());  
+        
+        while((clientSocket = serverSocket.accept()) != null){  
+            System.out.println("[Server]User " + clientSocket.getRemoteSocketAddress().toString() + " log in!");   
+            new Thread(new SocketHandler(clientSocket)).start();  
+        }  
+    }  
+}
+```
+
+```java
+public class Test {  
+    public static void main(String[] args) {  
+        int port;  
+        Scanner input = new Scanner(System.in);  
+        System.out.print("enter port to listen: ");  
+        try {  
+            new HttpServer(input.nextInt()).start();  
+        }catch (IOException e){  
+            e.printStackTrace();  
+        }  
+  
+    }  
+}
+```
+
+OK！现在启动程序，并监听1234端口，然后打开浏览器，输入上面的地址，就能看到如下结果：
+
+```shell
+enter port to listen: 1234
+[Server]Listening port 1234
+[Server]User /0:0:0:0:0:0:0:1:64607 log in!
+[Server]User /0:0:0:0:0:0:0:1:64609 log in!
+GET /haha?s=y HTTP/1.1
+[Server]User /0:0:0:0:0:0:0:1:64636 log in!
+GET / HTTP/1.1
+```
+
+我们能看出来，请求的信息被打印了出来，那么接下来就是通过这个打印的信息，去分析它需要的东西了。自然，**我们要从Request类的`parse`函数入手**。
+
+## 2.3 重新认识HTTP请求
+
+在继续书写之前，我们要先了解一下java的StringTokenizer类：
+
+[Java StringTokenizer 类使用方法 | 菜鸟教程 (runoob.com)](https://www.runoob.com/w3cnote/java-stringtokenizer-intro.html)
+
+我们能看到，我们的整个请求是这样的：
+
+```http
+GET /haha?s=y Http/1.1
+```
+
+这分为三个部分，被两个空格分开。因此我们解析也是要使用StringTokenizer将它分成三份：
+
+```java
+public boolean parse() throws IOException{  
+    String initialLine = in.readLine();  
+    log("request", initialLine);  
+    
+    StringTokenizer tok = new StringTokenizer(initialLine);  
+    String[] components = new String[3];  
+    for(int i = 0; i < components.length; i++){  
+        if(tok.hasMoreTokens()){  
+            components[i] = tok.nextToken();  
+            log("components " + i, components[i]);  
+        }else{  
+            return false;  
+        }  
+    }  
+    
+    return false;  
+}
+```
+
+如果详细看了关于StringTokenizer的介绍，这部分代码是很好看懂的。注意，我又升级了一下log函数，现在它变成了这样：
+
+```java
+private void log(String tag, String msg){  
+    System.out.print("[" + tag + "]" + " " + msg + "\n");  
+}
+```
+
+接下来，我们就这样再进行一次测试，看看这次会有什么结果：
+
+```java
+enter port to listen: 1234
+[Server]Listening port 1234
+[Server]User /0:0:0:0:0:0:0:1:65303 log in!
+[Server]User /0:0:0:0:0:0:0:1:65304 log in!
+[request] GET /hehe?a=b HTTP/1.1
+[components 0] GET
+[components 1] /hehe?a=b
+[components 2] HTTP/1.1
+```
+
+和我们想象得一模一样，非常nice！接下来，就是将这三个变量找个地方放一下，自然就是Request类中的成员了：
+
+```java
+public class Request {  
+    private BufferedReader in;  
+    private String method;  
+    private String fullUrl;  
+  
+    public Request(BufferedReader in)...
+  
+    public boolean parse()...
+  
+    private void log(String tg, String msg)...
+}
+```
+
+`method`就是我们请求的类型，而`fullUrl`就是请求的全部细节。
+
+在使用这些成员之前，我们还是要回到http协议本身上。这个协议可不像我们想象得这么简单只有这么短短的一行：
+
+```http
+http://localhost:1234/haha?sb=you&dsb=me
+```
+
+它的实际结构在开头的网站中是这样描述的：
+
+> Per the HTTP standard, `Request` expects a CR-LF delimited list of lines whose first line is of the form: **`VERB PATH VERSION`** followed by a variable-length list of headers in the form `NAME: VALUE` <u>and a closing empty line indicating that the header list is complete</u>. If the `VERB` supports an entity-body (like POST or PUT), the rest of the request is that entity body. I'm only worrying about `GET`s here, so I assume there's no entity body. Once this method completes, assuming everything was syntactically correct, `Request`'s internal `method, path, fullUrl` and `headers` member variables are filled in.
+
+注意其中的`VERB PATH VERSION`，这其实就是我们刚刚解析出来的三个components。而这后面，还用键值对形式跟着许多行。那么它们都是什么呢？我们不妨做个试验来看看：
+
+```java
+public boolean parse() throws IOException{  
+        String initialLine = in.readLine();  
+        log("request", initialLine);  
+        StringTokenizer tok = new StringTokenizer(initialLine);  
+        String[] components = new String[3];  
+        for(int i = 0; i < components.length; i++){  
+            if(tok.hasMoreTokens()){  
+                components[i] = tok.nextToken();  
+                log("components " + i, components[i]);  
+            }else{  
+                return false;  
+            }  
+        }  
+        
+        while(true){  
+            String headerLine = in.readLine();  
+            log("headerline", headerLine);  
+            if(headerLine.length() == 0) break;  
+        }  
+        return false;  
+    }
+```
+
+我们使用一个不停在读的while循环，直到读不出来为止。因此我们能在终端里看到我们一个简简单单的http请求到底都包含了什么：
+
+```shell
+enter port to listen: 1234
+[Server]Listening port 1234
+[Server]User /0:0:0:0:0:0:0:1:49558 log in!
+[Server]User /0:0:0:0:0:0:0:1:49559 log in!
+[request] GET /haha?sb=you&dsb=me HTTP/1.1
+[components 0] GET
+[components 1] /haha?sb=you&dsb=me
+[components 2] HTTP/1.1
+[headerline] Host: localhost:1234
+[headerline] Connection: keep-alive
+[headerline] sec-ch-ua: "Microsoft Edge";v="107", "Chromium";v="107", "Not=A?Brand";v="24"
+[headerline] sec-ch-ua-mobile: ?0
+[headerline] sec-ch-ua-platform: "Windows"
+[headerline] Upgrade-Insecure-Requests: 1
+[headerline] User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.26
+[headerline] Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+[headerline] Sec-Fetch-Site: none
+[headerline] Sec-Fetch-Mode: navigate
+[headerline] Sec-Fetch-User: ?1
+[headerline] Sec-Fetch-Dest: document
+[headerline] Accept-Encoding: gzip, deflate, br
+[headerline] Accept-Language: zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6
+[headerline] Cookie: Webstorm-536eb0eb=2c33d83d-2784-48b5-9dcf-9ebcee3fa1db
+[headerline] 
+```
+
+这里的最后一行也正应了文章中的这句话：
+
+> and a closing empty line indicating that the header list is complete.
+
+因此为了便于后期使用，这里使用了一个HashMap将它们存起来：
+
+```java
+public class Request {  
+    private BufferedReader in;  
+    private String method;  
+    private String fullUrl;
+    private Map<String, String> headers = new HashMap<String, String>();
+  
+    public Request(BufferedReader in)...
+  
+    public boolean parse()...
+  
+    private void log(String tg, String msg)...
+}
+
+```
+
+然后每一次循环就只需要进行这样的操作：
+
+```java
+while(true){  
+            String headerLine = in.readLine();  
+            log("headerline", headerLine);  
+            if(headerLine.length() == 0) break;  
+
+            int separator = headerLine.indexOf(":");  
+            if(separator == -1) return false;  
+            String key = headerLine.substring(0, separator);  
+            String val = headerLine.substring(separator + 1);  
+            log("key", key);  
+            log("val", val);  
+            headers.put(key, val);  
+            System.out.println("----------------------------");  
+  
+        }
+```
+
+这样我们就能够得到这样的结果了：
+
+```shell
+enter port to listen: 1234
+[Server]Listening port 1234
+[Server]User /0:0:0:0:0:0:0:1:50288 log in!
+[Server]User /0:0:0:0:0:0:0:1:50289 log in!
+[request] GET /haha?sb=you&dsb=me HTTP/1.1
+[components 0] GET
+[components 1] /haha?sb=you&dsb=me
+[components 2] HTTP/1.1
+[headerline] Host: localhost:1234
+[key] Host
+[val]  localhost:1234
+----------------------------
+[headerline] Connection: keep-alive
+[key] Connection
+[val]  keep-alive
+----------------------------
+[headerline] sec-ch-ua: "Microsoft Edge";v="107", "Chromium";v="107", "Not=A?Brand";v="24"
+[key] sec-ch-ua
+[val]  "Microsoft Edge";v="107", "Chromium";v="107", "Not=A?Brand";v="24"
+----------------------------
+[headerline] sec-ch-ua-mobile: ?0
+[key] sec-ch-ua-mobile
+[val]  ?0
+----------------------------
+[headerline] sec-ch-ua-platform: "Windows"
+[key] sec-ch-ua-platform
+[val]  "Windows"
+----------------------------
+[headerline] Upgrade-Insecure-Requests: 1
+[key] Upgrade-Insecure-Requests
+[val]  1
+----------------------------
+[headerline] User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.26
+[key] User-Agent
+[val]  Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.26
+----------------------------
+[headerline] Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+[key] Accept
+[val]  text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+----------------------------
+[headerline] Sec-Fetch-Site: none
+[key] Sec-Fetch-Site
+[val]  none
+----------------------------
+[headerline] Sec-Fetch-Mode: navigate
+[key] Sec-Fetch-Mode
+[val]  navigate
+----------------------------
+[headerline] Sec-Fetch-User: ?1
+[key] Sec-Fetch-User
+[val]  ?1
+----------------------------
+[headerline] Sec-Fetch-Dest: document
+[key] Sec-Fetch-Dest
+[val]  document
+----------------------------
+[headerline] Accept-Encoding: gzip, deflate, br
+[key] Accept-Encoding
+[val]  gzip, deflate, br
+----------------------------
+[headerline] Accept-Language: zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6
+[key] Accept-Language
+[val]  zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6
+----------------------------
+[headerline] Cookie: Webstorm-536eb0eb=2c33d83d-2784-48b5-9dcf-9ebcee3fa1db
+[key] Cookie
+[val]  Webstorm-536eb0eb=2c33d83d-2784-48b5-9dcf-9ebcee3fa1db
+----------------------------
+[headerline] 
+```
+
