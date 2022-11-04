@@ -424,26 +424,26 @@ http://localhost:1234/haha?sb=you&dsb=me
 
 ```java
 public boolean parse() throws IOException{  
-        String initialLine = in.readLine();  
-        log("request", initialLine);  
-        StringTokenizer tok = new StringTokenizer(initialLine);  
-        String[] components = new String[3];  
-        for(int i = 0; i < components.length; i++){  
-            if(tok.hasMoreTokens()){  
-                components[i] = tok.nextToken();  
-                log("components " + i, components[i]);  
-            }else{  
-                return false;  
-            }  
-        }  
-        
-        while(true){  
-            String headerLine = in.readLine();  
-            log("headerline", headerLine);  
-            if(headerLine.length() == 0) break;  
-        }  
-        return false;  
-    }
+	String initialLine = in.readLine();  
+	log("request", initialLine);  
+	StringTokenizer tok = new StringTokenizer(initialLine);  
+	String[] components = new String[3];  
+	for(int i = 0; i < components.length; i++){  
+		if(tok.hasMoreTokens()){  
+			components[i] = tok.nextToken();  
+			log("components " + i, components[i]);  
+		}else{  
+			return false;  
+		}  
+	}  
+	
+	while(true){  
+		String headerLine = in.readLine();  
+		log("headerline", headerLine);  
+		if(headerLine.length() == 0) break;  
+	}  
+	return false;  
+}
 ```
 
 我们使用一个不停在读的while循环，直到读不出来为止。因此我们能在终端里看到我们一个简简单单的http请求到底都包含了什么：
@@ -501,20 +501,20 @@ public class Request {
 
 ```java
 while(true){  
-            String headerLine = in.readLine();  
-            log("headerline", headerLine);  
-            if(headerLine.length() == 0) break;  
+	String headerLine = in.readLine();  
+	log("headerline", headerLine);  
+	if(headerLine.length() == 0) break;  
 
-            int separator = headerLine.indexOf(":");  
-            if(separator == -1) return false;  
-            String key = headerLine.substring(0, separator);  
-            String val = headerLine.substring(separator + 1);  
-            log("key", key);  
-            log("val", val);  
-            headers.put(key, val);  
-            System.out.println("----------------------------");  
-  
-        }
+	int separator = headerLine.indexOf(":");  
+	if(separator == -1) return false;  
+	String key = headerLine.substring(0, separator);  
+	String val = headerLine.substring(separator + 1);  
+	log("key", key);  
+	log("val", val);  
+	headers.put(key, val);  
+	System.out.println("----------------------------");  
+
+}
 ```
 
 这样我们就能够得到这样的结果了：
