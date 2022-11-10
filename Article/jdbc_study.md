@@ -9,7 +9,7 @@
 * Statement：语句执行官，用来执行sql语句。
 * Resultset：结果集，用来存放结果结合，本质是一个[[db#5.1.4 Cursors|cursor]] ^c627c2
 
-那么接下来，就给出每一步操作。首先是引入需要加载的驱动类。这个类并不是java自带的，而是要到各个数据库厂商对应的地方下载，比如如果要下载connector-java的MySQL版本，就可以到下面的网站：
+那么接下来，就给出每一步操作。首先是引入需要加载的驱动类。这个类并不是java自带的，而是要到各个数据库厂商对应的地方下载。比如如果要下载connector-java的MySQL版本，就可以到下面的网站：
 
 [MySQL :: Download Connector/J](https://dev.mysql.com/downloads/connector/j/8.0.html)
 
@@ -42,7 +42,7 @@ String password = "spreadzhao";
 
 #TODO 展示一下
 
-在有了连接之后，我们要使用具体的某一个数据库。在mysql中，可以直接使用如`use database1`这种语句去使用，那么在jdbc中，就需要这样：
+在有了连接之后，我们要使用具体的某一个数据库。在mysql中，可以直接使用如`use database1`这种语句去使用。而在jdbc中，就需要这样：
 
 ```java
 /**
@@ -80,7 +80,7 @@ SQLException – if a database access error occurs or this method is called on a
 Statement statement = connection.createStatement();
 ```
 
-> createStatement()有许多的重载，我们这里只是最简单的执行sql语句，其实还可以以游标的方式去执行，后面有可能会介绍。
+> createStatement()有许多的重载，我们这里只是最简单的执行sql语句，其实还可以以游标的方式去执行，后面**有可能**会介绍。
 
 再然后，就可以真正去执行我们的sql语句了。这里因为非常简单，所以直接给整个的代码。如果我们的数据库中某张表是这样的：
 
