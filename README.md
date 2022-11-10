@@ -55,3 +55,11 @@ where category="inter_class"
 ![[Pasted image 20221022185115.png]]
 
 不然会和某些代码段冲突。
+
+---
+
+# 2022-11-10
+
+由于引入了yaml模板，所以在Obsidian中要进行如下设置应用模板：
+
+![[Pasted image 20221110232507.png]]
