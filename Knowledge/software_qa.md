@@ -403,3 +403,11 @@ Export-WindowsDriver -Online -Destination D:\DriverBackup
 ## Ubuntu调整字体大小
 
 安装`gnome-tweaks`工具即可，之后便会出现Tweaks工具。在里面就能设置字体大小了。
+
+# 7. Idea
+
+## 修改maven仓库位置
+
+![[Pasted image 20221115105545.png]]
+
+Bundled代表idea自带的maven，而settings file默认就是自带maven的配置。所以我们需要自己将仓库迁移到别的位置，这里我迁移到了F盘。
