@@ -69,3 +69,11 @@ where category="inter_class"
 由于引入了yaml模板，所以在Obsidian中要进行如下设置应用模板：
 
 ![[Pasted image 20221110232507.png]]
+
+---
+
+# 2022-11-21
+
+增加了插件，下面给出目前的所有插件：
+
+![[resources/Pasted image 20221121123025.png]]
