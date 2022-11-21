@@ -77,3 +77,7 @@ where category="inter_class"
 增加了插件，下面给出目前的所有插件：
 
 ![[resources/Pasted image 20221121123025.png]]
+
+另外给出文件链接的新设置，今天之后插入的连接也都是这种格式。
+
+![[resources/Pasted image 20221121161025.png]]
