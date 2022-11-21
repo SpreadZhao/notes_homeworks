@@ -92,7 +92,7 @@ httpd -k install -n "Apache24"
 
 * 这时候会看到这样的情况
 
-![[gitst.png]]
+![[Knowledge/resources/gitst.png]]
 
 * 然后，提交这次改动
 
@@ -112,15 +112,15 @@ httpd -k install -n "Apache24"
 
 * 如图添加键值对
 
-![[gitbash.png]]
+![[Knowledge/resources/gitbash.png]]
 
 * ~~然后再添加图标和程序目录就好了~~
 
-![[gitbash2.png]]
+![[Knowledge/resources/gitbash2.png]]
 
 * 上面这么做是错的！`command`应该建在子项中，参考`cmd`是咋做的
 
-![[gitbash3.png]]
+![[Knowledge/resources/gitbash3.png]]
 
   不过`icon`确实是加在那里
 
@@ -146,17 +146,17 @@ httpd -k install -n "Apache24"
 
 * 然后在本地的`.git`里加上另一个的url
 
-  ![[newurl.png]]
+  ![[Knowledge/resources/newurl.png]]
 
 * 这样在`remote -v`的时候就能看到多个地址
 
-  ![[remote.png]]
+  ![[Knowledge/resources/remote.png]]
 
   > 我们能看到github的只支持push操作不支持pull操作
 
 * 然后在修改提交过后就会有两次提交记录在shell中了
 
-![[push.png]]
+![[Knowledge/resources/push.png]]
 
 # 3. Obsidian
 
@@ -269,9 +269,8 @@ httpd -k install -n "Apache24"
 }
 ```
 
+#TODO  learn dataview
 
-
-#TODO 
 - [ ] 学习Dataview插件的使用
 
 # 4. MySQL
@@ -280,7 +279,7 @@ httpd -k install -n "Apache24"
 
 下载MySQL的绿色版。然后解压缩，在里面会发现下面的结构：
 
-![[sql1.png]]
+![[Knowledge/resources/sql1.png]]
 
 * 注：`my.ini`本来是没有的。
 
@@ -408,6 +407,6 @@ Export-WindowsDriver -Online -Destination D:\DriverBackup
 
 ## 修改maven仓库位置
 
-![[Pasted image 20221115105545.png]]
+![[Knowledge/resources/Pasted image 20221115105545.png]]
 
 Bundled代表idea自带的maven，而settings file默认就是自带maven的配置。所以我们需要自己将仓库迁移到别的位置，这里我迁移到了F盘。

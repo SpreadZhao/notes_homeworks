@@ -2,11 +2,10 @@
 
 ## 数学公式
 
-![[latex1.png]]
+![[Knowledge/resources/latex1.png]]
 
-![[latex2.png]]
+![[Knowledge/resources/latex2.png]]
 
-![[latex3.png]]
+![[Knowledge/resources/latex3.png]]
 
-![[latex4.png]]
-
+![[Knowledge/resources/latex4.png]]
