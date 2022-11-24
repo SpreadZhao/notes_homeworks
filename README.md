@@ -89,3 +89,73 @@ where category="inter_class"
 - [ ] 将所有的图片都改成这种格式
 
 ![[resources/Pasted image 20221121161025.png]]
+
+---
+
+# 2022-11-24
+
+如何使用本仓库？其实非常简单。
+
+首先，去下面的网址下载obsidian：
+
+[Obsidian](https://obsidian.md/)
+
+![[resources/Pasted image 20221124143144.png]]
+
+点击`Get Obsidian fo Windows`即可。下载安装完之后，会打开这样一个窗口：
+
+![[resources/Pasted image 20221124143223.png]]
+
+一个仓库说白了就是一个文件夹。那么我们只需要把我的仓库下下来然后选择打开本地仓库，就欧克了！
+
+首先来到我的仓库地址：
+
+[notes_homeworks: 之前的笔记仓库已经弃用，从Typora转为了Obsidian (gitee.com)](https://gitee.com/spreadzhao/notes_homeworks)
+
+在里面你能够找到这个按钮：
+
+![[resources/Pasted image 20221124143355.png]]
+
+点击这个复制，这就是本项目的仓库地址。我们用这个地址把仓库下载下来。
+
+去这个地址下载git工具：
+
+[Git - Downloads (git-scm.com)](https://git-scm.com/downloads)
+
+![[resources/Pasted image 20221124143455.png]]
+
+点击这个windows，之后点击下面的按钮：
+
+![[resources/Pasted image 20221124143551.png]]
+
+下载完安装即可。安装的过程可能会有一点漫长，不过不要紧，全部默认就ok了。在安装完之后，在任意一个文件夹下右键都能看到这个：
+
+![[resources/Pasted image 20221124143649.png]]
+
+`Git Bash Here`就是我们最常用的功能了。我们在随便一个文件夹里点击它，会出现一个类似cmd的窗口：
+
+![[resources/Pasted image 20221124143751.png]]
+
+我们在这里下载我的仓库。输入如下命令：
+
+```shell
+git clone https://gitee.com/spreadzhao/notes_homeworks.git
+```
+
+这里的地址就是之前复制的仓库地址。**但是注意粘贴的方式不一样**，在gitbash中粘贴的快捷键是`SHIFT + INSERT` ，而不是`CTRL + V`。如果找不到的话鼠标右键粘贴也行。
+
+等待一段时间，仓库就下载好了，之后我们就要在obsidian中打开这个仓库：
+
+![[resources/Pasted image 20221124144100.png]]
+
+点击打开后，选择刚刚下载好的文件夹，就可以使用了！！！
+
+另外，如果仓库有更新，就来到下载的仓库目录下，右键打开`Git Bash Here`，输入如下命令：
+
+```shell
+git pull
+```
+
+这样就会自动将仓库更新成最新的。
+
+> 最好自己注册一个gitee的账号，有可能进行git操作的时候会让你登录。
