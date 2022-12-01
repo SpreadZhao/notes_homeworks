@@ -271,7 +271,7 @@ httpd -k install -n "Apache24"
 
 #TODO  learn dataview
 
-- [ ] 学习Dataview插件的使用
+- [x] 学习Dataview插件的使用
 
 # 4. MySQL
 
