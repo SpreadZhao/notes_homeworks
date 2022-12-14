@@ -337,4 +337,8 @@ public static Connection getConnection(){
 
 # 3. 对接作业
 
-为了对接我的数据库最后一次上机作业，这里直接用jdbc+swing写一个图形界面。
+~~为了对接我的数据库最后一次上机作业，这里直接用jdbc+swing写一个图形界面。~~
+
+好吧，我没有用jdbc，更没有用swing。只是用了mybatis plus和android。我还是选择在自己熟悉的平台上操作。下面是我的报告：
+
+[[homework/Database/4. journey_reserve_system]]
