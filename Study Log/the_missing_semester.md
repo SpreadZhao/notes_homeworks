@@ -70,7 +70,7 @@ cat < hello.txt >> hello2.txt
 
 这时hello2.txt中的内容就会变成：
 
-
+![[Study Log/resources/Pasted image 20221215225631.png]]
 
 ## 1.5 pipe
 
@@ -80,19 +80,23 @@ cat < hello.txt >> hello2.txt
 cat haha.txt | grep hehe
 ```
 
-这是找出haha.txt这个文件中包含hehe字符串的所有行。但是我们似乎从来没考虑过中间的这个`|`到底是什么。其实它就是pipe，管道的意思就是，左边的输出是右边的输入。因此，`cat haha.txt`的输出是文件中的所有字符，这些字符就作为grep程序的输入，然后grep程序会从输入中过滤出我们想要的东西。我们可以再通过几个例子来看看：
+![[Study Log/resources/Pasted image 20221215225739.png]]
+
+这是找出haha.txt这个文件中包含hehe字符串的所有行。但是我们似乎从来没考虑过中间的这个`|`到底是什么。其实它就是pipe，管道的意思就是，**左边的输出是右边的输入**。因此，`cat haha.txt`的输出是文件中的所有字符，这些字符就作为grep程序的输入，然后grep程序会从输入中过滤出我们想要的东西。我们可以再通过几个例子来看看：
 
 ```shell
 ls -l | tail -n1
 ```
 
-
+![[Study Log/resources/Pasted image 20221215225900.png]]
 
 `ls -l`列出当前文件夹下的文件，而`tail`表示只是输出最后几行，而`-n1`表示输出最后一行。所以如果我们想要查看haha.txt文件中的最后两行文本，就可以这样写：
 
 ```shell
 cat haha.txt | tail -n2
 ```
+
+![[Study Log/resources/Pasted image 20221215225940.png]]
 
 从这里我们也能发现，**pipe其实就是帮助我们重定向了这些程序的输入流和输出流**。
 
