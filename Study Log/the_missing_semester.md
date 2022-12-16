@@ -138,3 +138,69 @@ echo 1 | sudo tee brightness
 ```
 
 这时就会发现电脑的CapsLock键盘灯已经亮了。
+
+# 2. Shell Tools and Scripting
+
+## 2.1 variable
+
+我们可以在命令行中定义变量：
+
+```shell
+foo=bar
+echo $foo
+```
+
+
+
+在字符串中也可以嵌套这些变量(这其实才是最主要的用途)：
+
+```shell
+echo "value is $foo"
+```
+
+
+
+但是要注意两点。首先是空格的问题，这个问题[[#1.3 escape|第一章]]也提到了：
+
+```shell
+# error, should not use space
+foo = bar
+```
+
+在这种情况下，shell会把foo当成程序，等号和bar会被当作参数，自然就会报错了：
+
+
+
+第二点是单引号和双引号的问题。双引号中的变量可以被替换，而单引号不行：
+
+```shell
+echo "value is $foo" # value is bar
+echo 'value is $foo' # value is $foo
+```
+
+## 2.2 script fuction
+
+我们可以把命令行的命令封装成函数。比如我们可以定义一个创建目录并进入它的函数：
+
+```shell
+# mcd.sh
+mcd(){
+	mkdir -p "$1"
+	cd "$1"
+}
+```
+
+这里的`$1`是什么之后再说，先运行一下这个命令：
+
+```shell
+source mcd.sh
+mcd test
+```
+
+这样就能够创建test目录并进入它。这里我们其实就能看出来，test就是\$1。在脚本语言中，\$符号就是用来表示参数的占位符的。加上一个数字就表示第几个参数，显然，\$0就表示第零个参数，也就是程序本身。接下来我们来一个复杂的例子：
+
+```shell
+echo "starting program at"
+```
+
+这个例子中的
