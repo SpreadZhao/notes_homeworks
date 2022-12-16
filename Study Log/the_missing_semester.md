@@ -150,7 +150,7 @@ foo=bar
 echo $foo
 ```
 
-
+![[Study Log/resources/Pasted image 20221216144012.png]]
 
 在字符串中也可以嵌套这些变量(这其实才是最主要的用途)：
 
@@ -158,7 +158,7 @@ echo $foo
 echo "value is $foo"
 ```
 
-
+![[Study Log/resources/Pasted image 20221216144030.png]]
 
 但是要注意两点。首先是空格的问题，这个问题[[#1.3 escape|第一章]]也提到了：
 
@@ -169,7 +169,7 @@ foo = bar
 
 在这种情况下，shell会把foo当成程序，等号和bar会被当作参数，自然就会报错了：
 
-
+![[Study Log/resources/Pasted image 20221216144054.png]]
 
 第二点是单引号和双引号的问题。双引号中的变量可以被替换，而单引号不行：
 
@@ -177,6 +177,8 @@ foo = bar
 echo "value is $foo" # value is bar
 echo 'value is $foo' # value is $foo
 ```
+
+![[Study Log/resources/Pasted image 20221216144114.png]]
 
 ## 2.2 script fuction
 
@@ -200,7 +202,126 @@ mcd test
 这样就能够创建test目录并进入它。这里我们其实就能看出来，test就是\$1。在脚本语言中，\$符号就是用来表示参数的占位符的。加上一个数字就表示第几个参数，显然，\$0就表示第零个参数，也就是程序本身。接下来我们来一个复杂的例子：
 
 ```shell
-echo "starting program at"
+#!/usr/bin/bash
+echo "Starting program at $(date)"
+
+echo "running program $0 with $# arguments with pid $$"
+
+for file in "$@"; do
+	grep foobar "$file" > /dev/null 2> /dev/null
+	if [[ "$?" -ne 0 ]]; then
+		echo "file $file does not have any foobar, adding one"
+		echo "# foobar" >> "$file"
+	fi
+done
 ```
 
-这个例子中的
+这个例子中，我们首先输出当前的时间，使用`$(...)`来保存程序执行的结果，并将其嵌套入字符串中。接下来，就是\$0，也就是程序的名字。\$\#表示参数的个数；\$\$表示该进程的pid。然后是一个for循环，在其中的每个变量file都是一个字符串，比如这样来执行：
+
+```shell
+sudo ./example.sh bashtest1 bashtest2 bashtest3
+```
+
+那么file就会从bashtest1一直遍历到bashtest3。而\$@符号表示所有的参数列表。在for循环内部，我们进行了grep操作。从"\$file"这个字符串中找有没有foobar这段字符。如果有，那么我们将其重定向到`/dev/null`中。**这里注意后面的2>**，这表示如果出现错误，比如没有foobar这段字符，那么就用**标准错误流**将其输出到/dev/null中。
+
+然后，我们判断`$?`和0是否相等。`$?`会返回上个命令的错误码，如果是0则表示成功。因此如果不想等(-ne)的话，就手动添加一个。
+
+以上的脚本文件执行起来就是这样的。如果我们有测试文件bashtest1, bashtest2, bashtest3。其中的内容是这样的：
+
+![[Study Log/resources/Pasted image 20221216150511.png]]
+
+那么这个脚本的执行结果就是：
+
+![[Study Log/resources/Pasted image 20221216150651.png]]
+
+> 能看到，由于1和3中都没有foobar，所以它在后面添加了一个。
+
+## 2.3 wildcard
+
+在脚本语言中也可以使用各种通配符。比如我有如下文件：
+
+![[Study Log/resources/Pasted image 20221216150900.png|200]]
+
+那么注意观察下面两条命令的执行结果，就明白是什么意思了。
+
+![[Study Log/resources/Pasted image 20221216151047.png]]
+
+单个问号只占一个位置，而星号表示任意位数的字符串。
+
+---
+
+如果我想一次创建多个文件夹，可以这样：
+
+![[Study Log/resources/Pasted image 20221216151229.png]]
+
+这其实就相当于下面的命令：
+
+```shell
+mkdir test1 test2 test3
+```
+
+甚至还可以进行循环和嵌套：
+
+![[Study Log/resources/Pasted image 20221216151428.png]]
+
+## 2.4 process substitution
+
+从2.1的介绍我们能知道，如果想查看某些特殊的输出，比如想同时输出当前目录的文件和父目录的文件，可以这样：
+
+![[Study Log/resources/Pasted image 20221216152200.png]]
+
+> 这里的-e表示翻译转义字符，比如里面的\n。
+
+但是还有另外一种方式，就是process substitution：
+
+![[Study Log/resources/Pasted image 20221216152317.png]]
+
+`<(...)`符号的工作原理是，让程序执行的结果放在一个临时文件中。如何证明呢？用一个程序：diff。它比较的是文件，能输出它们的不同。下面的例子很好看懂：
+
+![[Study Log/resources/Pasted image 20221216152800.png]]
+
+> 这里将ls程序执行的结果放到了临时文件中，并比较这两个临时文件的不同。
+
+## 2.5 logic cal
+
+在脚本语言里也可以写逻辑运算，只不过和程序语言中有一些不同。比如下面的例子：
+
+```shell
+false || echo haha # will run
+true || echo hehe # will not run
+false && echo haha # will not run
+true && echo hehe # will run
+```
+
+这些程序都是从左到右执行的。或运算是：左边执行失败了，就执行右边，如果左边成功了，就不执行右边了；而与运算是：只要有一个执行失败就结束。所以这些程序的输出是这样的：
+
+![[Study Log/resources/Pasted image 20221216153320.png]]
+
+## 2.6 nifty tools
+
+下面介绍一些实用的小工具。首先是tldr，它相当于一个精简的man，只列出有用的帮助：
+
+![[Study Log/resources/Pasted image 20221216153629.png]]
+
+---
+
+find，这个很常用，就是搜索。下面给出一个比较常用的例子：
+
+```shell
+find . -name "*.sh" -type f # 找文件
+find . -name "test*" -type d # 找文件夹
+```
+
+![[Study Log/resources/Pasted image 20221216153921.png]]
+
+---
+
+locate，这个就是有索引地找。
+
+![[Study Log/resources/Pasted image 20221216154025.png]]
+
+它比find快很多，但是需要建立索引的过程：
+
+```shell
+sudo updatedb
+```
