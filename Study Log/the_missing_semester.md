@@ -473,7 +473,7 @@ You can use modifiers to change the meaning of a noun. Some modifiers are `i`, 
 
 Here is a broken [fizz buzz](https://en.wikipedia.org/wiki/Fizz_buzz) implementation:
 
-```
+```python
 def fizz_buzz(limit):
     for i in range(limit):
         if i % 3 == 0:
