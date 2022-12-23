@@ -1,6 +1,6 @@
 # 1. Apache服务器配置
 
-## 修改配置文件
+## 1.1 修改配置文件
 
 该文件位于Apache目录下的`conf/httpd.conf`。打开并编辑这个文件：
 
@@ -11,7 +11,7 @@ Listen 80
 ServerName localhost:80
 ```
 
-## 安装Apache服务
+## 1.2 安装Apache服务
 
 使用管理员权限打开终端，并输入如下命令：
 
@@ -21,11 +21,11 @@ httpd -k install -n "Apache24"
 
 其中，Apache24是我们可以自定义的服务名。
 
-## 启动Apache服务
+## 1.3 启动Apache服务
 
 在此电脑的服务中打开，或者直接`net start Apache24`都可以打开Apache服务。另外，我们也可以通过`/bin/ApacheMonitor.exe`来检测Apache服务。图形化界面很简洁明了。
 
-## 测试服务
+## 1.4 测试服务
 
 当在浏览器中输入`localhost:80`的时候，显示`It works!`就代表启动成功了。
 
@@ -33,7 +33,7 @@ httpd -k install -n "Apache24"
 
 # 2. git使用技巧
 
-## 已经推送过的文件，但是本地发现他不用提交(比如clion的cmake-build-debug)
+## 2.1 已经推送过的文件，但是本地发现他不用提交(比如clion的cmake-build-debug)
 
 * 可使用如下代码来操作：
 
@@ -76,7 +76,7 @@ httpd -k install -n "Apache24"
 
 ---
 
-## 本地的文件删掉了，我在远程仓库也不要了，怎么把这个删除后的状态同步到远程仓库
+## 2.2 本地的文件删掉了，我在远程仓库也不要了，怎么把这个删除后的状态同步到远程仓库
 
 * 如果目录中包含中文，使用如下命令配置
 
@@ -104,7 +104,7 @@ httpd -k install -n "Apache24"
 
 ---
 
-## 手动添加Git Bash Here到右键菜单
+## 2.3 手动添加Git Bash Here到右键菜单
 
 * 打开`regedit`
 
@@ -126,7 +126,7 @@ httpd -k install -n "Apache24"
 
 ---
 
-## 不clone仓库而添加远程仓库
+## 2.4 不clone仓库而添加远程仓库
 
 * `git init`在当前目录下生成`.git`文件夹
 
@@ -140,7 +140,7 @@ httpd -k install -n "Apache24"
 
 ---
 
-## gitee和github同步仓库，一次提交两次更新
+## 2.5 gitee和github同步仓库，一次提交两次更新
 
 * 首先有一个仓库，然后在另一个上面先import
 
@@ -160,7 +160,7 @@ httpd -k install -n "Apache24"
 
 # 3. Obsidian
 
-## pdf导出
+## 3.1 pdf导出
 
 安装minimal主题之后，代码段为黑色，并且表格非常难看，之后找到了这篇文章：
 
@@ -273,9 +273,25 @@ httpd -k install -n "Apache24"
 
 - [x] 学习Dataview插件的使用
 
+## 3.2 成块引用
+
+比如有下面的东西：
+
+> asdfasdg
+> 
+> asdgasgda
+> 
+> asdgasdg
+
+我想一下把这三行的引用都删掉。以前版本是自带快捷键的：`ctrl + shift + .`
+
+但是现在不行了，所以我在设置里找来找去，最后还真被我找到了：
+
+![[Knowledge/resources/Pasted image 20221223140048.png]]
+
 # 4. MySQL
 
-## MySQL的配置
+## 4.1 MySQL的配置
 
 下载MySQL的绿色版。然后解压缩，在里面会发现下面的结构：
 
@@ -351,7 +367,7 @@ mysql> alter user 'root'@'localhost' identified with mysql_native_password by 'N
 quit
 ```
 
-## MySQL恢复备份
+## 4.2 MySQL恢复备份
 
 MySQL的逻辑备份是`.sql`文件，使用如下命令可以恢复。
 
@@ -367,7 +383,7 @@ source <filename>
 
 # 5. Windows
 
-## 备份/恢复驱动
+## 5.1 备份/恢复驱动
 
 备份：cmd管理员
 
@@ -389,7 +405,7 @@ Export-WindowsDriver -Online -Destination D:\DriverBackup
 
 恢复在设备管理器那里就能恢复了，自动搜索。
 
-## Hyper-V和VM-Ware共存
+## 5.2 Hyper-V和VM-Ware共存
 
 因为WSA需要依靠Hyper-V启动，所以才会这样做。
 
@@ -399,13 +415,13 @@ Export-WindowsDriver -Online -Destination D:\DriverBackup
 
 # 6. Linux
 
-## Ubuntu调整字体大小
+## 6.1 Ubuntu调整字体大小
 
 安装`gnome-tweaks`工具即可，之后便会出现Tweaks工具。在里面就能设置字体大小了。
 
 # 7. Idea
 
-## 修改maven仓库位置
+## 7.1 修改maven仓库位置
 
 ![[Knowledge/resources/Pasted image 20221115105545.png]]
 

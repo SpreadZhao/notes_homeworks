@@ -19,109 +19,108 @@
   > 汇编：`gcc -c test.s`，生成`test.o`文件，这个文件人就看不懂了
   >
   > 链接：`gcc test.o -o test`最终生成可执行文件
- ^ac781a
+>  ^ac781a
  
 * `makefile`编写：仿照`gcc`的编译过程，逆向递归来写
 
-  > ```makefile
-  > tool:main.o tool1.o tool2.o
-  >         gcc main.o tool1.o tool2.o -o tool
-  > 
-  > main.o:main.c
-  >         gcc -c main.c
-  > 
-  > tool1.o:tool1.c
-  >         gcc -c tool1.c
-  > 
-  > tool2.o:tool2.c
-  >         gcc -c tool2.c
-  > ```
-  >
-  > 还可以加一些调试信息：
-  >
-  > ```makefile
-  > tool:main.o tool1.o tool2.o
-  >         gcc main.o tool1.o tool2.o -o tool
-  > 
-  > main.o:main.c
-  >         gcc -c -Wall -g main.c
-  > 
-  > tool1.o:tool1.c
-  >         gcc -c -Wall -g tool1.c
-  > 
-  > tool2.o:tool2.c
-  >         gcc -c -Wall -g tool2.c
-  > 
-  > clean:
-  >         rm *.o tool -rf
-  > # clean表示删除，这样执行 make clean 就等于执行了下面的命令
-  > ```
-  >
-  > 加上变量的使用：
-  >
-  > ```makefile
-  > OBJS=main.o tool1.o tool2.o
-  > CC=gcc
-  > CFLAGS+=-c -Wall -g
-  > 
-  > tool:main.o tool1.o tool2.o
-  >         $(CC) $(OBJS) -o tool
-  > 
-  > main.o:main.c
-  >         $(CC) $(CFLAGS) main.c
-  > 
-  > tool1.o:tool1.c
-  >         $(CC) $(CFLAGS) tool1.c
-  > 
-  > tool2.o:tool2.c
-  >         $(CC) $(CFLAGS) tool2.c
-  > 
-  > clean:
-  >         rm *.o tool -rf
-  > ```
-  >
-  > 我们发现：`target:source`这一对总是被使用，因此：
-  >
-  > ```makefile
-  > OBJS=main.o tool1.o tool2.o
-  > CC=gcc
-  > CFLAGS+=-c -Wall -g
-  > 
-  > # $^代表右边的source
-  > # $@代表左边的target
-  > 
-  > tool:$(OBJS)
-  >         $(CC) $^ -o $@
-  > 
-  > main.o:main.c
-  >         $(CC) $(CFLAGS) $^
-  > 
-  > tool1.o:tool1.c
-  >         $(CC) $(CFLAGS) $^
-  > 
-  > tool2.o:tool2.c
-  >         $(CC) $(CFLAGS) $^
-  > 
-  > clean:
-  >         rm *.o tool -rf
-  > ```
-  >
-  > 最后发现，`main, tool1, tool2`这三个执行的过程特别像，因此可以使用通配符：
-  >
-  > ```makefile
-  > OBJS=main.o tool1.o tool2.o
-  > CC=gcc
-  > CFLAGS+=-c -Wall -g
-  > 
-  > tool:$(OBJS)
-  >         $(CC) $^ -o $@
-  > 
-  > %.o:%.c
-  >         $(CC) $(CFLAGS) $^
-  > 
-  > 
-  > clean:
-  >         rm *.o tool -rf
-  > ```
-  >
+```makefile
+tool:main.o tool1.o tool2.o
+        gcc main.o tool1.o tool2.o -o tool
+
+main.o:main.c
+        gcc -c main.c
+
+tool1.o:tool1.c
+        gcc -c tool1.c
+
+tool2.o:tool2.c
+        gcc -c tool2.c
+```
+
+还可以加一些调试信息：
+
+```makefile
+tool:main.o tool1.o tool2.o
+        gcc main.o tool1.o tool2.o -o tool
+
+main.o:main.c
+        gcc -c -Wall -g main.c
+
+tool1.o:tool1.c
+        gcc -c -Wall -g tool1.c
+
+tool2.o:tool2.c
+        gcc -c -Wall -g tool2.c
+
+clean:
+        rm *.o tool -rf
+# clean表示删除，这样执行 make clean 就等于执行了下面的命令
+```
+
+加上变量的使用：
+
+```makefile
+OBJS=main.o tool1.o tool2.o
+CC=gcc
+CFLAGS+=-c -Wall -g
+
+tool:main.o tool1.o tool2.o
+        $(CC) $(OBJS) -o tool
+
+main.o:main.c
+        $(CC) $(CFLAGS) main.c
+
+tool1.o:tool1.c
+        $(CC) $(CFLAGS) tool1.c
+
+tool2.o:tool2.c
+        $(CC) $(CFLAGS) tool2.c
+
+clean:
+        rm *.o tool -rf
+```
+
+我们发现：`target:source`这一对总是被使用，因此：
+
+```makefile
+OBJS=main.o tool1.o tool2.o
+CC=gcc
+CFLAGS+=-c -Wall -g
+
+# $^代表右边的source
+# $@代表左边的target
+
+tool:$(OBJS)
+        $(CC) $^ -o $@
+
+main.o:main.c
+        $(CC) $(CFLAGS) $^
+
+tool1.o:tool1.c
+        $(CC) $(CFLAGS) $^
+
+tool2.o:tool2.c
+        $(CC) $(CFLAGS) $^
+
+clean:
+        rm *.o tool -rf
+```
+
+最后发现，`main, tool1, tool2`这三个执行的过程特别像，因此可以使用通配符：
+
+```makefile
+OBJS=main.o tool1.o tool2.o
+CC=gcc
+CFLAGS+=-c -Wall -g
+
+tool:$(OBJS)
+        $(CC) $^ -o $@
+
+%.o:%.c
+        $(CC) $(CFLAGS) $^
+
+
+clean:
+        rm *.o tool -rf
+```
 
