@@ -22,7 +22,7 @@ where category="inter_class"
 
 #idea 这是我突发奇想的点子，或者是一些我认为比较重要的东西。
 
-#keypoint 关键点，任何可能的重点都会使用此标签。
+#keypoint 关键点，任何可能的重点/难点都会使用此标签。
 
 ---
 
