@@ -1,8 +1,9 @@
 ---
 author: "Spread Zhao"
 title: the_missing_semester
-category: self_study_long
+category: self_study
 description: MIT学校的The Missing Section课程，能学到一些非常有用的编程知识和技巧
+link: https://missing.csail.mit.edu/2020/
 ---
 
 # 1. The Shell
@@ -1473,3 +1474,88 @@ nohup sleep 1001 &
 > 这个时候，向这个进程发送SIGHUP：
 >  * 如果这个进程正在运行，它会无视SIGHUP，继续运行；
 >  * 如果这个进程已经停止，它不但不会死掉，反而还是会继续运行。
+
+## 5.2 Terminal Multiplexer
+
+### 5.2.1 Session
+
+将终端变成多窗口！超级炫酷！目前最常用的Multiplexer就是tmux。我们安装好之后，只需要输入下面的命令：
+
+```shell
+tmux
+```
+
+就可以开启一个新的终端(好像是这样)：
+
+
+但是，实际上我们只是新建了一个session。每使用一次`tmux`命令，都会新建一个session。我们可以把它当成一个新的终端来使用：
+
+
+从当前的session**暂时**返回到主终端，我们可以这样做：先按`Ctrl + b`，然后再按一下`d`。我们也能发现，在主终端上出现了下面的字样：
+
+
+`detach`就表示暂时断开连接，attach的反义词。因此我们又会到了主终端。但是，那个session中的程序实际上还是在运行的，我们可以使用如下命令返回到那个session：
+
+```shell
+tmux a
+```
+
+我们也可以使用下面的命令来列出当前新建了多少个session：
+
+```shell
+tmux ls
+```
+
+
+还可以给新建的session起一个名字：
+
+```shell
+tmux new -t haha
+```
+
+这样我们就新建了一个名叫haha的session。和之前默认的一起，我们可以看到它们的情况：
+
+
+有了多个session，还可以通过session的编号和名字去attach它们：
+
+```shell
+tmux a -t 0
+tmux a -t haha
+```
+
+### 5.2.2 Window
+
+说完了session，下面看看每个session里都能干什么。实际上，session中的操作和vim多窗口有点像。我们可以按`Ctrl + b`，然后再按一下`c`来create一个新的window：
+
+在屏幕的最下面能看到当前处于哪一个window。下一个问题显而易见了：怎么在Window之间切换呢？使用`Ctrl + b`和`p`来切换到上一个(previous)window；使用`Ctrl + b`和`n`来切换到下一个(next)window。
+
+session可以改名字，window当然也可以改！在当前的window下，使用`Ctrl + b`和`,`来给当前的window改名字：
+
+
+### 5.2.3 Pane
+
+到目前为止，我们也只是实现了类似浏览器标签那种样子，但是真正的分屏多窗口还没有实现。而pane就是用来做这件事的。每一个window都可以新建若干个pane，使用`Ctrl + b`和`"`在当前window下分两屏：
+
+
+可以看到，这样是垂直切割。那么怎么水平切割呢？使用`Ctrl + b`和`%`就可以了：
+
+
+和window一样，如何在pane之前来回切换呢？使用`Ctrl + b`和`方向键`就可以了。如果我觉得这种排版不合适，可以使用`Ctrl + b`和`space`。多用几次，它会给你不同的排版：
+
+
+比如我在某一个pane里打开vim，发现窗口太小了，怎么放大呢？使用`Ctrl + b`和z来放大(zoom)当前窗口。如果我用完了，再来一遍就可以缩回去。
+
+
+**最后来说一下关闭。不管是pane，window还是session，统一使用`Ctrl + d`来关闭**。
+
+## 5.3 Dotfiles
+
+dotfile实际上就是那些前面带点的文件：`.bashrc`，`.vimrc`，`.gitignore`等等。这些都是配置文件，而通常它们都在`~`目录下。这些东西就是每次打开一个终端的时候都会加载好的，因此这些配置虽然不写到环境变量里，但是却随时都能生效。
+
+我们有时候可能会有这样的需求：某一个配置文件在一个仓库里用，但是这个仓库的配置和我本机的配置不一样。而且这个配置文件还总会变。那我该咋办？如果每写一个项目就要改一下配置文件那也太麻烦了！所以才有了dotfile repository的概念。我们将用户目录改成下面的结构：
+
+![[Study Log/resources/Pasted image 20230111133634.png]]
+
+这两个最基础的`.bashrc`和`.vimrc`里并没有内容，只是有链接。它们指向不同的配置文件。使用这种方式，当我们想要切换文件的时候，只需要把这个指向的链接修改了就可以了。
+
+#idea 其实这种思想和项目里经常看到的多重include很像。我经常在项目里看到，某一个.h文件打开之后就一句话，就是include了许多.h。这种做法其实也是为了便于切换引用的库。
