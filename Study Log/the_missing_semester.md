@@ -1487,12 +1487,15 @@ tmux
 
 就可以开启一个新的终端(好像是这样)：
 
+![[Study Log/resources/Pasted image 20230111141316.png]]
 
 但是，实际上我们只是新建了一个session。每使用一次`tmux`命令，都会新建一个session。我们可以把它当成一个新的终端来使用：
 
+![[Study Log/resources/Pasted image 20230111141354.png]]
 
 从当前的session**暂时**返回到主终端，我们可以这样做：先按`Ctrl + b`，然后再按一下`d`。我们也能发现，在主终端上出现了下面的字样：
 
+![[Study Log/resources/Pasted image 20230111141421.png]]
 
 `detach`就表示暂时断开连接，attach的反义词。因此我们又会到了主终端。但是，那个session中的程序实际上还是在运行的，我们可以使用如下命令返回到那个session：
 
@@ -1506,6 +1509,7 @@ tmux a
 tmux ls
 ```
 
+![[Study Log/resources/Pasted image 20230111141445.png]]
 
 还可以给新建的session起一个名字：
 
@@ -1515,6 +1519,7 @@ tmux new -t haha
 
 这样我们就新建了一个名叫haha的session。和之前默认的一起，我们可以看到它们的情况：
 
+![[Study Log/resources/Pasted image 20230111141522.png]]
 
 有了多个session，还可以通过session的编号和名字去attach它们：
 
@@ -1531,20 +1536,31 @@ tmux a -t haha
 
 session可以改名字，window当然也可以改！在当前的window下，使用`Ctrl + b`和`,`来给当前的window改名字：
 
+![[Study Log/resources/Pasted image 20230111141640.png]]
+
+> 第三个window被改成了spreadzhao。
+
+每个window都有编号，从0开始。我们也可以使用`Ctrl + b`和数字来定位到那个window。
 
 ### 5.2.3 Pane
 
 到目前为止，我们也只是实现了类似浏览器标签那种样子，但是真正的分屏多窗口还没有实现。而pane就是用来做这件事的。每一个window都可以新建若干个pane，使用`Ctrl + b`和`"`在当前window下分两屏：
 
+![[Study Log/resources/Pasted image 20230111141824.png]]
 
 可以看到，这样是垂直切割。那么怎么水平切割呢？使用`Ctrl + b`和`%`就可以了：
 
+![[Study Log/resources/Pasted image 20230111141856.png]]
 
 和window一样，如何在pane之前来回切换呢？使用`Ctrl + b`和`方向键`就可以了。如果我觉得这种排版不合适，可以使用`Ctrl + b`和`space`。多用几次，它会给你不同的排版：
 
+![[Study Log/resources/Pasted image 20230111141917.png]]
 
 比如我在某一个pane里打开vim，发现窗口太小了，怎么放大呢？使用`Ctrl + b`和z来放大(zoom)当前窗口。如果我用完了，再来一遍就可以缩回去。
 
+![[Study Log/resources/Pasted image 20230111142035.png]]
+
+![[Study Log/resources/Pasted image 20230111142101.png]]
 
 **最后来说一下关闭。不管是pane，window还是session，统一使用`Ctrl + d`来关闭**。
 
