@@ -2623,3 +2623,1090 @@ To avoid duplicating information, we’re not going to explain the commands belo
 5.  Like many command line tools, Git provides a configuration file (or dotfile) called `~/.gitconfig`. Create an alias in `~/.gitconfig` so that when you run `git graph`, you get the output of `git log --all --graph --decorate --oneline`. Information about git aliases can be found [here](https://git-scm.com/docs/git-config#Documentation/git-config.txt-alias).
 6.  You can define global ignore patterns in `~/.gitignore_global` after running `git config --global core.excludesfile ~/.gitignore_global`. Do this, and set up your global gitignore file to ignore OS-specific or editor-specific temporary files, like `.DS_Store`.
 7.  Fork the [repository for the class website](https://github.com/missing-semester/missing-semester), find a typo or some other improvement you can make, and submit a pull request on GitHub (you may want to look at [this](https://github.com/firstcontributions/first-contributions)).
+
+# 7. Debugging and Profiling
+
+A golden rule in programming is that code does not do what you expect it to do, but what you tell it to do. Bridging that gap can sometimes be a quite difficult feat. In this lecture we are going to cover useful techniques for dealing with buggy and resource hungry code: debugging and profiling.
+
+## 7.1 Debugging
+
+### 7.1.1 Printf debugging and Logging
+
+“The most effective debugging tool is still careful thought, coupled with judiciously placed print statements” — Brian Kernighan, _Unix for Beginners_.
+
+A first approach to debug a program is to add print statements around where you have detected the problem, and keep iterating until you have extracted enough information to understand what is responsible for the issue.
+
+A second approach is to use logging in your program, instead of ad hoc print statements. Logging is better than regular print statements for several reasons:
+
+-   You can log to files, sockets or even remote servers instead of standard output.
+-   Logging supports severity levels (such as INFO, DEBUG, WARN, ERROR, &c), that allow you to filter the output accordingly.
+-   For new issues, there’s a fair chance that your logs will contain enough information to detect what is going wrong.
+
+[Here](https://missing.csail.mit.edu/static/files/logger.py) is an example code that logs messages:
+
+```shell
+$ python logger.py
+# Raw output as with just prints
+$ python logger.py log
+# Log formatted output
+$ python logger.py log ERROR
+# Print only ERROR levels and above
+$ python logger.py color
+# Color formatted output
+```
+
+One of my favorite tips for making logs more readable is to color code them. By now you probably have realized that your terminal uses colors to make things more readable. But how does it do it? Programs like `ls` or `grep` are using [ANSI escape codes](https://en.wikipedia.org/wiki/ANSI_escape_code), which are special sequences of characters to indicate your shell to change the color of the output. For example, executing `echo -e "\e[38;2;255;0;0mThis is red\e[0m"` prints the message `This is red` in red on your terminal, as long as it supports [true color](https://github.com/termstandard/colors#truecolor-support-in-output-devices). If your terminal doesn’t support this (e.g. macOS’s Terminal.app), you can use the more universally supported escape codes for 16 color choices, for example `echo -e "\e[31;1mThis is red\e[0m"`.
+
+The following script shows how to print many RGB colors into your terminal (again, as long as it supports true color).
+
+```shell
+#!/usr/bin/env bash
+for R in $(seq 0 20 255); do
+    for G in $(seq 0 20 255); do
+        for B in $(seq 0 20 255); do
+            printf "\e[38;2;${R};${G};${B}m█\e[0m";
+        done
+    done
+done
+```
+
+### 7.1.2 Third party logs
+
+As you start building larger software systems you will most probably run into dependencies that run as separate programs. Web servers, databases or message brokers are common examples of this kind of dependencies. When interacting with these systems it is often necessary to read their logs, since client side error messages might not suffice.
+
+Luckily, most programs write their own logs somewhere in your system. In UNIX systems, it is commonplace for programs to write their logs under `/var/log`. For instance, the [NGINX](https://www.nginx.com/) webserver places its logs under `/var/log/nginx`. More recently, systems have started using a **system log**, which is increasingly where all of your log messages go. Most (but not all) Linux systems use `systemd`, a system daemon that controls many things in your system such as which services are enabled and running. `systemd` places the logs under `/var/log/journal` in a specialized format and you can use the [`journalctl`](https://www.man7.org/linux/man-pages/man1/journalctl.1.html) command to display the messages. Similarly, on macOS there is still `/var/log/system.log` but an increasing number of tools use the system log, that can be displayed with [`log show`](https://www.manpagez.com/man/1/log/). On most UNIX systems you can also use the [`dmesg`](https://www.man7.org/linux/man-pages/man1/dmesg.1.html) command to access the kernel log.
+
+For logging under the system logs you can use the [`logger`](https://www.man7.org/linux/man-pages/man1/logger.1.html) shell program. Here’s an example of using `logger` and how to check that the entry made it to the system logs. Moreover, most programming languages have bindings logging to the system log.
+
+```
+logger "Hello Logs"
+# On macOS
+log show --last 1m | grep Hello
+# On Linux
+journalctl --since "1m ago" | grep Hello
+```
+
+As we saw in the data wrangling lecture, logs can be quite verbose and they require some level of processing and filtering to get the information you want. If you find yourself heavily filtering through `journalctl` and `log show` you can consider using their flags, which can perform a first pass of filtering of their output. There are also some tools like [`lnav`](http://lnav.org/), that provide an improved presentation and navigation for log files.
+
+### 7.1.3 Debuggers
+
+When printf debugging is not enough you should use a debugger. Debuggers are programs that let you interact with the execution of a program, allowing the following:
+
+-   Halt execution of the program when it reaches a certain line.
+-   Step through the program one instruction at a time.
+-   Inspect values of variables after the program crashed.
+-   Conditionally halt the execution when a given condition is met.
+-   And many more advanced features
+
+Many programming languages come with some form of debugger. In Python this is the Python Debugger [`pdb`](https://docs.python.org/3/library/pdb.html).
+
+Here is a brief description of some of the commands `pdb` supports:
+
+-   **l**(ist) - Displays 11 lines around the current line or continue the previous listing.
+-   **s**(tep) - Execute the current line, stop at the first possible occasion.
+-   **n**(ext) - Continue execution until the next line in the current function is reached or it returns.
+-   **b**(reak) - Set a breakpoint (depending on the argument provided).
+-   **p**(rint) - Evaluate the expression in the current context and print its value. There’s also **pp** to display using [`pprint`](https://docs.python.org/3/library/pprint.html) instead.
+-   **r**(eturn) - Continue execution until the current function returns.
+-   **q**(uit) - Quit the debugger.
+
+Let’s go through an example of using `pdb` to fix the following buggy python code. (See the lecture video).
+
+```python
+def bubble_sort(arr):
+    n = len(arr)
+    for i in range(n):
+        for j in range(n):
+            if arr[j] > arr[j+1]:
+                arr[j] = arr[j+1]
+                arr[j+1] = arr[j]
+    return arr
+
+print(bubble_sort([4, 2, 1, 8, 7, 6]))
+```
+
+Note that since Python is an interpreted language we can use the `pdb` shell to execute commands and to execute instructions. [`ipdb`](https://pypi.org/project/ipdb/) is an improved `pdb` that uses the [`IPython`](https://ipython.org/) REPL enabling tab completion, syntax highlighting, better tracebacks, and better introspection while retaining the same interface as the `pdb` module.
+
+For more low level programming you will probably want to look into [`gdb`](https://www.gnu.org/software/gdb/) (and its quality of life modification [`pwndbg`](https://github.com/pwndbg/pwndbg)) and [`lldb`](https://lldb.llvm.org/). They are optimized for C-like language debugging but will let you probe pretty much any process and get its current machine state: registers, stack, program counter, &c.
+
+### 7.1.4 Specialized Tools
+
+Even if what you are trying to debug is a black box binary there are tools that can help you with that. Whenever programs need to perform actions that only the kernel can, they use [System Calls](https://en.wikipedia.org/wiki/System_call). There are commands that let you trace the syscalls your program makes. In Linux there’s [`strace`](https://www.man7.org/linux/man-pages/man1/strace.1.html) and macOS and BSD have [`dtrace`](http://dtrace.org/blogs/about/). `dtrace` can be tricky to use because it uses its own `D` language, but there is a wrapper called [`dtruss`](https://www.manpagez.com/man/1/dtruss/) that provides an interface more similar to `strace` (more details [here](https://8thlight.com/blog/colin-jones/2015/11/06/dtrace-even-better-than-strace-for-osx.html)).
+
+Below are some examples of using `strace` or `dtruss` to show [`stat`](https://www.man7.org/linux/man-pages/man2/stat.2.html) syscall traces for an execution of `ls`. For a deeper dive into `strace`, [this article](https://blogs.oracle.com/linux/strace-the-sysadmins-microscope-v2) and [this zine](https://jvns.ca/strace-zine-unfolded.pdf) are good reads.
+
+```
+# On Linux
+sudo strace -e lstat ls -l > /dev/null
+4
+# On macOS
+sudo dtruss -t lstat64_extended ls -l > /dev/null
+```
+
+Under some circumstances, you may need to look at the network packets to figure out the issue in your program. Tools like [`tcpdump`](https://www.man7.org/linux/man-pages/man1/tcpdump.1.html) and [Wireshark](https://www.wireshark.org/) are network packet analyzers that let you read the contents of network packets and filter them based on different criteria.
+
+For web development, the Chrome/Firefox developer tools are quite handy. They feature a large number of tools, including:
+
+-   Source code - Inspect the HTML/CSS/JS source code of any website.
+-   Live HTML, CSS, JS modification - Change the website content, styles and behavior to test (you can see for yourself that website screenshots are not valid proofs).
+-   Javascript shell - Execute commands in the JS REPL.
+-   Network - Analyze the requests timeline.
+-   Storage - Look into the Cookies and local application storage.
+
+### 7.1.5 Static Analysis
+
+For some issues you do not need to run any code. For example, just by carefully looking at a piece of code you could realize that your loop variable is shadowing an already existing variable or function name; or that a program reads a variable before defining it. Here is where [static analysis](https://en.wikipedia.org/wiki/Static_program_analysis) tools come into play. Static analysis programs take source code as input and analyze it using coding rules to reason about its correctness.
+
+In the following Python snippet there are several mistakes. First, our loop variable `foo` shadows the previous definition of the function `foo`. We also wrote `baz` instead of `bar` in the last line, so the program will crash after completing the `sleep` call (which will take one minute).
+
+```python
+import time
+
+def foo():
+    return 42
+
+for foo in range(5):
+    print(foo)
+bar = 1
+bar *= 0.2
+time.sleep(60)
+print(baz)
+```
+
+Static analysis tools can identify this kind of issues. When we run [`pyflakes`](https://pypi.org/project/pyflakes) on the code we get the errors related to both bugs. [`mypy`](http://mypy-lang.org/) is another tool that can detect type checking issues. Here, `mypy` will warn us that `bar` is initially an `int` and is then casted to a `float`. Again, note that all these issues were detected without having to run the code.
+
+```shell
+$ pyflakes foobar.py
+foobar.py:6: redefinition of unused 'foo' from line 3
+foobar.py:11: undefined name 'baz'
+
+$ mypy foobar.py
+foobar.py:6: error: Incompatible types in assignment (expression has type "int", variable has type "Callable[[], Any]")
+foobar.py:9: error: Incompatible types in assignment (expression has type "float", variable has type "int")
+foobar.py:11: error: Name 'baz' is not defined
+Found 3 errors in 1 file (checked 1 source file)
+```
+
+In the shell tools lecture we covered [`shellcheck`](https://www.shellcheck.net/), which is a similar tool for shell scripts.
+
+Most editors and IDEs support displaying the output of these tools within the editor itself, highlighting the locations of warnings and errors. This is often called **code linting** and it can also be used to display other types of issues such as stylistic violations or insecure constructs.
+
+In vim, the plugins [`ale`](https://vimawesome.com/plugin/ale) or [`syntastic`](https://vimawesome.com/plugin/syntastic) will let you do that. For Python, [`pylint`](https://github.com/PyCQA/pylint) and [`pep8`](https://pypi.org/project/pep8/) are examples of stylistic linters and [`bandit`](https://pypi.org/project/bandit/) is a tool designed to find common security issues. For other languages people have compiled comprehensive lists of useful static analysis tools, such as [Awesome Static Analysis](https://github.com/mre/awesome-static-analysis) (you may want to take a look at the _Writing_ section) and for linters there is [Awesome Linters](https://github.com/caramelomartins/awesome-linters).
+
+A complementary tool to stylistic linting are code formatters such as [`black`](https://github.com/psf/black) for Python, `gofmt` for Go, `rustfmt` for Rust or [`prettier`](https://prettier.io/) for JavaScript, HTML and CSS. These tools autoformat your code so that it’s consistent with common stylistic patterns for the given programming language. Although you might be unwilling to give stylistic control about your code, standardizing code format will help other people read your code and will make you better at reading other people’s (stylistically standardized) code.
+
+## 7.2 Profiling
+
+Even if your code functionally behaves as you would expect, that might not be good enough if it takes all your CPU or memory in the process. Algorithms classes often teach big _O_ notation but not how to find hot spots in your programs. Since [premature optimization is the root of all evil](http://wiki.c2.com/?PrematureOptimization), you should learn about profilers and monitoring tools. They will help you understand which parts of your program are taking most of the time and/or resources so you can focus on optimizing those parts.
+
+### 7.2.1 Timing
+
+Similarly to the debugging case, in many scenarios it can be enough to just print the time it took your code between two points. Here is an example in Python using the [`time`](https://docs.python.org/3/library/time.html) module.
+
+```python
+import time, random
+n = random.randint(1, 10) * 100
+
+# Get current time
+start = time.time()
+
+# Do some work
+print("Sleeping for {} ms".format(n))
+time.sleep(n/1000)
+
+# Compute time between start and now
+print(time.time() - start)
+
+# Output
+# Sleeping for 500 ms
+# 0.5713930130004883
+```
+
+However, wall clock time can be misleading since your computer might be running other processes at the same time or waiting for events to happen. It is common for tools to make a distinction between _Real_, _User_ and _Sys_ time. In general, _User_ + _Sys_ tells you how much time your process actually spent in the CPU (more detailed explanation [here](https://stackoverflow.com/questions/556405/what-do-real-user-and-sys-mean-in-the-output-of-time1)).
+
+-   _Real_ - Wall clock elapsed time from start to finish of the program, including the time taken by other processes and time taken while blocked (e.g. waiting for I/O or network)
+-   _User_ - Amount of time spent in the CPU running user code
+-   _Sys_ - Amount of time spent in the CPU running kernel code
+
+For example, try running a command that performs an HTTP request and prefixing it with [`time`](https://www.man7.org/linux/man-pages/man1/time.1.html). Under a slow connection you might get an output like the one below. Here it took over 2 seconds for the request to complete but the process only took 15ms of CPU user time and 12ms of kernel CPU time.
+
+```
+$ time curl https://missing.csail.mit.edu &> /dev/null
+real    0m2.561s
+user    0m0.015s
+sys     0m0.012s
+```
+
+### 7.2.2 Profilers
+
+#### 7.2.2.1 CPU
+
+Most of the time when people refer to _profilers_ they actually mean _CPU profilers_, which are the most common. There are two main types of CPU profilers: _tracing_ and _sampling_ profilers. Tracing profilers keep a record of every function call your program makes whereas sampling profilers probe your program periodically (commonly every millisecond) and record the program’s stack. They use these records to present aggregate statistics of what your program spent the most time doing. [Here](https://jvns.ca/blog/2017/12/17/how-do-ruby---python-profilers-work-) is a good intro article if you want more detail on this topic.
+
+Most programming languages have some sort of command line profiler that you can use to analyze your code. They often integrate with full fledged IDEs but for this lecture we are going to focus on the command line tools themselves.
+
+In Python we can use the `cProfile` module to profile time per function call. Here is a simple example that implements a rudimentary grep in Python:
+
+```python
+#!/usr/bin/env python
+
+import sys, re
+
+def grep(pattern, file):
+    with open(file, 'r') as f:
+        print(file)
+        for i, line in enumerate(f.readlines()):
+            pattern = re.compile(pattern)
+            match = pattern.search(line)
+            if match is not None:
+                print("{}: {}".format(i, line), end="")
+
+if __name__ == '__main__':
+    times = int(sys.argv[1])
+    pattern = sys.argv[2]
+    for i in range(times):
+        for file in sys.argv[3:]:
+            grep(pattern, file)
+```
+
+We can profile this code using the following command. Analyzing the output we can see that IO is taking most of the time and that compiling the regex takes a fair amount of time as well. Since the regex only needs to be compiled once, we can factor it out of the for.
+
+```
+$ python -m cProfile -s tottime grep.py 1000 '^(import|\s*def)[^,]*$' *.py
+
+[omitted program output]
+
+ ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+     8000    0.266    0.000    0.292    0.000 {built-in method io.open}
+     8000    0.153    0.000    0.894    0.000 grep.py:5(grep)
+    17000    0.101    0.000    0.101    0.000 {built-in method builtins.print}
+     8000    0.100    0.000    0.129    0.000 {method 'readlines' of '_io._IOBase' objects}
+    93000    0.097    0.000    0.111    0.000 re.py:286(_compile)
+    93000    0.069    0.000    0.069    0.000 {method 'search' of '_sre.SRE_Pattern' objects}
+    93000    0.030    0.000    0.141    0.000 re.py:231(compile)
+    17000    0.019    0.000    0.029    0.000 codecs.py:318(decode)
+        1    0.017    0.017    0.911    0.911 grep.py:3(<module>)
+
+[omitted lines]
+```
+
+A caveat of Python’s `cProfile` profiler (and many profilers for that matter) is that they display time per function call. That can become unintuitive really fast, especially if you are using third party libraries in your code since internal function calls are also accounted for. A more intuitive way of displaying profiling information is to include the time taken per line of code, which is what _line profilers_ do.
+
+For instance, the following piece of Python code performs a request to the class website and parses the response to get all URLs in the page:
+
+```python
+#!/usr/bin/env python
+import requests
+from bs4 import BeautifulSoup
+
+# This is a decorator that tells line_profiler
+# that we want to analyze this function
+@profile
+def get_urls():
+    response = requests.get('https://missing.csail.mit.edu')
+    s = BeautifulSoup(response.content, 'lxml')
+    urls = []
+    for url in s.find_all('a'):
+        urls.append(url['href'])
+
+if __name__ == '__main__':
+    get_urls()
+```
+
+If we used Python’s `cProfile` profiler we’d get over 2500 lines of output, and even with sorting it’d be hard to understand where the time is being spent. A quick run with [`line_profiler`](https://github.com/pyutils/line_profiler) shows the time taken per line:
+
+```
+$ kernprof -l -v a.py
+Wrote profile results to urls.py.lprof
+Timer unit: 1e-06 s
+
+Total time: 0.636188 s
+File: a.py
+Function: get_urls at line 5
+
+Line #  Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+ 5                                           @profile
+ 6                                           def get_urls():
+ 7         1     613909.0 613909.0     96.5      response = requests.get('https://missing.csail.mit.edu')
+ 8         1      21559.0  21559.0      3.4      s = BeautifulSoup(response.content, 'lxml')
+ 9         1          2.0      2.0      0.0      urls = []
+10        25        685.0     27.4      0.1      for url in s.find_all('a'):
+11        24         33.0      1.4      0.0          urls.append(url['href'])
+```
+
+#### 7.2.2.2 Memory
+
+In languages like C or C++ memory leaks can cause your program to never release memory that it doesn’t need anymore. To help in the process of memory debugging you can use tools like [Valgrind](https://valgrind.org/) that will help you identify memory leaks.
+
+In garbage collected languages like Python it is still useful to use a memory profiler because as long as you have pointers to objects in memory they won’t be garbage collected. Here’s an example program and its associated output when running it with [memory-profiler](https://pypi.org/project/memory-profiler/) (note the decorator like in `line-profiler`).
+
+```
+@profile
+def my_func():
+    a = [1] * (10 ** 6)
+    b = [2] * (2 * 10 ** 7)
+    del b
+    return a
+
+if __name__ == '__main__':
+    my_func()
+```
+
+```
+$ python -m memory_profiler example.py
+Line #    Mem usage  Increment   Line Contents
+==============================================
+     3                           @profile
+     4      5.97 MB    0.00 MB   def my_func():
+     5     13.61 MB    7.64 MB       a = [1] * (10 ** 6)
+     6    166.20 MB  152.59 MB       b = [2] * (2 * 10 ** 7)
+     7     13.61 MB -152.59 MB       del b
+     8     13.61 MB    0.00 MB       return a
+```
+
+#### 7.2.2.3 Event Profiling
+
+As it was the case for `strace` for debugging, you might want to ignore the specifics of the code that you are running and treat it like a black box when profiling. The [`perf`](https://www.man7.org/linux/man-pages/man1/perf.1.html) command abstracts CPU differences away and does not report time or memory, but instead it reports system events related to your programs. For example, `perf` can easily report poor cache locality, high amounts of page faults or livelocks. Here is an overview of the command:
+
+-   `perf list` - List the events that can be traced with perf
+-   `perf stat COMMAND ARG1 ARG2` - Gets counts of different events related a process or command
+-   `perf record COMMAND ARG1 ARG2` - Records the run of a command and saves the statistical data into a file called `perf.data`
+-   `perf report` - Formats and prints the data collected in `perf.data`
+
+#### 7.2.2.4 Visualization
+
+Profiler output for real world programs will contain large amounts of information because of the inherent complexity of software projects. Humans are visual creatures and are quite terrible at reading large amounts of numbers and making sense of them. Thus there are many tools for displaying profiler’s output in an easier to parse way.
+
+One common way to display CPU profiling information for sampling profilers is to use a [Flame Graph](http://www.brendangregg.com/flamegraphs.html), which will display a hierarchy of function calls across the Y axis and time taken proportional to the X axis. They are also interactive, letting you zoom into specific parts of the program and get their stack traces (try clicking in the image below).
+
+![[Study Log/resources/cpu-bash-flamegraph.svg]]
+
+Call graphs or control flow graphs display the relationships between subroutines within a program by including functions as nodes and functions calls between them as directed edges. When coupled with profiling information such as the number of calls and time taken, call graphs can be quite useful for interpreting the flow of a program. In Python you can use the [`pycallgraph`](https://pycallgraph.readthedocs.io/) library to generate them.
+
+![[Study Log/resources/Pasted image 20230113125922.png]]
+
+### 7.2.3 Resource Monitoring
+
+Sometimes, the first step towards analyzing the performance of your program is to understand what its actual resource consumption is. Programs often run slowly when they are resource constrained, e.g. without enough memory or on a slow network connection. There are a myriad of command line tools for probing and displaying different system resources like CPU usage, memory usage, network, disk usage and so on.
+
+-   **General Monitoring** - Probably the most popular is [`htop`](https://htop.dev/), which is an improved version of [`top`](https://www.man7.org/linux/man-pages/man1/top.1.html). `htop` presents various statistics for the currently running processes on the system. `htop` has a myriad of options and keybinds, some useful ones are: `<F6>` to sort processes, `t` to show tree hierarchy and `h` to toggle threads. See also [`glances`](https://nicolargo.github.io/glances/) for similar implementation with a great UI. For getting aggregate measures across all processes, [`dstat`](http://dag.wiee.rs/home-made/dstat/) is another nifty tool that computes real-time resource metrics for lots of different subsystems like I/O, networking, CPU utilization, context switches, &c.
+-   **I/O operations** - [`iotop`](https://www.man7.org/linux/man-pages/man8/iotop.8.html) displays live I/O usage information and is handy to check if a process is doing heavy I/O disk operations
+-   **Disk Usage** - [`df`](https://www.man7.org/linux/man-pages/man1/df.1.html) displays metrics per partitions and [`du`](http://man7.org/linux/man-pages/man1/du.1.html) displays **d**isk **u**sage per file for the current directory. In these tools the `-h` flag tells the program to print with **h**uman readable format. A more interactive version of `du` is [`ncdu`](https://dev.yorhel.nl/ncdu) which lets you navigate folders and delete files and folders as you navigate.
+-   **Memory Usage** - [`free`](https://www.man7.org/linux/man-pages/man1/free.1.html) displays the total amount of free and used memory in the system. Memory is also displayed in tools like `htop`.
+-   **Open Files** - [`lsof`](https://www.man7.org/linux/man-pages/man8/lsof.8.html) lists file information about files opened by processes. It can be quite useful for checking which process has opened a specific file.
+-   **Network Connections and Config** - [`ss`](https://www.man7.org/linux/man-pages/man8/ss.8.html) lets you monitor incoming and outgoing network packets statistics as well as interface statistics. A common use case of `ss` is figuring out what process is using a given port in a machine. For displaying routing, network devices and interfaces you can use [`ip`](http://man7.org/linux/man-pages/man8/ip.8.html). Note that `netstat` and `ifconfig` have been deprecated in favor of the former tools respectively.
+-   **Network Usage** - [`nethogs`](https://github.com/raboof/nethogs) and [`iftop`](http://www.ex-parrot.com/pdw/iftop/) are good interactive CLI tools for monitoring network usage.
+
+If you want to test these tools you can also artificially impose loads on the machine using the [`stress`](https://linux.die.net/man/1/stress) command.
+
+#### 7.2.3.1 Specialized tools
+
+Sometimes, black box benchmarking is all you need to determine what software to use. Tools like [`hyperfine`](https://github.com/sharkdp/hyperfine) let you quickly benchmark command line programs. For instance, in the shell tools and scripting lecture we recommended `fd` over `find`. We can use `hyperfine` to compare them in tasks we run often. E.g. in the example below `fd` was 20x faster than `find` in my machine.
+
+```
+$ hyperfine --warmup 3 'fd -e jpg' 'find . -iname "*.jpg"'
+Benchmark #1: fd -e jpg
+  Time (mean ± σ):      51.4 ms ±   2.9 ms    [User: 121.0 ms, System: 160.5 ms]
+  Range (min … max):    44.2 ms …  60.1 ms    56 runs
+
+Benchmark #2: find . -iname "*.jpg"
+  Time (mean ± σ):      1.126 s ±  0.101 s    [User: 141.1 ms, System: 956.1 ms]
+  Range (min … max):    0.975 s …  1.287 s    10 runs
+
+Summary
+  'fd -e jpg' ran
+   21.89 ± 2.33 times faster than 'find . -iname "*.jpg"'
+```
+
+As it was the case for debugging, browsers also come with a fantastic set of tools for profiling webpage loading, letting you figure out where time is being spent (loading, rendering, scripting, &c). More info for [Firefox](https://profiler.firefox.com/docs/) and [Chrome](https://developers.google.com/web/tools/chrome-devtools/rendering-tools).
+
+## 7.3 Exercises
+
+### 7.3.1 Debugging
+
+1.  Use `journalctl` on Linux or `log show` on macOS to get the super user accesses and commands in the last day. If there aren’t any you can execute some harmless commands such as `sudo ls` and check again.
+    
+2.  Do [this](https://github.com/spiside/pdb-tutorial) hands on `pdb` tutorial to familiarize yourself with the commands. For a more in depth tutorial read [this](https://realpython.com/python-debugging-pdb).
+    
+3.  Install [`shellcheck`](https://www.shellcheck.net/) and try checking the following script. What is wrong with the code? Fix it. Install a linter plugin in your editor so you can get your warnings automatically.
+    
+    ```
+    #!/bin/sh
+    ## Example: a typical script with several problems
+    for f in $(ls *.m3u)
+    do
+      grep -qi hq.*mp3 $f \
+        && echo -e 'Playlist $f contains a HQ file in mp3 format'
+    done
+    ```
+    
+4.  (Advanced) Read about [reversible debugging](https://undo.io/resources/reverse-debugging-whitepaper/) and get a simple example working using [`rr`](https://rr-project.org/) or [`RevPDB`](https://morepypy.blogspot.com/2016/07/reverse-debugging-for-python.html).
+
+### 7.3.2 Profiling
+
+5.  [Here](https://missing.csail.mit.edu/static/files/sorts.py) are some sorting algorithm implementations. Use [`cProfile`](https://docs.python.org/3/library/profile.html) and [`line_profiler`](https://github.com/pyutils/line_profiler) to compare the runtime of insertion sort and quicksort. What is the bottleneck of each algorithm? Use then `memory_profiler` to check the memory consumption, why is insertion sort better? Check now the inplace version of quicksort. Challenge: Use `perf` to look at the cycle counts and cache hits and misses of each algorithm.
+    
+6.  Here’s some (arguably convoluted) Python code for computing Fibonacci numbers using a function for each number.
+    
+    ```
+    #!/usr/bin/env python
+    def fib0(): return 0
+    
+    def fib1(): return 1
+    
+    s = """def fib{}(): return fib{}() + fib{}()"""
+    
+    if __name__ == '__main__':
+    
+        for n in range(2, 10):
+            exec(s.format(n, n-1, n-2))
+        # from functools import lru_cache
+        # for n in range(10):
+        #     exec("fib{} = lru_cache(1)(fib{})".format(n, n))
+        print(eval("fib9()"))
+    ```
+    
+    Put the code into a file and make it executable. Install prerequisites: [`pycallgraph`](https://pycallgraph.readthedocs.io/) and [`graphviz`](http://graphviz.org/). (If you can run `dot`, you already have GraphViz.) Run the code as is with `pycallgraph graphviz -- ./fib.py` and check the `pycallgraph.png` file. How many times is `fib0` called?. We can do better than that by memoizing the functions. Uncomment the commented lines and regenerate the images. How many times are we calling each `fibN` function now?
+    
+7.  A common issue is that a port you want to listen on is already taken by another process. Let’s learn how to discover that process pid. First execute `python -m http.server 4444` to start a minimal web server listening on port `4444`. On a separate terminal run `lsof | grep LISTEN` to print all listening processes and ports. Find that process pid and terminate it by running `kill <PID>`.
+    
+8.  Limiting processes resources can be another handy tool in your toolbox. Try running `stress -c 3` and visualize the CPU consumption with `htop`. Now, execute `taskset --cpu-list 0,2 stress -c 3` and visualize it. Is `stress` taking three CPUs? Why not? Read [`man taskset`](https://www.man7.org/linux/man-pages/man1/taskset.1.html). Challenge: achieve the same using [`cgroups`](https://www.man7.org/linux/man-pages/man7/cgroups.7.html). Try limiting the memory consumption of `stress -m`.
+    
+9.  (Advanced) The command `curl ipinfo.io` performs a HTTP request and fetches information about your public IP. Open [Wireshark](https://www.wireshark.org/) and try to sniff the request and reply packets that `curl` sent and received. (Hint: Use the `http` filter to just watch HTTP packets).
+
+# 8. Metaprogramming
+
+What do we mean by “metaprogramming”? Well, it was the best collective term we could come up with for the set of things that are more about _process_ than they are about writing code or working more efficiently. In this lecture, we will look at systems for building and testing your code, and for managing dependencies. These may seem like they are of limited importance in your day-to-day as a student, but the moment you interact with a larger code base through an internship or once you enter the “real world”, you will see this everywhere. We should note that “metaprogramming” can also mean “[programs that operate on programs](https://en.wikipedia.org/wiki/Metaprogramming)”, whereas that is not quite the definition we are using for the purposes of this lecture.
+
+## 8.1 Build systems
+
+If you write a paper in LaTeX, what are the commands you need to run to produce your paper? What about the ones used to run your benchmarks, plot them, and then insert that plot into your paper? Or to compile the code provided in the class you’re taking and then running the tests?
+
+For most projects, whether they contain code or not, there is a “build process”. Some sequence of operations you need to do to go from your inputs to your outputs. Often, that process might have many steps, and many branches. Run this to generate this plot, that to generate those results, and something else to produce the final paper. As with so many of the things we have seen in this class, you are not the first to encounter this annoyance, and luckily there exist many tools to help you!
+
+These are usually called “build systems”, and there are _many_ of them. Which one you use depends on the task at hand, your language of preference, and the size of the project. At their core, they are all very similar though. You define a number of _dependencies_, a number of _targets_, and _rules_ for going from one to the other. You tell the build system that you want a particular target, and its job is to find all the transitive dependencies of that target, and then apply the rules to produce intermediate targets all the way until the final target has been produced. Ideally, the build system does this without unnecessarily executing rules for targets whose dependencies haven’t changed and where the result is available from a previous build.
+
+`make` is one of the most common build systems out there, and you will usually find it installed on pretty much any UNIX-based computer. It has its warts, but works quite well for simple-to-moderate projects. When you run `make`, it consults a file called `Makefile` in the current directory. All the targets, their dependencies, and the rules are defined in that file. Let’s take a look at one:
+
+```
+paper.pdf: paper.tex plot-data.png
+	pdflatex paper.tex
+
+plot-%.png: %.dat plot.py
+	./plot.py -i $*.dat -o $@
+```
+
+Each directive in this file is a rule for how to produce the left-hand side using the right-hand side. Or, phrased differently, the things named on the right-hand side are dependencies, and the left-hand side is the target. The indented block is a sequence of programs to produce the target from those dependencies. In `make`, the first directive also defines the default goal. If you run `make` with no arguments, this is the target it will build. Alternatively, you can run something like `make plot-data.png`, and it will build that target instead.
+
+The `%` in a rule is a “pattern”, and will match the same string on the left and on the right. For example, if the target `plot-foo.png` is requested, `make` will look for the dependencies `foo.dat` and `plot.py`. Now let’s look at what happens if we run `make` with an empty source directory.
+
+```
+$ make
+make: *** No rule to make target 'paper.tex', needed by 'paper.pdf'.  Stop.
+```
+
+`make` is helpfully telling us that in order to build `paper.pdf`, it needs `paper.tex`, and it has no rule telling it how to make that file. Let’s try making it!
+
+```
+$ touch paper.tex
+$ make
+make: *** No rule to make target 'plot-data.png', needed by 'paper.pdf'.  Stop.
+```
+
+Hmm, interesting, there _is_ a rule to make `plot-data.png`, but it is a pattern rule. Since the source files do not exist (`data.dat`), `make` simply states that it cannot make that file. Let’s try creating all the files:
+
+```
+$ cat paper.tex
+\documentclass{article}
+\usepackage{graphicx}
+\begin{document}
+\includegraphics[scale=0.65]{plot-data.png}
+\end{document}
+$ cat plot.py
+#!/usr/bin/env python
+import matplotlib
+import matplotlib.pyplot as plt
+import numpy as np
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument('-i', type=argparse.FileType('r'))
+parser.add_argument('-o')
+args = parser.parse_args()
+
+data = np.loadtxt(args.i)
+plt.plot(data[:, 0], data[:, 1])
+plt.savefig(args.o)
+$ cat data.dat
+1 1
+2 2
+3 3
+4 4
+5 8
+```
+
+Now what happens if we run `make`?
+
+```
+$ make
+./plot.py -i data.dat -o plot-data.png
+pdflatex paper.tex
+... lots of output ...
+```
+
+And look, it made a PDF for us! What if we run `make` again?
+
+```
+$ make
+make: 'paper.pdf' is up to date.
+```
+
+It didn’t do anything! Why not? Well, because it didn’t need to. It checked that all of the previously-built targets were still up to date with respect to their listed dependencies. We can test this by modifying `paper.tex` and then re-running `make`:
+
+```
+$ vim paper.tex
+$ make
+pdflatex paper.tex
+...
+```
+
+Notice that `make` did _not_ re-run `plot.py` because that was not necessary; none of `plot-data.png`’s dependencies changed!
+
+## 8.2 Dependency management
+
+At a more macro level, your software projects are likely to have dependencies that are themselves projects. You might depend on installed programs (like `python`), system packages (like `openssl`), or libraries within your programming language (like `matplotlib`). These days, most dependencies will be available through a _repository_ that hosts a large number of such dependencies in a single place, and provides a convenient mechanism for installing them. Some examples include the Ubuntu package repositories for Ubuntu system packages, which you access through the `apt` tool, RubyGems for Ruby libraries, PyPi for Python libraries, or the Arch User Repository for Arch Linux user-contributed packages.
+
+Since the exact mechanisms for interacting with these repositories vary a lot from repository to repository and from tool to tool, we won’t go too much into the details of any specific one in this lecture. What we _will_ cover is some of the common terminology they all use. The first among these is _versioning_. Most projects that other projects depend on issue a _version number_ with every release. Usually something like 8.1.3 or 64.1.20192004. They are often, but not always, numerical. Version numbers serve many purposes, and one of the most important of them is to ensure that software keeps working. Imagine, for example, that I release a new version of my library where I have renamed a particular function. If someone tried to build some software that depends on my library after I release that update, the build might fail because it calls a function that no longer exists! Versioning attempts to solve this problem by letting a project say that it depends on a particular version, or range of versions, of some other project. That way, even if the underlying library changes, dependent software continues building by using an older version of my library.
+
+That also isn’t ideal though! What if I issue a security update which does _not_ change the public interface of my library (its “API”), and which any project that depended on the old version should immediately start using? This is where the different groups of numbers in a version come in. The exact meaning of each one varies between projects, but one relatively common standard is [_semantic versioning_](https://semver.org/). With semantic versioning, every version number is of the form: major.minor.patch. The rules are:
+
+-   If a new release does not change the API, increase the patch version.
+-   If you _add_ to your API in a backwards-compatible way, increase the minor version.
+-   If you change the API in a non-backwards-compatible way, increase the major version.
+
+This already provides some major advantages. Now, if my project depends on your project, it _should_ be safe to use the latest release with the same major version as the one I built against when I developed it, as long as its minor version is at least what it was back then. In other words, if I depend on your library at version `1.3.7`, then it _should_ be fine to build it with `1.3.8`, `1.6.1`, or even `1.3.0`. Version `2.2.4` would probably not be okay, because the major version was increased. We can see an example of semantic versioning in Python’s version numbers. Many of you are probably aware that Python 2 and Python 3 code do not mix very well, which is why that was a _major_ version bump. Similarly, code written for Python 3.5 might run fine on Python 3.7, but possibly not on 3.4.
+
+When working with dependency management systems, you may also come across the notion of _lock files_. A lock file is simply a file that lists the exact version you are _currently_ depending on of each dependency. Usually, you need to explicitly run an update program to upgrade to newer versions of your dependencies. There are many reasons for this, such as avoiding unnecessary recompiles, having reproducible builds, or not automatically updating to the latest version (which may be broken). An extreme version of this kind of dependency locking is _vendoring_, which is where you copy all the code of your dependencies into your own project. That gives you total control over any changes to it, and lets you introduce your own changes to it, but also means you have to explicitly pull in any updates from the upstream maintainers over time.
+
+## 8.3 Continuous integration systems
+
+As you work on larger and larger projects, you’ll find that there are often additional tasks you have to do whenever you make a change to it. You might have to upload a new version of the documentation, upload a compiled version somewhere, release the code to pypi, run your test suite, and all sort of other things. Maybe every time someone sends you a pull request on GitHub, you want their code to be style checked and you want some benchmarks to run? When these kinds of needs arise, it’s time to take a look at continuous integration.
+
+Continuous integration, or CI, is an umbrella term for “stuff that runs whenever your code changes”, and there are many companies out there that provide various types of CI, often for free for open-source projects. Some of the big ones are Travis CI, Azure Pipelines, and GitHub Actions. They all work in roughly the same way: you add a file to your repository that describes what should happen when various things happen to that repository. By far the most common one is a rule like “when someone pushes code, run the test suite”. When the event triggers, the CI provider spins up a virtual machines (or more), runs the commands in your “recipe”, and then usually notes down the results somewhere. You might set it up so that you are notified if the test suite stops passing, or so that a little badge appears on your repository as long as the tests pass.
+
+As an example of a CI system, the class website is set up using GitHub Pages. Pages is a CI action that runs the Jekyll blog software on every push to `master` and makes the built site available on a particular GitHub domain. This makes it trivial for us to update the website! We just make our changes locally, commit them with git, and then push. CI takes care of the rest.
+
+### 8.3.1 A brief aside on testing
+
+Most large software projects come with a “test suite”. You may already be familiar with the general concept of testing, but we thought we’d quickly mention some approaches to testing and testing terminology that you may encounter in the wild:
+
+-   Test suite: a collective term for all the tests
+-   Unit test: a “micro-test” that tests a specific feature in isolation
+-   Integration test: a “macro-test” that runs a larger part of the system to check that different feature or components work _together_.
+-   Regression test: a test that implements a particular pattern that _previously_ caused a bug to ensure that the bug does not resurface.
+-   Mocking: to replace a function, module, or type with a fake implementation to avoid testing unrelated functionality. For example, you might “mock the network” or “mock the disk”.
+
+## 8.4 Exercises
+
+1.  Most makefiles provide a target called `clean`. This isn’t intended to produce a file called `clean`, but instead to clean up any files that can be re-built by make. Think of it as a way to “undo” all of the build steps. Implement a `clean` target for the `paper.pdf` `Makefile` above. You will have to make the target [phony](https://www.gnu.org/software/make/manual/html_node/Phony-Targets.html). You may find the [`git ls-files`](https://git-scm.com/docs/git-ls-files) subcommand useful. A number of other very common make targets are listed [here](https://www.gnu.org/software/make/manual/html_node/Standard-Targets.html#Standard-Targets).
+2.  Take a look at the various ways to specify version requirements for dependencies in [Rust’s build system](https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html). Most package repositories support similar syntax. For each one (caret, tilde, wildcard, comparison, and multiple), try to come up with a use-case in which that particular kind of requirement makes sense.
+3.  Git can act as a simple CI system all by itself. In `.git/hooks` inside any git repository, you will find (currently inactive) files that are run as scripts when a particular action happens. Write a [`pre-commit`](https://git-scm.com/docs/githooks#_pre_commit) hook that runs `make paper.pdf` and refuses the commit if the `make` command fails. This should prevent any commit from having an unbuildable version of the paper.
+4.  Set up a simple auto-published page using [GitHub Pages](https://pages.github.com/). Add a [GitHub Action](https://github.com/features/actions) to the repository to run `shellcheck` on any shell files in that repository (here is [one way to do it](https://github.com/marketplace/actions/shellcheck)). Check that it works!
+5.  [Build your own](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/building-actions) GitHub action to run [`proselint`](http://proselint.com/) or [`write-good`](https://github.com/btford/write-good) on all the `.md` files in the repository. Enable it in your repository, and check that it works by filing a pull request with a typo in it.
+
+# 9. Security and Cryptography
+
+Last year’s [security and privacy lecture](https://missing.csail.mit.edu/2019/security/) focused on how you can be more secure as a computer _user_. This year, we will focus on security and cryptography concepts that are relevant in understanding tools covered earlier in this class, such as the use of hash functions in Git or key derivation functions and symmetric/asymmetric cryptosystems in SSH.
+
+This lecture is not a substitute for a more rigorous and complete course on computer systems security ([6.858](https://css.csail.mit.edu/6.858/)) or cryptography ([6.857](https://courses.csail.mit.edu/6.857/) and 6.875). Don’t do security work without formal training in security. Unless you’re an expert, don’t [roll your own crypto](https://www.schneier.com/blog/archives/2015/05/amateurs_produc.html). The same principle applies to systems security.
+
+This lecture has a very informal (but we think practical) treatment of basic cryptography concepts. This lecture won’t be enough to teach you how to _design_ secure systems or cryptographic protocols, but we hope it will be enough to give you a general understanding of the programs and protocols you already use.
+
+## 9.1 Entropy
+
+[Entropy](https://en.wikipedia.org/wiki/Entropy_(information_theory)) is a measure of randomness. This is useful, for example, when determining the strength of a password.
+
+![[Study Log/resources/Pasted image 20230113131438.png]]
+
+As the above [XKCD comic](https://xkcd.com/936/) illustrates, a password like “correcthorsebatterystaple” is more secure than one like “Tr0ub4dor&3”. But how do you quantify something like this?
+
+Entropy is measured in _bits_, and when selecting uniformly at random from a set of possible outcomes, the entropy is equal to `log_2(# of possibilities)`. A fair coin flip gives 1 bit of entropy. A dice roll (of a 6-sided die) has ~2.58 bits of entropy.
+
+You should consider that the attacker knows the _model_ of the password, but not the randomness (e.g. from [dice rolls](https://en.wikipedia.org/wiki/Diceware)) used to select a particular password.
+
+How many bits of entropy is enough? It depends on your threat model. For online guessing, as the XKCD comic points out, ~40 bits of entropy is pretty good. To be resistant to offline guessing, a stronger password would be necessary (e.g. 80 bits, or more).
+
+## 9.2 Hash functions
+
+A [cryptographic hash function](https://en.wikipedia.org/wiki/Cryptographic_hash_function) maps data of arbitrary size to a fixed size, and has some special properties. A rough specification of a hash function is as follows:
+
+```
+hash(value: array<byte>) -> vector<byte, N>  (for some fixed N)
+```
+
+An example of a hash function is [SHA1](https://en.wikipedia.org/wiki/SHA-1), which is used in Git. It maps arbitrary-sized inputs to 160-bit outputs (which can be represented as 40 hexadecimal characters). We can try out the SHA1 hash on an input using the `sha1sum` command:
+
+```
+$ printf 'hello' | sha1sum
+aaf4c61ddcc5e8a2dabede0f3b482cd9aea9434d
+$ printf 'hello' | sha1sum
+aaf4c61ddcc5e8a2dabede0f3b482cd9aea9434d
+$ printf 'Hello' | sha1sum 
+f7ff9e8b7bb2e09b70935a5d785e0cc5d9d0abf0
+```
+
+At a high level, a hash function can be thought of as a hard-to-invert random-looking (but deterministic) function (and this is the [ideal model of a hash function](https://en.wikipedia.org/wiki/Random_oracle)). A hash function has the following properties:
+
+-   Deterministic: the same input always generates the same output.
+-   Non-invertible: it is hard to find an input `m` such that `hash(m) = h` for some desired output `h`.
+-   Target collision resistant: given an input `m_1`, it’s hard to find a different input `m_2` such that `hash(m_1) = hash(m_2)`.
+-   Collision resistant: it’s hard to find two inputs `m_1` and `m_2` such that `hash(m_1) = hash(m_2)` (note that this is a strictly stronger property than target collision resistance).
+
+Note: while it may work for certain purposes, SHA-1 is [no longer](https://shattered.io/) considered a strong cryptographic hash function. You might find this table of [lifetimes of cryptographic hash functions](https://valerieaurora.org/hash.html) interesting. However, note that recommending specific hash functions is beyond the scope of this lecture. If you are doing work where this matters, you need formal training in security/cryptography.
+
+### 9.2.1 Applications
+
+-   Git, for content-addressed storage. The idea of a [hash function](https://en.wikipedia.org/wiki/Hash_function) is a more general concept (there are non-cryptographic hash functions). Why does Git use a cryptographic hash function?
+-   A short summary of the contents of a file. Software can often be downloaded from (potentially less trustworthy) mirrors, e.g. Linux ISOs, and it would be nice to not have to trust them. The official sites usually post hashes alongside the download links (that point to third-party mirrors), so that the hash can be checked after downloading a file.
+-   [Commitment schemes](https://en.wikipedia.org/wiki/Commitment_scheme). Suppose you want to commit to a particular value, but reveal the value itself later. For example, I want to do a fair coin toss “in my head”, without a trusted shared coin that two parties can see. I could choose a value `r = random()`, and then share `h = sha256(r)`. Then, you could call heads or tails (we’ll agree that even `r` means heads, and odd `r` means tails). After you call, I can reveal my value `r`, and you can confirm that I haven’t cheated by checking `sha256(r)` matches the hash I shared earlier.
+
+## 9.3 Key derivation functions
+
+A related concept to cryptographic hashes, [key derivation functions](https://en.wikipedia.org/wiki/Key_derivation_function) (KDFs) are used for a number of applications, including producing fixed-length output for use as keys in other cryptographic algorithms. Usually, KDFs are deliberately slow, in order to slow down offline brute-force attacks.
+
+### 9.3.1 Applications
+
+-   Producing keys from passphrases for use in other cryptographic algorithms (e.g. symmetric cryptography, see below).
+-   Storing login credentials. Storing plaintext passwords is bad; the right approach is to generate and store a random [salt](https://en.wikipedia.org/wiki/Salt_(cryptography)) `salt = random()` for each user, store `KDF(password + salt)`, and verify login attempts by re-computing the KDF given the entered password and the stored salt.
+
+## 9.4 Symmetric cryptography
+
+Hiding message contents is probably the first concept you think about when you think about cryptography. Symmetric cryptography accomplishes this with the following set of functionality:
+
+```
+keygen() -> key  (this function is randomized)
+
+encrypt(plaintext: array<byte>, key) -> array<byte>  (the ciphertext)
+decrypt(ciphertext: array<byte>, key) -> array<byte>  (the plaintext)
+```
+
+The encrypt function has the property that given the output (ciphertext), it’s hard to determine the input (plaintext) without the key. The decrypt function has the obvious correctness property, that `decrypt(encrypt(m, k), k) = m`.
+
+An example of a symmetric cryptosystem in wide use today is [AES](https://en.wikipedia.org/wiki/Advanced_Encryption_Standard).
+
+### 9.4.1 Applications
+
+-   Encrypting files for storage in an untrusted cloud service. This can be combined with KDFs, so you can encrypt a file with a passphrase. Generate `key = KDF(passphrase)`, and then store `encrypt(file, key)`.
+
+## 9.5 Asymmetric cryptography
+
+The term “asymmetric” refers to there being two keys, with two different roles. A private key, as its name implies, is meant to be kept private, while the public key can be publicly shared and it won’t affect security (unlike sharing the key in a symmetric cryptosystem). Asymmetric cryptosystems provide the following set of functionality, to encrypt/decrypt and to sign/verify:
+
+```
+keygen() -> (public key, private key)  (this function is randomized)
+
+encrypt(plaintext: array<byte>, public key) -> array<byte>  (the ciphertext)
+decrypt(ciphertext: array<byte>, private key) -> array<byte>  (the plaintext)
+
+sign(message: array<byte>, private key) -> array<byte>  (the signature)
+verify(message: array<byte>, signature: array<byte>, public key) -> bool  (whether or not the signature is valid)
+```
+
+The encrypt/decrypt functions have properties similar to their analogs from symmetric cryptosystems. A message can be encrypted using the _public_ key. Given the output (ciphertext), it’s hard to determine the input (plaintext) without the _private_ key. The decrypt function has the obvious correctness property, that `decrypt(encrypt(m, public key), private key) = m`.
+
+Symmetric and asymmetric encryption can be compared to physical locks. A symmetric cryptosystem is like a door lock: anyone with the key can lock and unlock it. Asymmetric encryption is like a padlock with a key. You could give the unlocked lock to someone (the public key), they could put a message in a box and then put the lock on, and after that, only you could open the lock because you kept the key (the private key).
+
+The sign/verify functions have the same properties that you would hope physical signatures would have, in that it’s hard to forge a signature. No matter the message, without the _private_ key, it’s hard to produce a signature such that `verify(message, signature, public key)` returns true. And of course, the verify function has the obvious correctness property that `verify(message, sign(message, private key), public key) = true`.
+
+### 9.5.1 Applications
+
+-   [PGP email encryption](https://en.wikipedia.org/wiki/Pretty_Good_Privacy). People can have their public keys posted online (e.g. in a PGP keyserver, or on [Keybase](https://keybase.io/)). Anyone can send them encrypted email.
+-   Private messaging. Apps like [Signal](https://signal.org/) and [Keybase](https://keybase.io/) use asymmetric keys to establish private communication channels.
+-   Signing software. Git can have GPG-signed commits and tags. With a posted public key, anyone can verify the authenticity of downloaded software.
+
+### 9.5.2 Key distribution
+
+Asymmetric-key cryptography is wonderful, but it has a big challenge of distributing public keys / mapping public keys to real-world identities. There are many solutions to this problem. Signal has one simple solution: trust on first use, and support out-of-band public key exchange (you verify your friends’ “safety numbers” in person). PGP has a different solution, which is [web of trust](https://en.wikipedia.org/wiki/Web_of_trust). Keybase has yet another solution of [social proof](https://keybase.io/blog/chat-apps-softer-than-tofu) (along with other neat ideas). Each model has its merits; we (the instructors) like Keybase’s model.
+
+## 9.6 Case studies
+
+### 9.6.1 Password managers
+
+This is an essential tool that everyone should try to use (e.g. [KeePassXC](https://keepassxc.org/), [pass](https://www.passwordstore.org/), and [1Password](https://1password.com/)). Password managers make it convenient to use unique, randomly generated high-entropy passwords for all your logins, and they save all your passwords in one place, encrypted with a symmetric cipher with a key produced from a passphrase using a KDF.
+
+Using a password manager lets you avoid password reuse (so you’re less impacted when websites get compromised), use high-entropy passwords (so you’re less likely to get compromised), and only need to remember a single high-entropy password.
+
+### 9.6.2 Two-factor authentication
+
+[Two-factor authentication](https://en.wikipedia.org/wiki/Multi-factor_authentication) (2FA) requires you to use a passphrase (“something you know”) along with a 2FA authenticator (like a [YubiKey](https://www.yubico.com/), “something you have”) in order to protect against stolen passwords and [phishing](https://en.wikipedia.org/wiki/Phishing) attacks.
+
+### 9.6.3 Full disk encryption
+
+Keeping your laptop’s entire disk encrypted is an easy way to protect your data in the case that your laptop is stolen. You can use [cryptsetup + LUKS](https://wiki.archlinux.org/index.php/Dm-crypt/Encrypting_a_non-root_file_system) on Linux, [BitLocker](https://fossbytes.com/enable-full-disk-encryption-windows-10/) on Windows, or [FileVault](https://support.apple.com/en-us/HT204837) on macOS. This encrypts the entire disk with a symmetric cipher, with a key protected by a passphrase.
+
+### 9.6.4 Private messaging
+
+Use [Signal](https://signal.org/) or [Keybase](https://keybase.io/). End-to-end security is bootstrapped from asymmetric-key encryption. Obtaining your contacts’ public keys is the critical step here. If you want good security, you need to authenticate public keys out-of-band (with Signal or Keybase), or trust social proofs (with Keybase).
+
+### 9.6.5 SSH
+
+We’ve covered the use of SSH and SSH keys in an [earlier lecture](https://missing.csail.mit.edu/2020/command-line/#remote-machines). Let’s look at the cryptography aspects of this.
+
+When you run `ssh-keygen`, it generates an asymmetric keypair, `public_key, private_key`. This is generated randomly, using entropy provided by the operating system (collected from hardware events, etc.). The public key is stored as-is (it’s public, so keeping it a secret is not important), but at rest, the private key should be encrypted on disk. The `ssh-keygen` program prompts the user for a passphrase, and this is fed through a key derivation function to produce a key, which is then used to encrypt the private key with a symmetric cipher.
+
+In use, once the server knows the client’s public key (stored in the `.ssh/authorized_keys` file), a connecting client can prove its identity using asymmetric signatures. This is done through [challenge-response](https://en.wikipedia.org/wiki/Challenge%E2%80%93response_authentication). At a high level, the server picks a random number and sends it to the client. The client then signs this message and sends the signature back to the server, which checks the signature against the public key on record. This effectively proves that the client is in possession of the private key corresponding to the public key that’s in the server’s `.ssh/authorized_keys` file, so the server can allow the client to log in.
+
+## 9.7 Resources
+
+-   [Last year’s notes](https://missing.csail.mit.edu/2019/security/): from when this lecture was more focused on security and privacy as a computer user
+-   [Cryptographic Right Answers](https://latacora.micro.blog/2018/04/03/cryptographic-right-answers.html): answers “what crypto should I use for X?” for many common X.
+
+## 9.8 Exercises
+
+1.  **Entropy.**
+    1.  Suppose a password is chosen as a concatenation of four lower-case dictionary words, where each word is selected uniformly at random from a dictionary of size 100,000. An example of such a password is `correcthorsebatterystaple`. How many bits of entropy does this have?
+    2.  Consider an alternative scheme where a password is chosen as a sequence of 8 random alphanumeric characters (including both lower-case and upper-case letters). An example is `rg8Ql34g`. How many bits of entropy does this have?
+    3.  Which is the stronger password?
+    4.  Suppose an attacker can try guessing 10,000 passwords per second. On average, how long will it take to break each of the passwords?
+2.  **Cryptographic hash functions.** Download a Debian image from a [mirror](https://www.debian.org/CD/http-ftp/) (e.g. [from this Argentinean mirror](http://debian.xfree.com.ar/debian-cd/current/amd64/iso-cd/)). Cross-check the hash (e.g. using the `sha256sum` command) with the hash retrieved from the official Debian site (e.g. [this file](https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/SHA256SUMS) hosted at `debian.org`, if you’ve downloaded the linked file from the Argentinean mirror).
+3.  **Symmetric cryptography.** Encrypt a file with AES encryption, using [OpenSSL](https://www.openssl.org/): `openssl aes-256-cbc -salt -in {input filename} -out {output filename}`. Look at the contents using `cat` or `hexdump`. Decrypt it with `openssl aes-256-cbc -d -in {input filename} -out {output filename}` and confirm that the contents match the original using `cmp`.
+4.  **Asymmetric cryptography.**
+    1.  Set up [SSH keys](https://www.digitalocean.com/community/tutorials/how-to-set-up-ssh-keys--2) on a computer you have access to (not Athena, because Kerberos interacts weirdly with SSH keys). Make sure your private key is encrypted with a passphrase, so it is protected at rest.
+    2.  [Set up GPG](https://www.digitalocean.com/community/tutorials/how-to-use-gpg-to-encrypt-and-sign-messages)
+    3.  Send Anish an encrypted email ([public key](https://keybase.io/anish)).
+    4.  Sign a Git commit with `git commit -S` or create a signed Git tag with `git tag -s`. Verify the signature on the commit with `git show --show-signature` or on the tag with `git tag -v`.
+
+# 10. Potpourri
+
+## 10.1 Keyboard remapping
+
+As a programmer, your keyboard is your main input method. As with pretty much anything in your computer, it is configurable (and worth configuring).
+
+The most basic change is to remap keys. This usually involves some software that is listening and, whenever a certain key is pressed, it intercepts that event and replaces it with another event corresponding to a different key. Some examples:
+
+-   Remap Caps Lock to Ctrl or Escape. We (the instructors) highly encourage this setting since Caps Lock has a very convenient location but is rarely used.
+-   Remapping PrtSc to Play/Pause music. Most OSes have a play/pause key.
+-   Swapping Ctrl and the Meta (Windows or Command) key.
+
+You can also map keys to arbitrary commands of your choosing. This is useful for common tasks that you perform. Here, some software listens for a specific key combination and executes some script whenever that event is detected.
+
+-   Open a new terminal or browser window.
+-   Inserting some specific text, e.g. your long email address or your MIT ID number.
+-   Sleeping the computer or the displays.
+
+There are even more complex modifications you can configure:
+
+-   Remapping sequences of keys, e.g. pressing shift five times toggles Caps Lock.
+-   Remapping on tap vs on hold, e.g. Caps Lock key is remapped to Esc if you quickly tap it, but is remapped to Ctrl if you hold it and use it as a modifier.
+-   Having remaps being keyboard or software specific.
+
+Some software resources to get started on the topic:
+
+-   macOS - [karabiner-elements](https://karabiner-elements.pqrs.org/), [skhd](https://github.com/koekeishiya/skhd) or [BetterTouchTool](https://folivora.ai/)
+-   Linux - [xmodmap](https://wiki.archlinux.org/index.php/Xmodmap) or [Autokey](https://github.com/autokey/autokey)
+-   Windows - Builtin in Control Panel, [AutoHotkey](https://www.autohotkey.com/) or [SharpKeys](https://www.randyrants.com/category/sharpkeys/)
+-   QMK - If your keyboard supports custom firmware you can use [QMK](https://docs.qmk.fm/) to configure the hardware device itself so the remaps works for any machine you use the keyboard with.
+
+## 10.2 Daemons
+
+You are probably already familiar with the notion of daemons, even if the word seems new. Most computers have a series of processes that are always running in the background rather than waiting for a user to launch them and interact with them. These processes are called daemons and the programs that run as daemons often end with a `d` to indicate so. For example `sshd`, the SSH daemon, is the program responsible for listening to incoming SSH requests and checking that the remote user has the necessary credentials to log in.
+
+In Linux, `systemd` (the system daemon) is the most common solution for running and setting up daemon processes. You can run `systemctl status` to list the current running daemons. Most of them might sound unfamiliar but are responsible for core parts of the system such as managing the network, solving DNS queries or displaying the graphical interface for the system. Systemd can be interacted with the `systemctl` command in order to `enable`, `disable`, `start`, `stop`, `restart` or check the `status` of services (those are the `systemctl` commands).
+
+More interestingly, `systemd` has a fairly accessible interface for configuring and enabling new daemons (or services). Below is an example of a daemon for running a simple Python app. We won’t go in the details but as you can see most of the fields are pretty self explanatory.
+
+```
+# /etc/systemd/system/myapp.service
+[Unit]
+Description=My Custom App
+After=network.target
+
+[Service]
+User=foo
+Group=foo
+WorkingDirectory=/home/foo/projects/mydaemon
+ExecStart=/usr/bin/local/python3.7 app.py
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Also, if you just want to run some program with a given frequency there is no need to build a custom daemon, you can use [`cron`](https://www.man7.org/linux/man-pages/man8/cron.8.html), a daemon your system already runs to perform scheduled tasks.
+
+## 10.3 FUSE
+
+Modern software systems are usually composed of smaller building blocks that are composed together. Your operating system supports using different filesystem backends because there is a common language of what operations a filesystem supports. For instance, when you run `touch` to create a file, `touch` performs a system call to the kernel to create the file and the kernel performs the appropriate filesystem call to create the given file. A caveat is that UNIX filesystems are traditionally implemented as kernel modules and only the kernel is allowed to perform filesystem calls.
+
+[FUSE](https://en.wikipedia.org/wiki/Filesystem_in_Userspace) (Filesystem in User Space) allows filesystems to be implemented by a user program. FUSE lets users run user space code for filesystem calls and then bridges the necessary calls to the kernel interfaces. In practice, this means that users can implement arbitrary functionality for filesystem calls.
+
+For example, FUSE can be used so whenever you perform an operation in a virtual filesystem, that operation is forwarded through SSH to a remote machine, performed there, and the output is returned back to you. This way, local programs can see the file as if it was in your computer while in reality it’s in a remote server. This is effectively what `sshfs` does.
+
+Some interesting examples of FUSE filesystems are:
+
+-   [sshfs](https://github.com/libfuse/sshfs) - Open locally remote files/folder through an SSH connection.
+-   [rclone](https://rclone.org/commands/rclone_mount/) - Mount cloud storage services like Dropbox, GDrive, Amazon S3 or Google Cloud Storage and open data locally.
+-   [gocryptfs](https://nuetzlich.net/gocryptfs/) - Encrypted overlay system. Files are stored encrypted but once the FS is mounted they appear as plaintext in the mountpoint.
+-   [kbfs](https://keybase.io/docs/kbfs) - Distributed filesystem with end-to-end encryption. You can have private, shared and public folders.
+-   [borgbackup](https://borgbackup.readthedocs.io/en/stable/usage/mount.html) - Mount your deduplicated, compressed and encrypted backups for ease of browsing.
+
+## 10.4 Backups
+
+Any data that you haven’t backed up is data that could be gone at any moment, forever. It’s easy to copy data around, it’s hard to reliably backup data. Here are some good backup basics and the pitfalls of some approaches.
+
+First, a copy of the data in the same disk is not a backup, because the disk is the single point of failure for all the data. Similarly, an external drive in your home is also a weak backup solution since it could be lost in a fire/robbery/&c. Instead, having an off-site backup is a recommended practice.
+
+Synchronization solutions are not backups. For instance, Dropbox/GDrive are convenient solutions, but when data is erased or corrupted they propagate the change. For the same reason, disk mirroring solutions like RAID are not backups. They don’t help if data gets deleted, corrupted or encrypted by ransomware.
+
+Some core features of good backups solutions are versioning, deduplication and security. Versioning backups ensure that you can access your history of changes and efficiently recover files. Efficient backup solutions use data deduplication to only store incremental changes and reduce the storage overhead. Regarding security, you should ask yourself what someone would need to know/have in order to read your data and, more importantly, to delete all your data and associated backups. Lastly, blindly trusting backups is a terrible idea and you should verify regularly that you can use them to recover data.
+
+Backups go beyond local files in your computer. Given the significant growth of web applications, large amounts of your data are only stored in the cloud. For instance, your webmail, social media photos, music playlists in streaming services or online docs are gone if you lose access to the corresponding accounts. Having an offline copy of this information is the way to go, and you can find online tools that people have built to fetch the data and save it.
+
+For a more detailed explanation, see 2019’s lecture notes on [Backups](https://missing.csail.mit.edu/2019/backups).
+
+## 10.5 APIs
+
+We’ve talked a lot in this class about using your computer more efficiently to accomplish _local_ tasks, but you will find that many of these lessons also extend to the wider internet. Most services online will have “APIs” that let you programmatically access their data. For example, the US government has an API that lets you get weather forecasts, which you could use to easily get a weather forecast in your shell.
+
+Most of these APIs have a similar format. They are structured URLs, often rooted at `api.service.com`, where the path and query parameters indicate what data you want to read or what action you want to perform. For the US weather data for example, to get the forecast for a particular location, you issue GET request (with `curl` for example) to https://api.weather.gov/points/42.3604,-71.094. The response itself contains a bunch of other URLs that let you get specific forecasts for that region. Usually, the responses are formatted as JSON, which you can then pipe through a tool like [`jq`](https://stedolan.github.io/jq/) to massage into what you care about.
+
+Some APIs require authentication, and this usually takes the form of some sort of secret _token_ that you need to include with the request. You should read the documentation for the API to see what the particular service you are looking for uses, but “[OAuth](https://www.oauth.com/)” is a protocol you will often see used. At its heart, OAuth is a way to give you tokens that can “act as you” on a given service, and can only be used for particular purposes. Keep in mind that these tokens are _secret_, and anyone who gains access to your token can do whatever the token allows under _your_ account!
+
+[IFTTT](https://ifttt.com/) is a website and service centered around the idea of APIs — it provides integrations with tons of services, and lets you chain events from them in nearly arbitrary ways. Give it a look!
+
+## 10.6 Common command-line flags/patterns
+
+Command-line tools vary a lot, and you will often want to check out their `man` pages before using them. They often share some common features though that can be good to be aware of:
+
+-   Most tools support some kind of `--help` flag to display brief usage instructions for the tool.
+-   Many tools that can cause irrevocable change support the notion of a “dry run” in which they only print what they _would have done_, but do not actually perform the change. Similarly, they often have an “interactive” flag that will prompt you for each destructive action.
+-   You can usually use `--version` or `-V` to have the program print its own version (handy for reporting bugs!).
+-   Almost all tools have a `--verbose` or `-v` flag to produce more verbose output. You can usually include the flag multiple times (`-vvv`) to get _more_ verbose output, which can be handy for debugging. Similarly, many tools have a `--quiet` flag for making it only print something on error.
+-   In many tools, `-` in place of a file name means “standard input” or “standard output”, depending on the argument.
+-   Possibly destructive tools are generally not recursive by default, but support a “recursive” flag (often `-r`) to make them recurse.
+-   Sometimes, you want to pass something that _looks_ like a flag as a normal argument. For example, imagine you wanted to remove a file called `-r`. Or you want to run one program “through” another, like `ssh machine foo`, and you want to pass a flag to the “inner” program (`foo`). The special argument `--` makes a program _stop_ processing flags and options (things starting with `-`) in what follows, letting you pass things that look like flags without them being interpreted as such: `rm -- -r` or `ssh machine --for-ssh -- foo --for-foo`.
+
+## 10.7 Window managers
+
+Most of you are used to using a “drag and drop” window manager, like what comes with Windows, macOS, and Ubuntu by default. There are windows that just sort of hang there on screen, and you can drag them around, resize them, and have them overlap one another. But these are only one _type_ of window manager, often referred to as a “floating” window manager. There are many others, especially on Linux. A particularly common alternative is a “tiling” window manager. In a tiling window manager, windows never overlap, and are instead arranged as tiles on your screen, sort of like panes in tmux. With a tiling window manager, the screen is always filled by whatever windows are open, arranged according to some _layout_. If you have just one window, it takes up the full screen. If you then open another, the original window shrinks to make room for it (often something like 2/3 and 1/3). If you open a third, the other windows will again shrink to accommodate the new window. Just like with tmux panes, you can navigate around these tiled windows with your keyboard, and you can resize them and move them around, all without touching the mouse. They are worth looking into!
+
+## 10.8 VPNs
+
+VPNs are all the rage these days, but it’s not clear that’s for [any good reason](https://gist.github.com/joepie91/5a9909939e6ce7d09e29). You should be aware of what a VPN does and does not get you. A VPN, in the best case, is _really_ just a way for you to change your internet service provider as far as the internet is concerned. All your traffic will look like it’s coming from the VPN provider instead of your “real” location, and the network you are connected to will only see encrypted traffic.
+
+While that may seem attractive, keep in mind that when you use a VPN, all you are really doing is shifting your trust from you current ISP to the VPN hosting company. Whatever your ISP _could_ see, the VPN provider now sees _instead_. If you trust them _more_ than your ISP, that is a win, but otherwise, it is not clear that you have gained much. If you are sitting on some dodgy unencrypted public Wi-Fi at an airport, then maybe you don’t trust the connection much, but at home, the trade-off is not quite as clear.
+
+You should also know that these days, much of your traffic, at least of a sensitive nature, is _already_ encrypted through HTTPS or TLS more generally. In that case, it usually matters little whether you are on a “bad” network or not – the network operator will only learn what servers you talk to, but not anything about the data that is exchanged.
+
+Notice that I said “in the best case” above. It is not unheard of for VPN providers to accidentally misconfigure their software such that the encryption is either weak or entirely disabled. Some VPN providers are malicious (or at the very least opportunist), and will log all your traffic, and possibly sell information about it to third parties. Choosing a bad VPN provider is often worse than not using one in the first place.
+
+In a pinch, MIT [runs a VPN](https://ist.mit.edu/vpn) for its students, so that may be worth taking a look at. Also, if you’re going to roll your own, give [WireGuard](https://www.wireguard.com/) a look.
+
+## 10.9 Markdown
+
+There is a high chance that you will write some text over the course of your career. And often, you will want to mark up that text in simple ways. You want some text to be bold or italic, or you want to add headers, links, and code fragments. Instead of pulling out a heavy tool like Word or LaTeX, you may want to consider using the lightweight markup language [Markdown](https://commonmark.org/help/).
+
+You have probably seen Markdown already, or at least some variant of it. Subsets of it are used and supported almost everywhere, even if it’s not under the name Markdown. At its core, Markdown is an attempt to codify the way that people already often mark up text when they are writing plain text documents. Emphasis (_italics_) is added by surrounding a word with `*`. Strong emphasis (**bold**) is added using `**`. Lines starting with `#` are headings (and the number of `#`s is the subheading level). Any line starting with `-` is a bullet list item, and any line starting with a number + `.` is a numbered list item. Backtick is used to show words in `code font`, and a code block can be entered by indenting a line with four spaces or surrounding it with triple-backticks:
+
+````
+```
+code goes here
+```
+````
+
+To add a link, place the _text_ for the link in square brackets, and the URL immediately following that in parentheses: `[name](url)`. Markdown is easy to get started with, and you can use it nearly everywhere. In fact, the lecture notes for this lecture, and all the others, are written in Markdown, and you can see the raw Markdown [here](https://raw.githubusercontent.com/missing-semester/missing-semester/master/_2020/potpourri.md).
+
+## 10.10 Hammerspoon (desktop automation on macOS)
+
+[Hammerspoon](https://www.hammerspoon.org/) is a desktop automation framework for macOS. It lets you write Lua scripts that hook into operating system functionality, allowing you to interact with the keyboard/mouse, windows, displays, filesystem, and much more.
+
+Some examples of things you can do with Hammerspoon:
+
+-   Bind hotkeys to move windows to specific locations
+-   Create a menu bar button that automatically lays out windows in a specific layout
+-   Mute your speaker when you arrive in lab (by detecting the WiFi network)
+-   Show you a warning if you’ve accidentally taken your friend’s power supply
+
+At a high level, Hammerspoon lets you run arbitrary Lua code, bound to menu buttons, key presses, or events, and Hammerspoon provides an extensive library for interacting with the system, so there’s basically no limit to what you can do with it. Many people have made their Hammerspoon configurations public, so you can generally find what you need by searching the internet, but you can always write your own code from scratch.
+
+### Resources
+
+-   [Getting Started with Hammerspoon](https://www.hammerspoon.org/go/)
+-   [Sample configurations](https://github.com/Hammerspoon/hammerspoon/wiki/Sample-Configurations)
+-   [Anish’s Hammerspoon config](https://github.com/anishathalye/dotfiles-local/tree/mac/hammerspoon)
+
+## 10.11 Booting + Live USBs
+
+When your machine boots up, before the operating system is loaded, the [BIOS](https://en.wikipedia.org/wiki/BIOS)/[UEFI](https://en.wikipedia.org/wiki/Unified_Extensible_Firmware_Interface) initializes the system. During this process, you can press a specific key combination to configure this layer of software. For example, your computer may say something like “Press F9 to configure BIOS. Press F12 to enter boot menu.” during the boot process. You can configure all sorts of hardware-related settings in the BIOS menu. You can also enter the boot menu to boot from an alternate device instead of your hard drive.
+
+[Live USBs](https://en.wikipedia.org/wiki/Live_USB) are USB flash drives containing an operating system. You can create one of these by downloading an operating system (e.g. a Linux distribution) and burning it to the flash drive. This process is a little bit more complicated than simply copying a `.iso` file to the disk. There are tools like [UNetbootin](https://unetbootin.github.io/) to help you create live USBs.
+
+Live USBs are useful for all sorts of purposes. Among other things, if you break your existing operating system installation so that it no longer boots, you can use a live USB to recover data or fix the operating system.
+
+## 10.12 Docker, Vagrant, VMs, Cloud, OpenStack
+
+[Virtual machines](https://en.wikipedia.org/wiki/Virtual_machine) and similar tools like containers let you emulate a whole computer system, including the operating system. This can be useful for creating an isolated environment for testing, development, or exploration (e.g. running potentially malicious code).
+
+[Vagrant](https://www.vagrantup.com/) is a tool that lets you describe machine configurations (operating system, services, packages, etc.) in code, and then instantiate VMs with a simple `vagrant up`. [Docker](https://www.docker.com/) is conceptually similar but it uses containers instead.
+
+You can also rent virtual machines on the cloud, and it’s a nice way to get instant access to:
+
+-   A cheap always-on machine that has a public IP address, used to host services
+-   A machine with a lot of CPU, disk, RAM, and/or GPU
+-   Many more machines than you physically have access to (billing is often by the second, so if you want a lot of computing for a short amount of time, it’s feasible to rent 1000 computers for a couple of minutes)
+
+Popular services include [Amazon AWS](https://aws.amazon.com/), [Google Cloud](https://cloud.google.com/), [Microsoft Azure](https://azure.microsoft.com/), [DigitalOcean](https://www.digitalocean.com/).
+
+If you’re a member of MIT CSAIL, you can get free VMs for research purposes through the [CSAIL OpenStack instance](https://tig.csail.mit.edu/shared-computing/open-stack/).
+
+## 10.13 Notebook programming
+
+[Notebook programming environments](https://en.wikipedia.org/wiki/Notebook_interface) can be really handy for doing certain types of interactive or exploratory development. Perhaps the most popular notebook programming environment today is [Jupyter](https://jupyter.org/), for Python (and several other languages). [Wolfram Mathematica](https://www.wolfram.com/mathematica/) is another notebook programming environment that’s great for doing math-oriented programming.
+
+## 10.14 GitHub
+
+[GitHub](https://github.com/) is one of the most popular platforms for open-source software development. Many of the tools we’ve talked about in this class, from [vim](https://github.com/vim/vim) to [Hammerspoon](https://github.com/Hammerspoon/hammerspoon), are hosted on GitHub. It’s easy to get started contributing to open-source to help improve the tools that you use every day.
+
+There are two primary ways in which people contribute to projects on GitHub:
+
+-   Creating an [issue](https://help.github.com/en/github/managing-your-work-on-github/creating-an-issue). This can be used to report bugs or request a new feature. Neither of these involves reading or writing code, so it can be pretty lightweight to do. High-quality bug reports can be extremely valuable to developers. Commenting on existing discussions can be helpful too.
+-   Contribute code through a [pull request](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-requests). This is generally more involved than creating an issue. You can [fork](https://help.github.com/en/github/getting-started-with-github/fork-a-repo) a repository on GitHub, clone your fork, create a new branch, make some changes (e.g. fix a bug or implement a feature), push the branch, and then [create a pull request](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request). After this, there will generally be some back-and-forth with the project maintainers, who will give you feedback on your patch. Finally, if all goes well, your patch will be merged into the upstream repository. Often times, larger projects will have a contributing guide, tag beginner-friendly issues, and some even have mentorship programs to help first-time contributors become familiar with the project.
+
+# 11. Q&A
+
+## Any recommendations on learning Operating Systems related topics like processes, virtual memory, interrupts, memory management, etc
+
+First, it is unclear whether you actually need to be very familiar with all of these topics since they are very low level topics. They will matter as you start writing more low level code like implementing or modifying a kernel. Otherwise, most topics will not be relevant, with the exception of processes and signals that were briefly covered in other lectures.
+
+Some good resources to learn about this topic:
+
+-   [MIT’s 6.828 class](https://pdos.csail.mit.edu/6.828/) - Graduate level class on Operating System Engineering. Class materials are publicly available.
+-   Modern Operating Systems (4th ed) - by Andrew S. Tanenbaum is a good overview of many of the mentioned concepts.
+-   The Design and Implementation of the FreeBSD Operating System - A good resource about the FreeBSD OS (note that this is not Linux).
+-   Other guides like [Writing an OS in Rust](https://os.phil-opp.com/) where people implement a kernel step by step in various languages, mostly for teaching purposes.
+
+## What are some of the tools you’d prioritize learning first?
+
+Some topics worth prioritizing:
+
+-   Learning how to use your keyboard more and your mouse less. This can be through keyboard shortcuts, changing interfaces, &c.
+-   Learning your editor well. As a programmer most of your time is spent editing files so it really pays off to learn this skill well.
+-   Learning how to automate and/or simplify repetitive tasks in your workflow because the time savings will be enormous…
+-   Learning about version control tools like Git and how to use it in conjunction with GitHub to collaborate in modern software projects.
+
+## When do I use Python versus a Bash scripts versus some other language?
+
+In general, bash scripts are useful for short and simple one-off scripts when you just want to run a specific series of commands. bash has a set of oddities that make it hard to work with for larger programs or scripts:
+
+-   bash is easy to get right for a simple use case but it can be really hard to get right for all possible inputs. For example, spaces in script arguments have led to countless bugs in bash scripts.
+-   bash is not amenable to code reuse so it can be hard to reuse components of previous programs you have written. More generally, there is no concept of software libraries in bash.
+-   bash relies on many magic strings like `$?` or `$@` to refer to specific values, whereas other languages refer to them explicitly, like `exitCode` or `sys.args` respectively.
+
+Therefore, for larger and/or more complex scripts we recommend using more mature scripting languages like Python or Ruby. You can find online countless libraries that people have already written to solve common problems in these languages. If you find a library that implements the specific functionality you care about in some language, usually the best thing to do is to just use that language.
+
+## What is the difference between `source script.sh` and `./script.sh`
+
+#keypoint source and ./
+
+In both cases the `script.sh` will be read and executed in a bash session, the difference lies in which session is running the commands. For `source` the commands are executed in your current bash session and thus any changes made to the current environment, like changing directories or defining functions will persist in the current session once the `source` command finishes executing. When running the script standalone like `./script.sh`, your current bash session starts a new instance of bash that will run the commands in `script.sh`. Thus, if `script.sh` changes directories, the new bash instance will change directories but once it exits and returns control to the parent bash session, the parent session will remain in the same place. Similarly, if `script.sh` defines a function that you want to access in your terminal, you need to `source` it for it to be defined in your current bash session. Otherwise, if you run it, the new bash process will be the one to process the function definition instead of your current shell.
+
+## What are the places where various packages and tools are stored and how does referencing them work? What even is `/bin` or `/lib`?
+
+Regarding programs that you execute in your terminal, they are all found in the directories listed in your `PATH` environment variable and you can use the `which` command (or the `type` command) to check where your shell is finding a specific program. In general, there are some conventions about where specific types of files live. Here are some of the ones we talked about, check the [Filesystem, Hierarchy Standard](https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard) for a more comprehensive list.
+
+-   `/bin` - Essential command binaries
+-   `/sbin` - Essential system binaries, usually to be run by root
+-   `/dev` - Device files, special files that often are interfaces to hardware devices
+-   `/etc` - Host-specific system-wide configuration files
+-   `/home` - Home directories for users in the system
+-   `/lib` - Common libraries for system programs
+-   `/opt` - Optional application software
+-   `/sys` - Contains information and configuration for the system (covered in the [first lecture](https://missing.csail.mit.edu/2020/course-shell/))
+-   `/tmp` - Temporary files (also `/var/tmp`). Usually deleted between reboots.
+-   `/usr/` - Read only user data
+    -   `/usr/bin` - Non-essential command binaries
+    -   `/usr/sbin` - Non-essential system binaries, usually to be run by root
+    -   `/usr/local/bin` - Binaries for user compiled programs
+-   `/var` - Variable files like logs or caches
+
+## Should I `apt-get install` a python-whatever, or `pip install` whatever package?
+
+There’s no universal answer to this question. It’s related to the more general question of whether you should use your system’s package manager or a language-specific package manager to install software. A few things to take into account:
+
+-   Common packages will be available through both, but less popular ones or more recent ones might not be available in your system package manager. In this case, using the language-specific tool is the better choice.
+-   Similarly, language-specific package managers usually have more up to date versions of packages than system package managers.
+-   When using your system package manager, libraries will be installed system wide. This means that if you need different versions of a library for development purposes, the system package manager might not suffice. For this scenario, most programming languages provide some sort of isolated or virtual environment so you can install different versions of libraries without running into conflicts. For Python, there’s virtualenv, and for Ruby, there’s RVM.
+-   Depending on the operating system and the hardware architecture, some of these packages might come with binaries or might need to be compiled. For instance, in ARM computers like the Raspberry Pi, using the system package manager can be better than the language specific one if the former comes in form of binaries and the latter needs to be compiled. This is highly dependent on your specific setup.
+
+You should try to use one solution or the other and not both since that can lead to conflicts that are hard to debug. Our recommendation is to use the language-specific package manager whenever possible, and to use isolated environments (like Python’s virtualenv) to avoid polluting the global environment.
+
+## What’s the easiest and best profiling tools to use to improve performance of my code?
+
+The easiest tool that is quite useful for profiling purposes is [print timing](https://missing.csail.mit.edu/2020/debugging-profiling/#timing). You just manually compute the time taken between different parts of your code. By repeatedly doing this, you can effectively do a binary search over your code and find the segment of code that took the longest.
+
+For more advanced tools, Valgrind’s [Callgrind](http://valgrind.org/docs/manual/cl-manual.html) lets you run your program and measure how long everything takes and all the call stacks, namely which function called which other function. It then produces an annotated version of your program’s source code with the time taken per line. However, it slows down your program by an order of magnitude and does not support threads. For other cases, the [`perf`](http://www.brendangregg.com/perf.html) tool and other language specific sampling profilers can output useful data pretty quickly. [Flamegraphs](http://www.brendangregg.com/flamegraphs.html) are a good visualization tool for the output of said sampling profilers. You should also try to use specific tools for the programming language or task you are working with. For example, for web development, the dev tools built into Chrome and Firefox have fantastic profilers.
+
+Sometimes the slow part of your code will be because your system is waiting for an event like a disk read or a network packet. In those cases, it is worth checking that back-of-the-envelope calculations about the theoretical speed in terms of hardware capabilities do not deviate from the actual readings. There are also specialized tools to analyze the wait times in system calls. These include tools like [eBPF](http://www.brendangregg.com/blog/2019-01-01/learn-ebpf-tracing.html) that perform kernel tracing of user programs. In particular [`bpftrace`](https://github.com/iovisor/bpftrace) is worth checking out if you need to perform this sort of low level profiling.
+
+## What browser plugins do you use?
+
+Some of our favorites, mostly related to security and usability:
+
+-   [uBlock Origin](https://github.com/gorhill/uBlock) - It is a [wide-spectrum](https://github.com/gorhill/uBlock/wiki/Blocking-mode) blocker that doesn’t just stop ads, but all sorts of third-party communication a page may try to do. This also covers inline scripts and other types of resource loading. If you’re willing to spend some time on configuration to make things work, go to [medium mode](https://github.com/gorhill/uBlock/wiki/Blocking-mode:-medium-mode) or even [hard mode](https://github.com/gorhill/uBlock/wiki/Blocking-mode:-hard-mode). Those will make some sites not work until you’ve fiddled with the settings enough, but will also significantly improve your online security. Otherwise, the [easy mode](https://github.com/gorhill/uBlock/wiki/Blocking-mode:-easy-mode) is already a good default that blocks most ads and tracking. You can also define your own rules about what website objects to block.
+-   [Stylus](https://github.com/openstyles/stylus/) - a fork of Stylish (don’t use Stylish, it was shown to [steal users’ browsing history](https://www.theregister.co.uk/2018/07/05/browsers_pull_stylish_but_invasive_browser_extension/)), allows you to sideload custom CSS stylesheets to websites. With Stylus you can easily customize and modify the appearance of websites. This can be removing a sidebar, changing the background color or even the text size or font choice. This is fantastic for making websites that you visit frequently more readable. Moreover, Stylus can find styles written by other users and published in [userstyles.org](https://userstyles.org/). Most common websites have one or several dark theme stylesheets for instance.
+-   Full Page Screen Capture - [Built into Firefox](https://screenshots.firefox.com/) and [Chrome extension](https://chrome.google.com/webstore/detail/full-page-screen-capture/fdpohaocaechififmbbbbbknoalclacl?hl=en). Lets you take a screenshot of a full website, often much better than printing for reference purposes.
+-   [Multi Account Containers](https://addons.mozilla.org/en-US/firefox/addon/multi-account-containers/) - lets you separate cookies into “containers”, allowing you to browse the web with different identities and/or ensuring that websites are unable to share information between them.
+-   Password Manager Integration - Most password managers have browser extensions that make inputting your credentials into websites not only more convenient but also more secure. Compared to simply copy-pasting your user and password, these tools will first check that the website domain matches the one listed for the entry, preventing phishing attacks that impersonate popular websites to steal credentials.
+-   [Vimium](https://github.com/philc/vimium) - A browser extension that provides keyboard-based navigation and control of the web in the spirit of the Vim editor.
+
+## What are other useful data wrangling tools?
+
+Some of the data wrangling tools we did not have time to cover during the data wrangling lecture include `jq` or `pup` which are specialized parsers for JSON and HTML data respectively. The Perl programming language is another good tool for more advanced data wrangling pipelines. Another trick is the `column -t` command that can be used to convert whitespace text (not necessarily aligned) into properly column aligned text.
+
+More generally a couple of more unconventional data wrangling tools are vim and Python. For some complex and multi-line transformations, vim macros can be a quite invaluable tool to use. You can just record a series of actions and repeat them as many times as you want, for instance in the editors [lecture notes](https://missing.csail.mit.edu/2020/editors/#macros) (and last year’s [video](https://missing.csail.mit.edu/2019/editors/)) there is an example of converting an XML-formatted file into JSON just using vim macros.
+
+For tabular data, often presented in CSVs, the [pandas](https://pandas.pydata.org/) Python library is a great tool. Not only because it makes it quite easy to define complex operations like group by, join or filters; but also makes it quite easy to plot different properties of your data. It also supports exporting to many table formats including XLS, HTML or LaTeX. Alternatively the R programming language (an arguably [bad](http://arrgh.tim-smith.us/) programming language) has lots of functionality for computing statistics over data and can be quite useful as the last step of your pipeline. [ggplot2](https://ggplot2.tidyverse.org/) is a great plotting library in R.
+
+## What is the difference between Docker and a Virtual Machine?
+
+#keypoint 容器和虚拟机的区别
+
+Docker is based on a more general concept called containers. The main difference between containers and virtual machines is that virtual machines will execute an entire OS stack, including the kernel, even if the kernel is the same as the host machine. Unlike VMs, containers avoid running another instance of the kernel and instead share the kernel with the host. In Linux, this is achieved through a mechanism called LXC, and it makes use of a series of isolation mechanisms to spin up a program that thinks it’s running on its own hardware but it’s actually sharing the hardware and kernel with the host. Thus, containers have a lower overhead than a full VM. On the flip side, containers have a weaker isolation and only work if the host runs the same kernel. For instance if you run Docker on macOS, Docker needs to spin up a Linux virtual machine to get an initial Linux kernel and thus the overhead is still significant. Lastly, Docker is a specific implementation of containers and it is tailored for software deployment. Because of this, it has some quirks: for example, Docker containers will not persist any form of storage between reboots by default.
+
+## What are the advantages and disadvantages of each OS and how can we choose between them (e.g. choosing the best Linux distribution for our purposes)?
+
+Regarding Linux distros, even though there are many, many distros, most of them will behave fairly identically for most use cases. Most of Linux and UNIX features and inner workings can be learned in any distro. A fundamental difference between distros is how they deal with package updates. Some distros, like Arch Linux, use a rolling update policy where things are bleeding-edge but things might break every so often. On the other hand, some distros like Debian, CentOS or Ubuntu LTS releases are much more conservative with releasing updates in their repositories so things are usually more stable at the expense of sacrificing newer features. Our recommendation for an easy and stable experience with both desktops and servers is to use Debian or Ubuntu.
+
+Mac OS is a good middle point between Windows and Linux that has a nicely polished interface. However, Mac OS is based on BSD rather than Linux, so some parts of the system and commands are different. An alternative worth checking is FreeBSD. Even though some programs will not run on FreeBSD, the BSD ecosystem is much less fragmented and better documented than Linux. We discourage Windows for anything but for developing Windows applications or if there is some deal breaker feature that you need, like good driver support for gaming.
+
+For dual boot systems, we think that the most working implementation is macOS’ bootcamp and that any other combination can be problematic on the long run, specially if you combine it with other features like disk encryption.
+
+## Vim vs Emacs?
+
+The three of us use vim as our primary editor but Emacs is also a good alternative and it’s worth trying both to see which works better for you. Emacs does not follow vim’s modal editing, but this can be enabled through Emacs plugins like [Evil](https://github.com/emacs-evil/evil) or [Doom Emacs](https://github.com/hlissner/doom-emacs). An advantage of using Emacs is that extensions can be implemented in Lisp, a better scripting language than vimscript, Vim’s default scripting language.
+
+## Any tips or tricks for Machine Learning applications?
+
+Some of the lessons and takeaways from this class can directly be applied to ML applications. As it is the case with many science disciplines, in ML you often perform a series of experiments and want to check what things worked and what didn’t. You can use shell tools to easily and quickly search through these experiments and aggregate the results in a sensible way. This could mean subselecting all experiments in a given time frame or that use a specific dataset. By using a simple JSON file to log all relevant parameters of the experiments, this can be incredibly simple with the tools we covered in this class. Lastly, if you do not work with some sort of cluster where you submit your GPU jobs, you should look into how to automate this process since it can be a quite time consuming task that also eats away your mental energy.
+
+## Any more Vim tips?
+
+A few more tips:
+
+-   Plugins - Take your time and explore the plugin landscape. There are a lot of great plugins that address some of vim’s shortcomings or add new functionality that composes well with existing vim workflows. For this, good resources are [VimAwesome](https://vimawesome.com/) and other programmers’ dotfiles.
+-   Marks - In vim, you can set a mark doing `m<X>` for some letter `X`. You can then go back to that mark doing `'<X>`. This lets you quickly navigate to specific locations within a file or even across files.
+-   Navigation - `Ctrl+O` and `Ctrl+I` move you backward and forward respectively through your recently visited locations.
+-   Undo Tree - Vim has a quite fancy mechanism for keeping track of changes. Unlike other editors, vim stores a tree of changes so even if you undo and then make a different change you can still go back to the original state by navigating the undo tree. Some plugins like [gundo.vim](https://github.com/sjl/gundo.vim) and [undotree](https://github.com/mbbill/undotree) expose this tree in a graphical way.
+-   Undo with time - The `:earlier` and `:later` commands will let you navigate the files using time references instead of one change at a time.
+-   [Persistent undo](https://vim.fandom.com/wiki/Using_undo_branches#Persistent_undo) is an amazing built-in feature of vim that is disabled by default. It persists undo history between vim invocations. By setting `undofile` and `undodir` in your `.vimrc`, vim will store a per-file history of changes.
+-   Leader Key - The leader key is a special key that is often left to the user to be configured for custom commands. The pattern is usually to press and release this key (often the space key) and then some other key to execute a certain command. Often, plugins will use this key to add their own functionality, for instance the UndoTree plugin uses `<Leader> U` to open the undo tree.
+-   Advanced Text Objects - Text objects like searches can also be composed with vim commands. E.g. `d/<pattern>` will delete to the next match of said pattern or `cgn` will change the next occurrence of the last searched string.
+
+## What is 2FA and why should I use it?
+
+Two Factor Authentication (2FA) adds an extra layer of protection to your accounts on top of passwords. In order to login, you not only have to know some password, but you also have to “prove” in some way you have access to some hardware device. In the most simple case, this can be achieved by receiving an SMS on your phone, although there are [known issues](https://www.kaspersky.com/blog/2fa-practical-guide/24219/) with SMS 2FA. A better alternative we endorse is to use a [U2F](https://en.wikipedia.org/wiki/Universal_2nd_Factor) solution like [YubiKey](https://www.yubico.com/).
+
+## Any comments on differences between web browsers?
+
+The current landscape of browsers as of 2020 is that most of them are like Chrome because they use the same engine (Blink). This means that Microsoft Edge which is also based on Blink, and Safari, which is based on WebKit, a similar engine to Blink, are just worse versions of Chrome. Chrome is a reasonably good browser both in terms of performance and usability. Should you want an alternative, Firefox is our recommendation. It is comparable to Chrome in pretty much every regard and it excels for privacy reasons. Another browser called [Flow](https://www.ekioh.com/flow-browser/) is not user ready yet, but it is implementing a new rendering engine that promises to be faster than the current ones.
