@@ -426,3 +426,22 @@ Export-WindowsDriver -Online -Destination D:\DriverBackup
 ![[Knowledge/resources/Pasted image 20221115105545.png]]
 
 Bundled代表idea自带的maven，而settings file默认就是自带maven的配置。所以我们需要自己将仓库迁移到别的位置，这里我迁移到了F盘。
+
+# 8. WSL
+
+## 8.1 添加环境变量
+
+WSL中默认会添加windows的环境变量，在`/etc/`目录下新建`wsl.conf`文件，写上如下配置：
+
+```properties
+[interop]
+appendWindowsPath=false
+```
+
+然后重启wsl，windows的环境变量就没了。另外，如果我们想自己添加环境变量，可以这样。修改`~`目录下的`.profile`文件，在最后追加：
+
+```shell
+export PATH=$PATH:/usr/lib/jvm/jdk-17./bin
+```
+
+之后source一下，这个`/usr/lib/jvm/jdk-17./bin`目录就添加到环境变量中了。
