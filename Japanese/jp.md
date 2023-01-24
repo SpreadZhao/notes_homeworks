@@ -1,3 +1,11 @@
+---
+author: "Spread Zhao"
+title: jp
+category: self_study
+description: Japanese study, teached by A Fei in bilibili.
+link: https://www.bilibili.com/video/BV1Bp4y1D747
+---
+
 # 1. Basic
 
 * あ: a

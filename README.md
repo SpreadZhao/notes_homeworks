@@ -1,12 +1,28 @@
 欢迎来到Spread Zhao的笔记仓库！**这里是我所有知识的积累，并且会持续更新下去**！有关每个文件夹的定义，可以到各个文件夹的`README`文件去查看，这里给出所有的课堂笔记：
 
 ```dataview
-table description
+table description, link
 from "/"
 where category="inter_class"
 ```
 
-> *该查询使用了DataView插件，版本在下面。*
+然后是所有的课外笔记：
+
+```dataview
+table description, link
+from "/"
+where category = "self_study"
+```
+
+接下来列出所有的README文件，它们对你理解每个文件夹的内容有帮助
+
+```dataview
+table file.path as Path
+from "/"
+where file.name = "README"
+```
+
+> *以上查询使用了DataView插件，版本在下面。*
 
 **==对于仓库内部细节的更新，我会以日记的形式更新在这下面==**，每一天的日记都会以横线分割。另外，介绍一下这个仓库中常用的标签，**它们有可能会并列出现**：
 
@@ -167,3 +183,9 @@ git pull
 更新了插件：
 
 ![[resources/Pasted image 20221229144203.png]]
+
+# 2023-1-24
+
+想要正常工作，只需要DataView和Excalidraw插件即可：
+
+![[resources/Pasted image 20230124231029.png]]

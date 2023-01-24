@@ -289,6 +289,12 @@ httpd -k install -n "Apache24"
 
 ![[Knowledge/resources/Pasted image 20221223140048.png]]
 
+## 3.3 DataView Implicit Fields
+
+DataView has some default metadata, you can see that in this website:
+
+[Metadata on Pages - Dataview (blacksmithgu.github.io)](https://blacksmithgu.github.io/obsidian-dataview/annotation/metadata-pages/)
+
 # 4. MySQL
 
 ## 4.1 MySQL的配置
