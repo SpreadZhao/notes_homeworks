@@ -273,7 +273,7 @@ link: https://www.bilibili.com/video/BV1Bp4y1D747
 
 百(ひゃく0) -> (hya ku)
 
-辞書(じしょ1) -> dictionary(ji xiu)
+辞書(じしょ1) -> dictionary(ji xio)
 
 今日(きょう1) -> (kio==ooo==)
 
