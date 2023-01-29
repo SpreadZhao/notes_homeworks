@@ -101,7 +101,7 @@ link: https://www.bilibili.com/video/BV1Bp4y1D747
 
 # 2. Long tone
 
-## 2.1 **あ segment + あ**
+## 2.1 あ segment + あ
 
 * ああ: aaa
 * かあ: kaa
