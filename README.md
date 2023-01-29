@@ -1,4 +1,6 @@
-欢迎来到Spread Zhao的笔记仓库！**这里是我所有知识的积累，并且会持续更新下去**！有关每个文件夹的定义，可以到各个文件夹的`README`文件去查看，这里给出所有的课堂笔记：
+欢迎来到Spread Zhao的笔记仓库！**这里是我所有知识的积累，并且会持续更新下去**！使用前请先看[[#2023-1-30|最基本的设置]]！！！
+
+有关每个文件夹的定义，可以到各个文件夹的`README`文件去查看，这里给出所有的课堂笔记：
 
 ```dataview
 table description, link
@@ -189,3 +191,27 @@ git pull
 想要正常工作，只需要DataView和Excalidraw插件即可：
 
 ![[resources/Pasted image 20230124231029.png]]
+
+# 2023-1-30
+
+**重大更新！！！**
+
+将插件设置和Obsidian本体设置进行汇总，保证所有的工作正常。
+
+**DataView**
+
+![[resources/Pasted image 20230130001011.png]]
+
+---
+
+**Excalidraw**
+
+![[resources/Pasted image 20230130001111.png]]
+
+![[resources/Pasted image 20230130001127.png]]
+
+---
+
+**Obsidian**
+
+![[resources/Pasted image 20230130001216.png]]
