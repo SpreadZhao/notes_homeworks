@@ -2029,19 +2029,19 @@ Install a Linux virtual machine (or use an already existing one) for this exerci
 
 git使用的是Directed Asyclic Graph(有向无环图)来管理版本信息。从简单的角度来讲，比如我整个仓库首次上传的时候，有一个最初的状态：
 
-![[Excalidraw/Drawing 2023-01-12 14.11.16.excalidraw|50]]
+![[Study Log/resources/Drawing 2023-01-12 14.11.16.excalidraw.png]]
 
 那么当我开发出下一个版本时，这个新状态就会指向原来的版本，也就是它的父亲：
 
-![[Excalidraw/Drawing 2023-01-12 14.12.17.excalidraw|200]]
+![[Study Log/resources/Drawing 2023-01-12 14.12.17.excalidraw.png]]
 
 接下来我们遇到了一些困难：当前开发出来的这个新版本有一些bug要修；而于此同时，我还有一些新的特性要加进去。这个时候，git就可以同时产生两个状态，它们都指向这个新版本。
 
-![[Excalidraw/Drawing 2023-01-12 14.14.17.excalidraw]]
+![[Study Log/resources/Drawing 2023-01-12 14.14.17.excalidraw.png]]
 
 之后，我的新特性添加完了，同时我的bug也修完了。那我当然要把它俩合为一体。这个时候又出现一个新状态，它同时指向这两个分支：
 
-![[Excalidraw/Drawing 2023-01-12 14.16.16.excalidraw|500]]
+![[Study Log/resources/Drawing 2023-01-12 14.16.16.excalidraw.png]]
 
 ## 6.1 Git Overview
 
@@ -2088,7 +2088,7 @@ git commit
 
 这其实就相当于创建了一个新的状态结点，并且这里的commit信息也存了下来：
 
-![[Excalidraw/Drawing 2023-01-12 17.39.05.excalidraw|100]]
+![[Study Log/resources/Drawing 2023-01-12 17.39.05.excalidraw.png]]
 
 这个`c4cf3ec`是什么？实际上就是sha-1码，对应的就是我们刚才添加进去的说明信息。我们可以使用`git cat-file`命令来查看这些信息：
 
@@ -2104,7 +2104,7 @@ git commit
 
 这不就是`haha.txt`文件中的内容吗！因此，我们已经捋清楚了git项目的结构：
 
-![[Excalidraw/Drawing 2023-01-12 17.46.33.excalidraw]]
+![[Study Log/resources/Drawing 2023-01-12 17.46.33.excalidraw.png]]
 
 > tree就是文件夹，blob就是文件。tree可以包含tree和blob，而blob不能包含任何blob和tree。
 
@@ -2122,7 +2122,7 @@ echo "heihei" >> haha.txt
 
 此时我们相当于又新建了一个结点，指向之前的结点，并且也包含提交信息：
 
-![[Excalidraw/Drawing 2023-01-12 18.08.44.excalidraw]]
+![[Study Log/resources/Drawing 2023-01-12 18.08.44.excalidraw.png]]
 
 这下有了多个结点，我们可以回顾我们的历史纪录了：
 
