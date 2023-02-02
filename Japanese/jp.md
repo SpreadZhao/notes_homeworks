@@ -10,65 +10,65 @@ link: https://www.bilibili.com/video/BV1Bp4y1D747
 
 ## 1.1 A
 
-* あ: a
-* い: i
-* う: u
-* え: e
-* お: o
+* あ/ア: a
+* い/イ: i
+* う/ウ: u
+* え/エ: e
+* お/オ: o
 
 ## 1.2 K
 
-* か: ka　　が: ga
-* き: ki　　ぎ: gi
-* く: ku　　ぐ: gu
-* け: ke　　げ: ge
-* こ: ko　　ご: go
+* か/カ: ka　　が: ga
+* き/キ: ki　　ぎ: gi
+* く/ク: ku　　ぐ: gu
+* け/ケ: ke　　げ: ge
+* こ/コ: ko　　ご: go
 
 ## 1.3 S
 
-* さ: sa　　ざ: za
-* し: si(xi)　　じ: zi(==ji==)
-* す: su(si ~ su)　ず: zu(zi)
-* せ: se　　ぜ: ze
-* そ: so　　ぞ: zo
+* さ/サ: sa　　ざ: za
+* し/シ: si(xi)　　じ: zi(==ji==)
+* す/ス: su(si ~ su)　ず: zu(zi)
+* せ/セ: se　　ぜ: ze
+* そ/ソ: so　　ぞ: zo
 
 ## 1.4 T
 
-* た: ta　　だ: da
-* ち: ti(qi)　ぢ: di(==ji==)
-* つ: tu(ci)　づ: du(==zi==)
-* て: te　　で: de
-* と: to　　ど: do
+* た/タ: ta　　だ: da
+* ち/チ: ti(qi)　ぢ: di(==ji==)
+* つ/ツ: tu(ci)　づ: du(==zi==)
+* て/テ: te　　で: de
+* と/ト: to　　ど: do
 
 ## 1.5 N
 
-* な: na
-* に: ni
-* ぬ: nu
-* ね: ne
-* の: no
+* な/ナ: na
+* に/ニ: ni
+* ぬ/ヌ: nu
+* ね/ネ: ne
+* の/ノ: no
 
 ## 1.6 H
 
-* は: ha　　　ば: ba　　ぱ: pa
-* ひ: hi　　　び: bi　　　ぴ: pi
-* ふ: hu(fu)　ぶ: bu　　　ぷ: pu
-* へ: he　　　べ: be　　ぺ: pe
-* ほ: ho　　　ぼ: bo　　ぽ: po
+* は/ハ: ha　　　ば: ba　　ぱ: pa
+* ひ/ヒ: hi　　　び: bi　　　ぴ: pi
+* ふ/フ: hu(fu)　ぶ: bu　　　ぷ: pu
+* へ/ヘ: he　　　べ: be　　ぺ: pe
+* ほ/ホ: ho　　　ぼ: bo　　ぽ: po
 
 ## 1.7 M
 
-* ま: ma
-* み: mi
-* む: mu
-* め: me
-* も: mo
+* ま/マ: ma
+* み/ミ: mi
+* む/ム: mu
+* め/メ: me
+* も/モ: mo
 
 ## 1.8 Y
 
-* や: ya
-* ゆ: yu
-* よ: yo
+* や/ヤ: ya
+* ゆ/ユ: yu
+* よ/ヨ: yo
 
 ## 1.9 R
 
