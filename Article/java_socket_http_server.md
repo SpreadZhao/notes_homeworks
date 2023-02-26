@@ -591,3 +591,6 @@ enter port to listen: 1234
 [headerline] 
 ```
 
+#TODO java socket http server
+
+- [ ] Keep going!!!! fkkkkk!!!

@@ -42,7 +42,7 @@ String password = "spreadzhao";
 
 #TODO show param
 
-- [ ] 展示url的参数
+- [x] 展示url的参数
 
 在有了连接之后，我们要使用具体的某一个数据库。在mysql中，可以直接使用如`use database1`这种语句去使用。而在jdbc中，就需要这样：
 

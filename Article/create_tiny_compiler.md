@@ -4,3 +4,6 @@
 
 [jamiebuilds/the-super-tiny-compiler: Possibly the smallest compiler ever (github.com)](https://github.com/jamiebuilds/the-super-tiny-compiler)
 
+#TODO Compiler
+
+- [ ] You just won't write, ahh???
