@@ -31,9 +31,9 @@ httpd -k install -n "Apache24"
 
 
 
-# 2. git使用技巧
+# 2. Git Usage
 
-## 2.1 已经推送过的文件，但是本地发现他不用提交(比如clion的cmake-build-debug)
+## 2.1 已经推送过的文件，但是本地发现他不用提交(比如clion的cmake-build-debug或者后来被加入到.gitignore的文件)
 
 * 可使用如下代码来操作：
 
@@ -46,6 +46,8 @@ httpd -k install -n "Apache24"
   ```git
   git rm -r --cached <d1/d2/files>
   ```
+
+> 如果要删除一个目录，比如仓库根目录下的`out`目录，那就是：`git rm -r --cached out/`。注意`out/`前面不要加`/`。
   
 * 如果不想直接删，只想列出删了什么，就加一个-n
 
