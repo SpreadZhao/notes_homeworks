@@ -421,6 +421,28 @@ Export-WindowsDriver -Online -Destination D:\DriverBackup
 
 [www.reddit.com](https://www.reddit.com/r/vmware/comments/swjp4t/running_vmware_workstation_on_a_hyperv_enabled/)
 
+## 5.3 安装系统的时候找不到Storage Driver
+
+视频：[(188) How To Fix Lenovo Couldn't Find Storage Driver Load Error in Windows Install - YouTube](https://www.youtube.com/watch?v=41C71-dvv-4)
+
+原因就是Intel VMD技术会将**固态介质**隐藏，因此我们加载不了分区。在BIOS中将Intel VMD功能关掉，之后就能够正常找到分区了。
+
+## 5.4 恢复右键菜单
+
+[有没有什么办法可以让win11右键默认显示更多选项？ - 知乎 (zhihu.com)](https://www.zhihu.com/question/480356710)
+
+管理员运行：
+
+```shell
+reg.exe add "HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32" /f /ve
+```
+
+恢复：
+
+```shell
+reg.exe delete "HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32" /va /f
+```
+
 # 6. Linux
 
 ## 6.1 Ubuntu调整字体大小
