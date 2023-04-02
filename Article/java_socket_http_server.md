@@ -2,7 +2,11 @@
 
 [A Simple HTTP Server in Java (commandlinefanatic.com)](https://commandlinefanatic.com/cgi-bin/showarticle.cgi?article=art076)
 
-# 1. 小爱同学
+The repository of my coding:
+
+[java_http_server: A simple HTTP server written in java, all ground techniques. (gitee.com)](https://gitee.com/spreadzhao/java_http_server)
+
+# 1. MI AI
 
 但是在开始这个项目之前，我们先来看一个比较简单的，也是我之前做过的一个项目。这个项目模拟了智能语音助手的简单工作方式，其实就是服务端在监听，客户端去发送信息，当服务端检测到信息之后，传回对应的对象即可。
 
@@ -92,9 +96,9 @@ public class ClientSocketHandlingTask implements Runnable{
 
 ^25f69e
 
-在构造这个任务的时候，我们最重要的任务就是拿到客户端的输入流和输出流，借助这两个流我们就能从客户端读信息和向客户端写信息了。
+在构造这个任务的时候，我们最重要的任务就是**拿到客户端的输入流和输出流**，借助这两个流我们就能从客户端读信息和向客户端写信息了。
 
-当这个任务被执行的时候，它会调用输入流的`readObject`方法(注意，客户端的输入流是服务端的输出流)，为了弄清楚这段代码到底是怎么运行的，我重写了一下：
+当这个任务被执行的时候，它会调用输入流的`readObject`方法(~~注意，客户端的输入流是服务端的输出流~~)，为了弄清楚这段代码到底是怎么运行的，我重写了一下：
 
 ```java
 public void run() {  
@@ -129,7 +133,7 @@ haha
 [Server]receive [user 1]'s message: fgh
 ```
 
-因此我们能推测出来：**`readObject`是一个阻塞方法**，只有收到了客户端发来的消息时才会继续执行。接下来就是客户端的代码了，这部分代码非常简单：
+这里的test只在输入时才打印，因此我们能推测出来：**`readObject`是一个阻塞方法**，只有收到了客户端发来的消息时才会继续执行。接下来就是客户端的代码了，这部分代码非常简单：
 
 ```java
 public class client {  
@@ -191,9 +195,9 @@ if(returnMsg instanceof File) {
 }
 ```
 
-# 2. 开始搭建
+# 2. Beginning
 
-## 2.1 重复工作
+## 2.1 Duplicate Works
 
 有了这个小爱同学的例子，我们已经对socket编程有了一个最最基本的认识。那么接下来就开始用java来手撸一个服务器罢！
 
@@ -222,15 +226,15 @@ public class HttpServer {
 
 这个while循环还没写完，接下来的事情就是去处理用户的连接了。在做这件事之前，我们先要明确一件事：我们是要处理http请求，而Socket传输的通常都是Object。因此我们要单独定义一些方法去将从客户端接收过来的object变成http请求的接口。
 
-## 2.2 Request简单介绍
+## 2.2 Request
 
-我们都知道，http请求分为Request和Response。前者是客户端发给服务端；后者反过来。那么我们就先从这两个对象开始说起。首先是Request，它的本质其实就是一个`BufferedReader`：
+我们都知道，http请求分为Request和Response。前者是客户端发给服务端；后者反过来。那么我们就先从这两个对象开始说起。首先是Request，它内部含有一个`BufferedReader`：
 
 ```java
 private BufferedReader in;
 ```
 
-我们从最简单的开始一步步来，首先给出Request的部分简单代码：
+而这个实际上就是**客户端的输入流**。我们可以用这个流不断地读取用户发送来的数据，从而得到相应的HTTP请求。我们从最简单的开始一步步来，首先给出Request的部分简单代码：
 
 ```java
 public class Request {  
@@ -337,7 +341,7 @@ GET / HTTP/1.1
 
 我们能看出来，请求的信息被打印了出来，那么接下来就是通过这个打印的信息，去分析它需要的东西了。自然，**我们要从Request类的`parse`函数入手**。
 
-## 2.3 重新认识HTTP请求
+## 2.3 Recognize HTTP Request
 
 在继续书写之前，我们要先了解一下java的StringTokenizer类：
 
@@ -593,4 +597,296 @@ enter port to listen: 1234
 
 #TODO java socket http server
 
-- [ ] Keep going!!!! fkkkkk!!!
+- [x] Keep going!!!! fkkkkk!!!
+
+After dealing with the "key-val" formed header list, it's time to turn to the `path` and it's query params. In the first line of HTTP request, **`componens[0]` is method and `components[1]` is the full Url which we care about most**:
+
+```java
+method = components[0];  
+fullUrl = components[1];
+```
+
+The `fullUrl` contains all the params which we need to analyze and handle. So let's find the law first. If our http request is like this:
+
+```url
+http://localhost:1234/doc/main
+```
+
+The `fullUrl` would be like this:
+
+```shell
+[components 1]/doc/main
+```
+
+---
+
+In another case, if our request contains query params:
+
+```url
+http://localhost:1234/doc/main?category=computer
+```
+
+The variable is like this:
+
+```shell
+[components 1]/doc/main?category=computer
+```
+
+---
+
+If we don't have any element after the port number:
+
+```url
+http://localhost:1234
+```
+
+The result is:
+
+```shell
+[components 1]/
+```
+
+To conclude the 3 cases above, we say that:
+
+* If the Url does not contain the character `?` which means the query param token, we can think that the whole Url is the path;
+* if the Url contain the character `?`, we should make the sub string before it the path, and we should also **parse every query param formed key-val after that guy**.
+
+Now let's code for these conclusions:
+
+```java
+public class Request {  
+    private BufferedReader in;  
+    private String method;  
+    private String fullUrl;  
+    private String path;  
+    private Map<String, String> headers = new HashMap<>();  
+  
+    public Request(BufferedReader in) ...
+  
+    public boolean parse() throws IOException {  
+
+		... ...
+  
+        if(!fullUrl.contains("?")) path = fullUrl;  
+        else {  
+            path = fullUrl.substring(0, fullUrl.indexOf("?"));  
+            parseQueryParameters(fullUrl.substring(fullUrl.indexOf("?") + 1));  
+        }  
+        return false;  
+    }  
+  
+    private void parseQueryParameters(String queryString){  
+		  ... ...
+    }  
+  
+    private void log(String tag, String msg) ...
+}
+```
+
+Everything is obvious and clear except **how we parse the query params**, which is the task of `parseQueryParameters()`. Now let's take a look at it:
+
+```java
+private void parseQueryParameters(String queryString){  
+    for(String param : queryString.split("&")){  
+        int separator = param.indexOf("=");  
+        if(separator > -1){  
+            queryParams.put(param.substring(0, separator), param.substring(separator + 1));  
+        }else {  
+            queryParams.put(param, null);  
+        }  
+    }  
+}
+```
+
+For a Url like this:
+
+```url
+http://localhost:8080/haha/hehe?name=spread&age=20&sex=male
+```
+
+the `queryString` has been cut down to this:
+
+```url
+name=spread&age=20&sex=male
+```
+
+So we need to **split it by `&`** to determine each key-val query param, and put the things before a `=` to the key and the things after it to the val.
+
+## 2.4 Handle the Parse Result
+
+During the parse job, once we were failed, the `parse()` method will return false. So if we get that, we should **respond to the client as an Intra Server Error**:
+
+```java
+public class SocketHandler implements Runnable{  
+  
+    private Socket clientSocket;   
+    public SocketHandler(Socket socket) ...
+  
+    @Override  
+    public void run() {  
+        BufferedReader in = null;  
+        OutputStream out = null;  
+  
+        try {  
+            ... ...
+            Request request = new Request(in);  
+            if(!request.parse()){  
+                respond(500, "Unable to parse request", out);  
+                return;            
+            }  
+        }catch (IOException e){  
+            e.printStackTrace();  
+        }  
+    }  
+  
+    private void respond(int statusCode, String msg, OutputStream out) throws IOException {  
+        ... ...
+    }  
+}
+```
+
+in the `respond()` method, we should use the Output Stream of client to return the status code and the detail message to it. So the implementation is like this:
+
+```java
+private void respond(int statusCode, String msg, OutputStream out) throws IOException {  
+    String responseLine = "HTTP/1.1 " + statusCode + " " + msg + "\r\n\r\n";  
+    out.write(responseLine.getBytes());  
+}
+```
+
+> SocketHandler means one-time Request handling, while HttpServer continously creates different SocketHandler to deal with multiple requests.
+
+What if we have successfully parse the request? **It's time to find a handler**! For a GET method, we have a series of handlers to do with it. Everybody of them is associated with a certain `PATH`. For example, there's a handler **A** which is capable of dealing with all GET methods under the path below:
+
+```url
+/hello
+```
+
+The case means that, if the client send a request like this:
+
+```url
+http://localhost:1234/hello?name=spread
+```
+
+After the server has parsed it, we know that **A** is the target handler to deal with such request. To implement that, we use a **Map of String and Map** to indicate the internal stucture:
+
+```java
+private Map<String, Map<String, Handler>> handlers;
+```
+
+The key of the first level Map is the **method**, such as GET, POST, DELETE, etc. The second level key is the **path** which the specific handler cares about. The SocketHandler parses the request, so it will know the method and path after the performing. We use these variables to query the target handler from the two-level map:
+
+```java
+Request request = new Request(in);  
+if(!request.parse()){  
+	respond(500, "Unable to parse request", out);  
+	return;            
+}  
+boolean foundHandler = false;  
+Response response = new Response(out);  
+
+// Filter for method  
+Map<String, Handler> methodHandlers = handlers.get(request.getMethod());  
+if(methodHandlers == null){  
+	respond(405, "Method not supported", out);  
+	return;            
+}  
+
+// Filter for path  
+if(methodHandlers.containsKey(request.getPath())){  
+	methodHandlers.get(request.getPath()).handle(request, response);  
+	response.send();  
+	foundHandler = true;  
+}
+```
+
+You will notice that I have implement the Response class, which is very easy and listed below:
+
+```java
+public class Response {  
+    private OutputStream out;  
+    private int statusCode;  
+    private String msg;  
+    private Map<String, String> headers = new HashMap<>();  
+    private String body;  
+  
+    public Response(OutputStream out){ this.out = out; }  
+    public void setResponseCode(int code, String msg){  
+        this.statusCode = code;  
+        this.msg = msg;  
+    }  
+    public void addHeader(String headerName, String headerValue){  
+        this.headers.put(headerName, headerValue);  
+    }  
+    public void addBody(String body){  
+        headers.put("Content-Length", Integer.toString(body.length()));  
+        this.body = body;  
+    }  
+    public void send() throws IOException {  
+        headers.put("Connection", "Close");  
+        out.write(("HTTP/1.1 " + statusCode + " " + msg + "\r\n").getBytes());  
+        for(String headerName : headers.keySet()){  
+            out.write((headerName + ": " + headers.get(headerName) + "\r\n").getBytes());  
+        }  
+        out.write("\r\n".getBytes());  
+        if(body != null) out.write(body.getBytes());  
+    }  
+}
+```
+
+## 2.5 Finish of First Release
+
+The next thing is: **what is the handler it self? How and When to fill the handlers Map**? Both of the two questions is easy. The handler is just an interface which is **thread safe**:
+
+```java
+public interface Handler {  
+    void handle(Request request, Response response) throws IOException;  
+}
+```
+
+When to add it? Absolutely when we create the server! Let's implement a demo handler and add it:
+
+```java
+public class DemoHandler implements Handler{  
+    @Override  
+    public void handle(Request request, Response response) throws IOException {  
+        String html = "<html><body>it works!</body></html>";  
+        response.setResponseCode(200, "OK");  
+        response.addHeader("Content-Type", "text/html");  
+        response.addBody(html);  
+    }  
+}
+```
+
+To add the demo handler, we should determine which type of request and which path we care about.
+
+```java
+public class Main {  
+    public static void main(String[] args) {  
+        int port;  
+        Scanner input = new Scanner(System.in);  
+        System.out.print("Enter port to listen: ");  
+        try {  
+            HttpServer server = new HttpServer(input.nextInt());  
+            server.addHandler("GET", "/demo", new DemoHandler());  
+            server.start();  
+        } catch (IOException e) {  
+            e.printStackTrace();  
+        }  
+    }  
+}
+```
+
+> Notice that, **the origin two-level Map `handlers` is located in HttpServer**, once a time a handling thread starts, the specific SocketHandler is created, and the Map is transformed into it:
+> 
+> ```java
+> // Constructor of SocketHandler
+> public SocketHandler(Socket socket, Map<String, Map<String, Handler>> handlers){  
+>     this.clientSocket = socket;  
+>     this.handlers = handlers;  
+> }
+> ```
+
+Now it's time to witness our effort! Start our server, visit the demo Url of that demo, we'll see:
+
+![[Article/resources/Pasted image 20230402200739.png|300]]
