@@ -39,5 +39,19 @@
 5. 调试plugin动态库，知道了.text放代码，.data放数据，.bss放全局静态变量
 6. 看到plugin的设计，发现了是Event系统体系结构，并理解同步异步概念，还用C去实现了面向对象QOM(QEMU Object Module)。它的方式和PCI的注册和初始化很像。
 
+
 8. 没有协程，没有CAS那种我一个cookie你一个session的方式，都是http明文传输，也没有SSL/TSL认证啥的
 9. 我是实习生啊，项目能有啥亮点，硬要说的话就是有Kotlin的泛型实化，用reified和inline机制来进行实时宏替换(ServiceCreator)，还有Kotlin有特点的get属性来隐蔽MutableLiveData；还有一个孬主意，用反射来加载图片，因为不想弄图床了。
+
+# 3. 美团
+
+自我介绍
+
+1. 最常使用Kotlin/Java/C，在大二下接触安卓，四大组件，网络库，图片库，一些第三方库，持久化等技术
+2. 跟着老师在做项目，定制，驱动，事件体系结构，buffer，能分析大型项目源代码
+3. 喜欢阅读官方文档
+4. 喜欢探索，在安卓上写解释器
+5. leetcode，快排，归并排，贪心，分治
+6. Obsidian仓库
+7. 关注新技术，Jetpack Compose, Material 3
+
