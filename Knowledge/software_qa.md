@@ -29,8 +29,6 @@ httpd -k install -n "Apache24"
 
 当在浏览器中输入`localhost:80`的时候，显示`It works!`就代表启动成功了。
 
-
-
 # 2. Git Usage
 
 ## 2.1 已经推送过的文件，但是本地发现他不用提交(比如clion的cmake-build-debug或者后来被加入到.gitignore的文件)
@@ -314,7 +312,7 @@ img[alt*="center"] {
 And below is how to use it:
 
 ```
-![[haha.png | center | 200x300]]
+![[haha.png|center|200x300]]
 ```
 
 ## 3.5 Alternative Checkboxes

@@ -242,13 +242,17 @@ Below is the settings for Style Settings:
   "minimal-style@@h1-l": true,
   "minimal-style@@h1-variant": "normal",
   "minimal-style@@spacing-p": "0.3em",
-  "minimal-style@@zoom-off": true
+  "minimal-style@@zoom-off": true,
+  "minimal-style@@sidebar-lines-off": false,
+  "minimal-style@@sidebar-tabs-style": "sidebar-tabs-underline"
 }
 ```
 
 All plugins now:
 
-![[resources/Pasted image 20230502154720.png]]
+![[resources/Pasted image 20230502234456.png]]
+
+![[resources/Pasted image 20230502234507.png]]
 
 Also, we create a css to center the images which also works when exported to pdf files. See [[Knowledge/software_qa#3.4 Center Images|this]] for detail.
 
