@@ -7,7 +7,7 @@
 * JDBC Driver：连接驱动，提供创建java和数据库连接的基本API。
 * Connection：连接对象，类似HttpUrlConnection对象。
 * Statement：语句执行官，用来执行sql语句。
-* Resultset：结果集，用来存放结果结合，本质是一个[[db#5.1.4 Cursors|cursor]] ^c627c2
+* Resultset：结果集，用来存放结果结合，本质是一个[[Lecture Notes/Database/db#5.1.4 Cursors|cursor]] ^c627c2
 
 那么接下来，就给出每一步操作。首先是引入需要加载的驱动类。这个类并不是java自带的，而是要到各个数据库厂商对应的地方下载。比如如果要下载connector-java的MySQL版本，就可以到下面的网站：
 
@@ -288,7 +288,7 @@ public class JdbcUtil {
 }
 ```
 
-在java中加载配置文件有两种方式，分别是`Properties`工具类和`ResourcesBundle`。zfh在写我们的[[spread_shop_report#^31c4af|SpreadShop项目]]时使用的就是后者。它们的区别可以参考下面的网站：
+在java中加载配置文件有两种方式，分别是`Properties`工具类和`ResourcesBundle`。zfh在写我们的[[Projects/android/spreadshop/spread_shop_report#^31c4af|SpreadShop项目]]时使用的就是后者。它们的区别可以参考下面的网站：
 
 [(29条消息) ResourceBundle与Properties_黄爱岗的博客-CSDN博客_resourcebundle 与 properties](https://blog.csdn.net/huangaigang6688/article/details/49496445)
 
@@ -341,4 +341,4 @@ public static Connection getConnection(){
 
 好吧，我没有用jdbc，更没有用swing。只是用了mybatis plus和android。我还是选择在自己熟悉的平台上操作。下面是我的报告：
 
-[[homework/Database/4. journey_reserve_system]]
+[[Homework/Database/4. journey_reserve_system]]

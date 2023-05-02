@@ -28,7 +28,7 @@ link: "[(921) CS170 Spring 2020 - YouTube](https://www.youtube.com/playlist?list
 
 接下来是乘法，列竖式的话，最多需要n位乘以n位，所以时间复杂度是$O(n^2)$。很长一段时间，人们都认为没有比这更快的算法了。下面我们给出这段时间内的一个证明，这也是之后的Divide and Conquer问题。比如我们算$5143 \times 291$，可以这样： ^8b7991
 
-![[Algorithm/resources/Drawing 2023-01-20 17.15.11.excalidraw.png|center|300]]
+![[Lecture Notes/Algorithm/resources/Drawing 2023-01-20 17.15.11.excalidraw.png|center|300]]
 
 在这个例子中，我们把每个数字分成了2份，因此，如果要算出x和y的话，就应该是：
 
@@ -58,15 +58,15 @@ $$
 
 为啥n=1的时候是1呢？因为99乘法表！当n=1时，意味着这时已经分到了1位数乘以1位数，那还算啥？乘法表都背下来，直接给结果就可以了！下一个问题：这个算法的时间复杂度是多少？
 
-![[Algorithm/resources/Drawing 2023-01-20 17.50.21.excalidraw.png|400]]
+![[Lecture Notes/Algorithm/resources/Drawing 2023-01-20 17.50.21.excalidraw.png|400]]
 
 递归的求和其实和等比数列很像。将这些框里的时间加起来就是最终的时间了。也就是$4^0 \cdot c \cdot n + 4^1 \cdot c \cdot \frac{n}{2} + 4^2 \cdot c \cdot \frac{n}{4} + \cdots = cn(1 + 2 + 2^2 + 2^3 + \cdots + 2^k)$。k是多少？观察一下就知道，这棵树有多深k就是多少。显然，当n除的是n的时候这棵树截至，那么分母的变化为$2^0,2^1,2^2,\cdots,2^l$。求出$l = log_2n$，因此$k = l + 1 = log_2n + 1$。根据等比求和公式，上面的式子结果是$cn(2^{k+1}-1)$，带入得到最终结果：$cn(4n-1) \longrightarrow O(n^2)$。**这里$\Theta$和$O$的区别是，前者表示差不多相等，后者表示通常情况下都是(远)小于等于，后面给出的只是最复杂的情况**。
 
 #question 老师的板书：
 
-![[Algorithm/resources/Pasted image 20230120181557.png]]
+![[Lecture Notes/Algorithm/resources/Pasted image 20230120181557.png]]
 
-![[Algorithm/resources/Pasted image 20230120181653.png]]
+![[Lecture Notes/Algorithm/resources/Pasted image 20230120181653.png]]
 
 ~~我怀疑老师的数学有点问题，那两个k根本就不是同一个变量。但是也无伤大雅。~~
 
@@ -99,7 +99,7 @@ $$
 
 那么总时间的图就会变成这样：
 
-![[Algorithm/resources/Drawing 2023-01-20 18.35.54.excalidraw.png|400]]
+![[Lecture Notes/Algorithm/resources/Drawing 2023-01-20 18.35.54.excalidraw.png|400]]
 
 来算一下这棵树的总时间，就是$3^0 \cdot c \cdot n + 3^1 \cdot c \cdot \frac{n}{2} + 3^2 \cdot c \cdot \frac{n}{2^2} + \cdots + 3^l \cdot c \cdot \frac{n}{2^l} = cn(1 + \frac{3}{2} + (\frac{3}{2})^2 + (\frac{3}{2})^3 + \cdots + (\frac{3}{2})^k)$。树的深度并没有变，只是分叉少了一个。那么k还是$log_2n + 1$。带入之前的求和公式，能够得到最终的结果：
 
@@ -117,13 +117,13 @@ $$
 
 啥时候用这个算法呢？如果我只算个$10 \times 10$，还需要这么大费周章吗？在Python的源代码中我们能找到答案。Python的long类型有个特点，就是它可以非常非常长，甚至是无限长。原因就是它存的方式就是字符串。那么咋计算呢？其实就是用到了上面这种方法。我们看一看源代码的注释：
 
-![[Algorithm/resources/Pasted image 20230120212757.png]]
+![[Lecture Notes/Algorithm/resources/Pasted image 20230120212757.png]]
 
 意思就是说，如果两个操作数的长度有一个小于等于70，就用在学校里学过的方法(模拟列竖式)；只有两个数字的长度都超过70的时候，采用这种比较复杂的算法。那么为啥是70呢？比如，一个$\Theta(50n)$和一个$\Theta(n^2)$的算法，我们该选那个？那就看这俩谁小呗！如果n < 50就选n2；如果大于50就选50n。这里也是一样的道理，只不过它们测出这个70的手段更高级一些。
 
 下面是算乘法的记录：
 
-![[Algorithm/resources/Pasted image 20230120214905.png]]
+![[Lecture Notes/Algorithm/resources/Pasted image 20230120214905.png]]
 
 > 可以看到，就在最近的2019年，Harvey Vander Hoeven已经将两个整数相乘的算法复杂度提高到了$O(nlogn)$，这在从前是不敢想的。以后会不会更快，甚至到$O(logn)$的级别，也未可知。
 
@@ -460,9 +460,9 @@ for(i = 0; i < n; i++){
 
 So the time cost is $\Theta(n^3)$ for the nest for loops. Can we make it better with Divide and Conquer? The answer is yes!
 
-![[Algorithm/resources/Pasted image 20230123144213.png]]
+![[Lecture Notes/Algorithm/resources/Pasted image 20230123144213.png]]
 
-![[Algorithm/resources/Pasted image 20230123144232.png]]
+![[Lecture Notes/Algorithm/resources/Pasted image 20230123144232.png]]
 
 > Matrix multiplication is unlike the integer one, we still don't have a relatively good alg to solve it.
 
@@ -470,19 +470,19 @@ So the time cost is $\Theta(n^3)$ for the nest for loops. Can we make it better 
 
 If we have an array consist of just one elem: 3, and we have another array also consist of one elem: 5. We want to **merge them to an entire array** like:
 
-![[Algorithm/resources/Drawing 2023-01-23 14.54.34.excalidraw.png|center|200]]
+![[Lecture Notes/Algorithm/resources/Drawing 2023-01-23 14.54.34.excalidraw.png|center|200]]
 
 This is the core idea of Merge Sort. **We recursively divide the array in two pieces until is has only 1 elem**. Then we start to put them together, **but with order**. If somehow we have done everything before the last merge, we will get two arrays which has been in order:
 
-![[Algorithm/resources/Drawing 2023-01-23 14.58.12.excalidraw.png]]
+![[Lecture Notes/Algorithm/resources/Drawing 2023-01-23 14.58.12.excalidraw.png]]
 
 What we need to do is to merge them together. But how? Make 2 pointers, pointing to the smallest one: 
 
-![[Algorithm/resources/Drawing 2023-01-23 15.00.11.excalidraw.png|300]]
+![[Lecture Notes/Algorithm/resources/Drawing 2023-01-23 15.00.11.excalidraw.png|300]]
 
 **Which one is smaller? 2! So we put 2 to the new array**:
 
-![[Algorithm/resources/Drawing 2023-01-23 15.02.02.excalidraw.png|500]]
+![[Lecture Notes/Algorithm/resources/Drawing 2023-01-23 15.02.02.excalidraw.png|500]]
 
 Continuously do this, until both of the two pointers reach the end. After that, we will get the merged array. So the structure of Merge Sort is supposed to be:
 
@@ -514,7 +514,7 @@ There're also other implements to achieve this time cost **without recursion**. 
 
 what you should do is making a queue, and pushing all the elems in it, **one in a list**:
 
-![[Algorithm/resources/Drawing 2023-01-27 00.08.55.excalidraw.png]]
+![[Lecture Notes/Algorithm/resources/Drawing 2023-01-27 00.08.55.excalidraw.png]]
 
 Now you just need to do as the follow, until there're only 1 list in the queue:
 
@@ -522,15 +522,15 @@ Now you just need to do as the follow, until there're only 1 list in the queue:
 * merge them
 * push the merged list to the tail
 
-![[Algorithm/resources/Drawing 2023-01-27 00.11.17.excalidraw.png|400]]
+![[Lecture Notes/Algorithm/resources/Drawing 2023-01-27 00.11.17.excalidraw.png|400]]
 
 Is there any algs which is faster than $O(nlogn)$? The answer is true when your computer can not only do comparison(Well, actually almost all computers now fit it). Let's take **Counting Sort** as an example. If every number to be sorted is between 1 to B, then I can make B-size buckets:
 
-![[Algorithm/resources/Drawing 2023-01-27 00.27.09.excalidraw.png|300]]
+![[Lecture Notes/Algorithm/resources/Drawing 2023-01-27 00.27.09.excalidraw.png|300]]
 
 And here is the array I want to sort:
 
-![[Algorithm/resources/Drawing 2023-01-27 00.28.13.excalidraw.png]]
+![[Lecture Notes/Algorithm/resources/Drawing 2023-01-27 00.28.13.excalidraw.png]]
 
 What I need to do is terribly easy: Go through the array. The 1st is 2, so we put it in the bucket 2; the next one is 4, so we put it in the bucket 4 ... . After we have went through the array, all the numbers have been put into their affiliated buckets. **So we just need to turn to the buckets by going through it.** Then we'll get the sorted array.
 
@@ -542,7 +542,7 @@ But if you assume the comparison based model, why $O(nlogn)$ is the fasted time 
 
 Then there's a machine constantly asking dummy questions like: $A_5 < A_7\ ?$. If the answer is yes, it strach to a new question like $A_4 < A_7\ ?$ ... ... When the machine stop asking questions, the sorting alg is over:
 
-![[Algorithm/resources/Pasted image 20230127181051.png|300]]
+![[Lecture Notes/Algorithm/resources/Pasted image 20230127181051.png|300]]
 
 If every question the machine asks just hits the point, the alg is faster; other wise like the machine is asking questions like: $A_1 < A_2\ ?\ A_2 < A_1\ ? \cdots$, the alg is slower. Whatever, once the process got to the end of the tree, we will get a bigger-less relation ship of the permutation. If it is assumed that the height of this tree is `T`(where `T` is just the times of comparison, or time cost), there're $2^T$ leaves in the tree, and **every permutation of the input must mapping a leaf itself**, which means **the number of leaves is at least the number of the permutations**:
 
@@ -576,7 +576,7 @@ where $cn$ is the time of comparing the pivot with other elems in the array; $T(
 
 Here's my array and it has **n distinct** entries. The next thing I will do looks like a little weird, but after that I will show you that the weirdness is not out of no where. **I'm going to group the entries with blocks of size 5**:
 
-![[Algorithm/resources/Drawing 2023-01-28 20.18.04.excalidraw.png]]
+![[Lecture Notes/Algorithm/resources/Drawing 2023-01-28 20.18.04.excalidraw.png]]
 
 Then I'll find the median of every group. The way I can use is various, like merge sort, bubble sort etc. Because the size of the group is constant, so **whatever the alg used to find the median is, the time cost is always constant**. For example, if I use Merge Sort to find the median, then the time cost will be:
 
@@ -586,7 +586,7 @@ $$
 
 Totally I've got the number of the groups of medians. Then I'll **recursively call the function to find the median of the medians**:
 
-![[Algorithm/resources/Drawing 2023-01-28 20.26.08.excalidraw.png]]
+![[Lecture Notes/Algorithm/resources/Drawing 2023-01-28 20.26.08.excalidraw.png]]
 
 > You may ask why recursively? Because the algorithm itself is a way to find the kth smallest elem in the array, so it absolutely fits our expectation when
 >  
@@ -659,7 +659,7 @@ Now let's analyze the time cost of this alg:
 * Then we pivot around the array, namely do a linear scan on it to find `L` and `R`. So we cost another $O(n)$.
 * Finally is the toughest thing. What if we do the recursion in `L` and `R`? Is it $T(\frac{n}{2})$? Notice that the best pivot is not always the midium of the array, **it is just bigger than half of the numbers in some groups, but not the half in the entire array**. So let's see what is the size of `L` and `R`.
 
-  ![[Algorithm/resources/Pasted image 20230128214203.png]]
+  ![[Lecture Notes/Algorithm/resources/Pasted image 20230128214203.png]]
 
   The best pivot is **guaranteed to be in the product of the first selection**, which is just `B`. So the `p` is guaranteed to be bigger than half of the elems in `B`(From here, you could see, instead of the half of `A` which is the origin entire array). And the half of `B` which is smaller than `p` is also guaranteed to be bigger than half of the elems in **their respective group**. And the number of groups is ought to be:
 
@@ -719,7 +719,7 @@ $$
 
 Remember what we said: **at least 5 blocks**, how about 3? And how about an even number? The 2nd question is easy to solve, because the median is expected to be the only one; but the 1st question is a little bit harder. But I'll show the teacher's blackboard-writing as a tip:
 
-![[Algorithm/resources/Pasted image 20230129011048.png|center|200]]
+![[Lecture Notes/Algorithm/resources/Pasted image 20230129011048.png|center|200]]
 
 ## 3.4 Polynomial Multipication
 
@@ -784,5 +784,5 @@ $$
 
 We can also do KaraTsuba Alg in poly mult. And the trick to divide and conquer is also the same:
 
-![[Algorithm/resources/Pasted image 20230131132601.png]]
+![[Lecture Notes/Algorithm/resources/Pasted image 20230131132601.png]]
 

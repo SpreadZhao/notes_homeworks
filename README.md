@@ -70,7 +70,7 @@ where file.name = "README"
 
 # 2022-10-19 
 
-导出pdf的样式丑的要死，怀疑是1.0版本升级之后改成这个样子。解决办法参见[[software_qa#pdf导出|这里]]，但是解决成这样还是不太好看。
+导出pdf的样式丑的要死，怀疑是1.0版本升级之后改成这个样子。解决办法参见[[software_qa#3.1 pdf导出|这里]]，但是解决成这样还是不太好看。
 
 ---
 
@@ -232,16 +232,16 @@ Below is the settings for Style Settings:
   "minimal-style@@h1-color@@dark": "#D51A1A",
   "minimal-style@@h1-weight": 700,
   "minimal-style@@h2-size": "1.6em",
-  "minimal-style@@h2-color@@dark": "#FFE600",
+  "minimal-style@@h2-color@@dark": "#D58E06",
   "minimal-style@@h3-size": "1.4em",
   "minimal-style@@h3-color@@dark": "#5569C8",
   "minimal-style@@h4-size": "1.0em",
-  "minimal-style@@h4-color@@dark": "#24CD0F",
+  "minimal-style@@h4-color@@dark": "#1C829D",
   "minimal-style@@h5-size": "1em",
   "minimal-style@@h6-size": "1em",
   "minimal-style@@h1-l": true,
   "minimal-style@@h1-variant": "normal",
-  "minimal-style@@spacing-p": "0.3em"
+  "minimal-style@@spacing-p": "0.3em",
   "minimal-style@@zoom-off": true
 }
 ```
