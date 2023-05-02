@@ -297,6 +297,32 @@ DataView has some default metadata, you can see that in this website:
 
 [Metadata on Pages - Dataview (blacksmithgu.github.io)](https://blacksmithgu.github.io/obsidian-dataview/annotation/metadata-pages/)
 
+## 3.4 Center Images
+
+You need to create your own css file to realize this. See this for detail:
+
+[Centering Images in Reading Mode : r/ObsidianMD (reddit.com)](https://www.reddit.com/r/ObsidianMD/comments/v1fs0f/centering_images_in_reading_mode/)
+
+```css
+img[alt*="center"] {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+```
+
+And below is how to use it:
+
+```
+![[haha.png | center | 200x300]]
+```
+
+## 3.5 Alternative Checkboxes
+
+Work with Minimal:
+
+![[Knowledge/resources/Pasted image 20230502155741.png]]
+
 # 4. MySQL
 
 ## 4.1 MySQL的配置

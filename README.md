@@ -215,3 +215,40 @@ git pull
 **Obsidian**
 
 ![[resources/Pasted image 20230130001216.png]]
+
+# 2023-5-2
+
+We are now begin using The Minimal Theme for obsidian. These are the plugins related to it:
+
+* [Minimal Theme Settings](https://minimal.guide/Plugins/Minimal+Theme+Settings) allows you to customize [color schemes](https://minimal.guide/Features/Color+schemes), fonts, [Hotkeys](https://minimal.guide/Features/Hotkeys), and theme features. This plugin is highly recommended for all users of Minimal
+* [Contextual Typography](https://minimal.guide/Plugins/Contextual+Typography) is required for advanced layout features such as [Image grids](https://minimal.guide/Block+types/Image+grids) and [Block width](https://minimal.guide/Features/Block+width)
+* [Style Settings](https://minimal.guide/Plugins/Style+Settings) allows you to create custom [Color schemes](https://minimal.guide/Features/Color+schemes)
+
+Below is the settings for Style Settings:
+
+```css
+{
+  "minimal-style@@h1-size": "1.8em",
+  "minimal-style@@h1-color@@dark": "#D51A1A",
+  "minimal-style@@h1-weight": 700,
+  "minimal-style@@h2-size": "1.6em",
+  "minimal-style@@h2-color@@dark": "#FFE600",
+  "minimal-style@@h3-size": "1.4em",
+  "minimal-style@@h3-color@@dark": "#5569C8",
+  "minimal-style@@h4-size": "1.0em",
+  "minimal-style@@h4-color@@dark": "#24CD0F",
+  "minimal-style@@h5-size": "1em",
+  "minimal-style@@h6-size": "1em",
+  "minimal-style@@h1-l": true,
+  "minimal-style@@h1-variant": "normal",
+  "minimal-style@@spacing-p": "0.3em"
+  "minimal-style@@zoom-off": true
+}
+```
+
+All plugins now:
+
+![[resources/Pasted image 20230502154720.png]]
+
+Also, we create a css to center the images which also works when exported to pdf files. See [[Knowledge/software_qa#3.4 Center Images|this]] for detail.
+
