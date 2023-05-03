@@ -27,3 +27,25 @@
 ![[Lecture Notes/Software Architecture/resources/Pasted image 20230502135943.png]]
 
 ## 1.2 Pipe and Filter
+
+**If only the data comes, components can work**, which is the biggest difference than the Batch Sequential. Such feature enables **parallel** among components.
+
+![[Lecture Notes/Software Architecture/resources/Pasted image 20230503112524.png]]
+
+![[Lecture Notes/Software Architecture/resources/Pasted image 20230503112601.png]]
+
+![[Lecture Notes/Software Architecture/resources/Pasted image 20230503112646.png]]
+
+![[Lecture Notes/Software Architecture/resources/Pasted image 20230503112850.png]]
+
+![[Lecture Notes/Software Architecture/resources/Pasted image 20230503112902.png]]
+
+![[Lecture Notes/Software Architecture/resources/Pasted image 20230503113010.png]]
+
+![[Lecture Notes/Software Architecture/resources/Pasted image 20230503113135.png]]
+
+![[Lecture Notes/Software Architecture/resources/Pasted image 20230503113151.png]]
+
+![[Lecture Notes/Software Architecture/resources/Pasted image 20230503113338.png]]
+
+![[Lecture Notes/Software Architecture/resources/Pasted image 20230503113441.png]]

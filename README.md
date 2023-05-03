@@ -42,6 +42,8 @@ where file.name = "README"
 
 #keypoint 关键点，任何可能的重点/难点都会使用此标签。
 
+#point Knowledge point.
+
 ---
 
 # 2022-10-17
@@ -244,7 +246,19 @@ Below is the settings for Style Settings:
   "minimal-style@@spacing-p": "0.3em",
   "minimal-style@@zoom-off": true,
   "minimal-style@@sidebar-lines-off": false,
-  "minimal-style@@sidebar-tabs-style": "sidebar-tabs-underline"
+  "minimal-style@@sidebar-tabs-style": "sidebar-tabs-underline",
+  "minimal-advanced@@cursor": "default",
+  "minimal-style@@italic-color@@dark": "#4BACC5",
+  "minimal-style@@hl2@@dark": "#8C7E7E",
+  "minimal-style@@bold-weight": 600,
+  "minimal-style@@bold-color@@dark": "#C10202",
+  "minimal-style@@italic-color@@light": "#4BACC5",
+  "minimal-style@@h1-color@@light": "#D51A1A",
+  "minimal-style@@h2-color@@light": "#D58E06",
+  "minimal-style@@h3-color@@light": "#5569C8",
+  "minimal-style@@h4-color@@light": "#1C829D",
+  "minimal-style@@hl2@@light": "#8C7E7E",
+  "minimal-style@@bold-color@@light": "#C10202"
 }
 ```
 

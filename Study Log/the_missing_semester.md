@@ -1422,7 +1422,7 @@ signal(SIGINT, handler);
 
 ![[Study Log/resources/Pasted image 20221219213915.png]]
 
-> 这个程序的更多细节可以在[[Article/story_on_program/2022-12-19|我的开发日记]]里看到。
+> 这个程序的更多细节可以在[[Article/story/2022-12-19|我的开发日记]]里看到。
 
 那么问题来了，如何停止呢？答案是按ctrl + \\，这其实是发送了一个SIGQUIT信号，而这个程序不能处理SIGQUIT信号，因此终止了。
 
