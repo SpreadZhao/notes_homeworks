@@ -270,3 +270,40 @@ All plugins now:
 
 Also, we create a css to center the images which also works when exported to pdf files. See [[Knowledge/software_qa#3.4 Center Images|this]] for detail.
 
+# 2023-5-3
+
+New Sytle Settings:
+
+```css
+{
+  "minimal-advanced@@cursor": "default",
+  "minimal-style@@h1-size": "1.8em",
+  "minimal-style@@h1-color@@dark": "#D51A1A",
+  "minimal-style@@h1-weight": 700,
+  "minimal-style@@h2-size": "1.6em",
+  "minimal-style@@h2-color@@dark": "#D58E06",
+  "minimal-style@@h3-size": "1.4em",
+  "minimal-style@@h3-color@@dark": "#5569C8",
+  "minimal-style@@h4-size": "1.0em",
+  "minimal-style@@h4-color@@dark": "#1C829D",
+  "minimal-style@@h5-size": "1em",
+  "minimal-style@@h6-size": "1em",
+  "minimal-style@@h1-l": true,
+  "minimal-style@@h1-variant": "normal",
+  "minimal-style@@spacing-p": "0.3em",
+  "minimal-style@@zoom-off": true,
+  "minimal-style@@sidebar-lines-off": false,
+  "minimal-style@@sidebar-tabs-style": "sidebar-tabs-underline",
+  "minimal-style@@italic-color@@dark": "#4BACC5",
+  "minimal-style@@hl2@@dark": "#52511D",
+  "minimal-style@@bold-weight": 600,
+  "minimal-style@@bold-color@@dark": "#C10202",
+  "minimal-style@@italic-color@@light": "#4BACC5",
+  "minimal-style@@h1-color@@light": "#D51A1A",
+  "minimal-style@@h2-color@@light": "#D58E06",
+  "minimal-style@@h3-color@@light": "#5569C8",
+  "minimal-style@@h4-color@@light": "#1C829D",
+  "minimal-style@@hl2@@light": "#ACAA44",
+  "minimal-style@@bold-color@@light": "#C10202"
+}
+```
