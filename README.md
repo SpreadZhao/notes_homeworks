@@ -44,9 +44,13 @@ where file.name = "README"
 
 #point Knowledge point.
 
+#date Exists after every title with the date format. Because I have no reason to write every date-related articles in diary, so I have to put a tag to remember this.
+
 ---
 
 # 2022-10-17
+
+#date 2022-10-17
 
 本仓库使用obsidian搭建，并且融合进了HappySE的仓库。关于HappySE仓库的作者信息如下：
 
@@ -64,6 +68,8 @@ where file.name = "README"
 
 # 2022-10-18
 
+#date 2022-10-18
+
 新增了插件：
 
 ![[Pasted image 20221018121850.png]]
@@ -72,11 +78,15 @@ where file.name = "README"
 
 # 2022-10-19 
 
+#date 2022-10-19
+
 导出pdf的样式丑的要死，怀疑是1.0版本升级之后改成这个样子。解决办法参见[[software_qa#3.1 pdf导出|这里]]，但是解决成这样还是不太好看。
 
 ---
 
 # 2022-10-21
+
+#date 2022-10-21
 
 增加了插件：
 
@@ -92,6 +102,8 @@ where file.name = "README"
 
 # 2022-11-10
 
+#date 2022-11-10
+
 由于引入了yaml模板，所以在Obsidian中要进行如下设置应用模板：
 
 ![[Pasted image 20221110232507.png]]
@@ -99,6 +111,8 @@ where file.name = "README"
 ---
 
 # 2022-11-21
+
+#date 2022-11-21
 
 增加了插件，下面给出目前的所有插件：
 
@@ -115,6 +129,8 @@ where file.name = "README"
 ---
 
 # 2022-11-24
+
+#date 2022-11-24
 
 如何使用本仓库？其实非常简单。
 
@@ -184,17 +200,23 @@ git pull
 
 # 2022-12-29
 
+#date 2022-12-29
+
 更新了插件：
 
 ![[resources/Pasted image 20221229144203.png]]
 
-# 2023-1-24
+# 2023-01-24
+
+#date 2023-01-24
 
 想要正常工作，只需要DataView和Excalidraw插件即可：
 
 ![[resources/Pasted image 20230124231029.png]]
 
-# 2023-1-30
+# 2023-01-30
+
+#date 2023-01-30
 
 **重大更新！！！**
 
@@ -218,7 +240,9 @@ git pull
 
 ![[resources/Pasted image 20230130001216.png]]
 
-# 2023-5-2
+# 2023-05-02
+
+#date 2023-05-02
 
 We are now begin using The Minimal Theme for obsidian. These are the plugins related to it:
 
@@ -270,7 +294,9 @@ All plugins now:
 
 Also, we create a css to center the images which also works when exported to pdf files. See [[Knowledge/software_qa#3.4 Center Images|this]] for detail.
 
-# 2023-5-3
+# 2023-05-03
+
+#date 2023-05-03
 
 New Sytle Settings:
 
@@ -307,3 +333,33 @@ New Sytle Settings:
   "minimal-style@@bold-color@@light": "#C10202"
 }
 ```
+
+# 2023-05-07
+
+#date 2023-05-07
+
+Now we can use our own css snippet to custimize our own style!!!
+
+```css
+.square-solid {
+	border-style: solid;
+	background-color: transparent !important;
+}
+.square-solid-red {
+	border-style: solid;
+	border-color: red;
+	background-color: transparent !important;
+}
+.square-solid-yellow {
+	border-style: solid;
+	border-color: yellow;
+	background-color: transparent !important;
+}
+.square-solid-blue {
+	border-style: solid;
+	border-color: blue;
+	background-color: transparent !important;
+}
+```
+
+The [[templates/square-solid|new template]] is also defined under the existance of this style.
