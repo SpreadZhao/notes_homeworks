@@ -20,4 +20,4 @@
 
 Using class:
 
-<mark class="square-solid">square-solid</mark> <mark class="square-solid-red">square-solid-red</mark> <mark class="square-solid-yellow">square-solid-yellow</mark> <mark class="square-solid-blue">square-solid-blue</mark>
+<mark class="square-solid">square-solid</mark> <mark class="square-solid-red">squa**re-s**olid-red</mark> <mark class="square-solid-yellow">square-solid-yellow</mark> <mark class="square-solid-blue">square-solid-blue</mark>

@@ -363,3 +363,39 @@ Now we can use our own css snippet to custimize our own style!!!
 ```
 
 The [[templates/square-solid|new template]] is also defined under the existance of this style.
+
+# 2023-05-08
+
+#date 2023-05-08
+
+To make the text bordered remains its color, we should **interit the color style from its parent**:
+
+```css
+.square-solid {
+	border-style: solid;
+	background-color: transparent !important;
+	color: inherit !important;
+}
+.square-solid-red {
+	border-style: solid;
+	border-color: red;
+	background-color: transparent !important;
+	color: inherit !important;
+}
+.square-solid-yellow {
+	border-style: solid;
+	border-color: yellow;
+	background-color: transparent !important;
+	color: inherit !important;
+}
+.square-solid-blue {
+	border-style: solid;
+	border-color: blue;
+	background-color: transparent !important;
+	color: inherit !important;
+}
+```
+
+You will get such result which is more comforting:
+
+![[resources/Pasted image 20230508235852.png]]
