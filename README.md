@@ -44,7 +44,7 @@ where file.name = "README"
 
 #point Knowledge point.
 
-#date Exists after every title with the date format. Because I have no reason to write every date-related articles in diary, so I have to put a tag to remember this.
+#date Exists after every title with the date format *mostly*. Because I have no reason to write every date-related articles in diary, so I have to put a tag to remember this.
 
 ---
 

@@ -12,7 +12,7 @@ The core idea of Jetpack Compose is **transferring all xml layout files into kot
 
 ![[Article/resources/Screenshot_20230408_223849_ComposeTutorial.jpg|200]]  ![[Article/resources/Screenshot_20230408_223852_ComposeTutorial.jpg|200]]
 
-An [OutlinedTextField](https://developer.android.com/jetpack/compose/text) on the top, and a RecyclerView-like List below, with 3 columns. This file is called **HomeScreen.kt** which is a kotlin file instead of a kotlin class, because what we are coding is function but xml or it's corrisponding object.
+An [OutlinedTextField](https://developer.android.com/jetpack/compose/text#enter-modify-text) on the top, and a RecyclerView-like List below, with 3 columns. This file is called **HomeScreen.kt** which is a kotlin file instead of a kotlin class, because what we are coding is function but not xml or it's corrisponding object.
 
 ```kotlin
 @Composable  
