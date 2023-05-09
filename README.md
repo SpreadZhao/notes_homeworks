@@ -46,6 +46,8 @@ where file.name = "README"
 
 #date Exists after every title with the date format *mostly*. Because I have no reason to write every date-related articles in diary, so I have to put a tag to remember this.
 
+#diary Just like what it looks like.
+
 ---
 
 # 2022-10-17
