@@ -1,0 +1,3 @@
+# Japanese Daily Note
+
+#japanese 
