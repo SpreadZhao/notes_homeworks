@@ -1,3 +1,3 @@
 # Japanese Daily Note
 
-#japanese 
+#language/communication/japanese

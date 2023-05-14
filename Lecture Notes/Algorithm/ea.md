@@ -12,7 +12,7 @@ link: "[(921) CS170 Spring 2020 - YouTube](https://www.youtube.com/playlist?list
 
 算加法，怎么算？数数呗！从小我们就知道，算5+7是多少，**就从5开始，数7个数，得到结果是12**。但是，这个过程从计算机的角度来讲，应该是什么呢？换句话说，**我们如何用计算机程序来模拟数数的过程呢**？计算机并不知道1的后面是2，2的后面是3。因此我们要是想模拟数数的过程，需要的Runtime时间$\leq 10^n \cdot n$。
 
-#question 视频里这块完全不知道他在讲什么，好在没啥大用，就记结论了。
+#question/common 视频里这块完全不知道他在讲什么，好在没啥大用，就记结论了。
 
 列竖式的思想其实也是这个， 我们算2568+347，就是这样： ^429ac9
 
@@ -62,7 +62,7 @@ $$
 
 递归的求和其实和等比数列很像。将这些框里的时间加起来就是最终的时间了。也就是$4^0 \cdot c \cdot n + 4^1 \cdot c \cdot \frac{n}{2} + 4^2 \cdot c \cdot \frac{n}{4} + \cdots = cn(1 + 2 + 2^2 + 2^3 + \cdots + 2^k)$。k是多少？观察一下就知道，这棵树有多深k就是多少。显然，当n除的是n的时候这棵树截至，那么分母的变化为$2^0,2^1,2^2,\cdots,2^l$。求出$l = log_2n$，因此$k = l + 1 = log_2n + 1$。根据等比求和公式，上面的式子结果是$cn(2^{k+1}-1)$，带入得到最终结果：$cn(4n-1) \longrightarrow O(n^2)$。**这里$\Theta$和$O$的区别是，前者表示差不多相等，后者表示通常情况下都是(远)小于等于，后面给出的只是最复杂的情况**。
 
-#question 老师的板书：
+#question/common 老师的板书：
 
 ![[Lecture Notes/Algorithm/resources/Pasted image 20230120181557.png]]
 
@@ -111,7 +111,7 @@ S & = cn \cdot \frac{1 \cdot [1 - (\frac{3}{2})^{k + 1}]}{1 - \frac{3}{2}} = cn 
 \end{align}
 $$
 
-#question 这里老师还是认为$k = log_2n$，我觉得还是有问题。
+#question/common 这里老师还是认为$k = log_2n$，我觉得还是有问题。
 
 由于$log_23 < 2 = log_24$，因此这个被优化的算法是比正常乘法更快的！
 
@@ -171,7 +171,7 @@ $$
 T \geqslant 2^{.5n}\ (flops)
 $$
 
-#question I also don't know what is the teacher saying. Just remember that this alg takes **exponential flops of $cn$**, marked as **exp(cn).** **Flops! Not real time!**
+#question/class I also don't know what is the teacher saying. Just remember that this alg takes **exponential flops of $cn$**, marked as **exp(cn).** **Flops! Not real time!**
 
 ---
 
