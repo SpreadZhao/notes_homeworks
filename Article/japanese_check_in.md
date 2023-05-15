@@ -1,4 +1,4 @@
 ```query
 path:"story"
-tag: #japanese 
+tag: #language/communication/japanese
 ```
