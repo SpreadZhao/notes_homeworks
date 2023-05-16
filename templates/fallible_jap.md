@@ -24,6 +24,6 @@ content:
 ```
 
 ```query
-tag: #language/communication/japanese
+tag: #question/language/japanese 
 content: 
 ```
