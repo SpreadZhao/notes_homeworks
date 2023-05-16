@@ -321,6 +321,10 @@ Work with Minimal:
 
 ![[Knowledge/resources/Pasted image 20230502155741.png]]
 
+## 3.6 Query
+
+[Search - Obsidian Help](https://help.obsidian.md/Plugins/Search#Embed+search+results+in+a+note)
+
 # 4. MySQL
 
 ## 4.1 MySQL的配置
