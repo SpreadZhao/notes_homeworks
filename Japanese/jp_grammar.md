@@ -5,3 +5,4 @@
 * 第3课：[[Article/story/2023-05-03#Japanese Daily Note|2023-05-03]]
 * 第4课：[[Article/story/2023-05-15#Japanese Daily Note|2023-05-15]]
 * 第5课：[[Article/story/2023-05-16#Japanese Daily Note|2023-05-16]]
+* 第6课：[[Article/story/2023-05-19#Japanese Daily Note|2023-05-19]]
