@@ -6,3 +6,7 @@
 * 第4课：[[Article/story/2023-05-15#Japanese Daily Note|2023-05-15]]
 * 第5课：[[Article/story/2023-05-16#Japanese Daily Note|2023-05-16]]
 * 第6课：[[Article/story/2023-05-19#Japanese Daily Note|2023-05-19]]
+
+# 重要语法
+
+* 动词三大类：[[Article/story/2023-05-21#Japanese Daily Note|2023-05-21]]

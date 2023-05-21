@@ -42,7 +42,11 @@ where file.name = "README"
 
 #keypoint 关键点，任何可能的重点/难点都会使用此标签。
 
-#point Knowledge point.
+#rating Difficulty level for problems:
+
+* #rating/basic
+* #rating/medium 
+* #rating/high
 
 #date Exists after every title with the date format *mostly*. Because I have no reason to write every date-related articles in diary, so I have to put a tag to remember this.
 

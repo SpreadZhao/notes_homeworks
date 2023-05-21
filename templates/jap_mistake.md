@@ -1,6 +1,6 @@
 # {{title}}
 
-#language/communication/japanese Japanese Mistake #date {{date:YYYY-MM-DD}}
+#question/language/japanese Japanese Mistake #date {{date:YYYY-MM-DD}} #rating/basic 
 
 ## Question
 

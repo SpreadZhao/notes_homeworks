@@ -1,4 +1,4 @@
-#language/communication/japanese #point/basic #date {{date:YYYY-MM-DD}}
+#language/communication/japanese #rating/basic #date {{date:YYYY-MM-DD}}
 
 # 日本語の漢字
 
