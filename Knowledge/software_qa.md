@@ -325,6 +325,10 @@ Work with Minimal:
 
 [Search - Obsidian Help](https://help.obsidian.md/Plugins/Search#Embed+search+results+in+a+note)
 
+## 3.7 Minimal Image Filters
+
+![[Knowledge/resources/Pasted image 20230525165603.png]]
+
 # 4. MySQL
 
 ## 4.1 MySQL的配置
