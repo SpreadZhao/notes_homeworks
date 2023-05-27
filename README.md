@@ -405,3 +405,11 @@ To make the text bordered remains its color, we should **interit the color style
 You will get such result which is more comforting:
 
 ![[resources/Pasted image 20230508235852.png]]
+
+# 2023-05-28
+
+#date 2023-05-28
+
+Add DB Folder plugin.
+
+![[resources/Pasted image 20230528010756.png]]
