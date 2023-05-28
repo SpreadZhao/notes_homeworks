@@ -325,6 +325,8 @@ Work with Minimal:
 
 [Search - Obsidian Help](https://help.obsidian.md/Plugins/Search#Embed+search+results+in+a+note)
 
+[Regular expressions - JavaScript | MDN (mozilla.org)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions)
+
 ## 3.7 Minimal Image Filters
 
 ![[Knowledge/resources/Pasted image 20230525165603.png]]

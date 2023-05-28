@@ -21,6 +21,7 @@ columns:
     position: 1
     isHidden: false
     sortIndex: -1
+    width: 86
     config:
       enable_media_view: true
       link_alias_enabled: true
@@ -221,7 +222,7 @@ config:
   source_form_result: 
   source_destination_path: /
   row_templates_folder: /
-  current_row_template: 
+  current_row_template: templates/fallible_jap.md
   pagination_size: 10
   font_size: 16
   enable_js_formulas: false

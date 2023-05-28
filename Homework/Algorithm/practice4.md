@@ -18,7 +18,63 @@ Solve the 8-Queen problem using back-tracking algorithm.
 
 ## 3.1 Knapsack Problem
 
-回溯法其实就是暴力的计算。只不过我们可以尽量使用一些技巧来减少回溯的次数。KMP算法就是这样。
+回溯法其实就是暴力的计算。只不过我们可以尽量使用一些技巧来减少回溯的次数。KMP算法就是这样。在上一次实验中，我们已经介绍过这个方法：
+
+```kotlin
+fun zeroOneKnap(capacity: Int, wt: IntArray, pft: IntArray, n: Int): Int {  
+    if (n == 0 || capacity == 0) return 0
+    return if (wt[n - 1] > capacity) zeroOneKnap(capacity, wt, pft, n - 1)  
+    else max(  
+        pft[n - 1] + zeroOneKnap(capacity - wt[n - 1], wt, pft, n - 1),  
+        zeroOneKnap(capacity, wt, pft, n - 1)  
+    )  
+}
+```
+
+从最后一个物品开始，算一下放进背包之后的情况，再算一下不放背包的情况，两者取一个最大值。而在递归的过程中，自然而然就会遍历到所有的物品。下面，我们再介绍一种比较好理解的方法，虽然代码有点长：
+
+```kotlin
+class KnapSack {  
+	
+	private var res = Int.MIN_VALUE 
+	 
+	fun zeroOneKnap4(capacity: Int, wt: IntArray, pft: IntArray, n: Int): Int {  
+		val isChosen = BooleanArray(n)  
+		choose(capacity, wt, pft, 0, n, isChosen)  
+		return res  
+	}  
+	  
+	private fun choose(capacity: Int, wt: IntArray, pft: IntArray, curr: Int, n: Int, isChosen: BooleanArray) {  
+		if (curr >= n) {  
+			checkMax(capacity, wt, pft, n, isChosen)  
+		} else {  
+			isChosen[curr] = false  
+			choose(capacity, wt, pft, curr + 1, n, isChosen)  
+			isChosen[curr] = true  
+			choose(capacity, wt, pft, curr + 1, n, isChosen)  
+		}  
+	}  
+	
+	private fun checkMax(capacity: Int, wt: IntArray, pft: IntArray, n: Int, isChosen: BooleanArray) {  
+		var weight = 0; var profit = 0  
+		for (i in isChosen.indices) {  
+			if (isChosen[i]) {  
+				weight += wt[i]  
+				profit += pft[i]  
+			}  
+		}  
+		if (weight <= capacity) {  
+			if (profit > res) {  
+				res = profit  
+			}  
+		}  
+	}  
+}
+```
+
+之前那个简短的方法中，我们是通过不断累加`pft[n - 1]`来计算最终的结果；而本方法中我们通过类中的成员变量`res`来计算。通过一个布尔数组`isChosen`来记录那些物品被选择了，当统计完最后一个物品时，就通过`checkMax()`函数来统计当前已经选择的物品的总价值，并和当前的最优解`res`比较。当[[Homework/Algorithm/resources/Drawing 2023-04-30 18.53.43.excalidraw.png|二叉树]]中所有的情况都走过后，`res`里存的就是最终的答案。
+
+![[Homework/Algorithm/resources/Drawing 2023-04-30 18.53.43.excalidraw.png|center]]
 
 ## 3.2 8-Queen Problem
 
@@ -41,7 +97,7 @@ for (i in arr.indices) {
 }
 ```
 
-上面的代码代表，我为第一个皇后考虑了从0号到7号共8个**列**。当摆放好第一个皇后之后，就应该考虑第二个皇后放在哪里。因此，应该将n换成n + 1重新走一遍这个逻辑。这显然是一个递归：
+上面的代码代表，我为第一个皇后考虑了从0号到7号共8个**列**。当摆放好第一个皇后之后，就应该考虑第二个皇后放在哪里。因此，应该将n换成n + 1重新走一遍这个逻辑。这显然是一个递归( #question 貌似循环也可以？ )：
 
 ```kotlin
 private fun putQueen(n: Int) {  
@@ -153,47 +209,8 @@ class Queen8(private var count: Int = 0) {
 
 ## 5.1 Knapsack Problem.
 
-![[Homework/Algorithm/resources/Pasted image 20230511234033.png]]
+![[Homework/Algorithm/resources/Pasted image 20230528133037.png]]
 
-![[Homework/Algorithm/resources/Pasted image 20230511234647.png]]
+## 5.2 8-Queen Problem
 
-## 5.2 A simple scheduling problem
-
-![[Homework/Algorithm/resources/Pasted image 20230511235001.png]]
-
-## 1.3 Single-source / All-pairs shortest paths
-
-```kotlin
-fun shortest() {  
-	val I = Int.MAX_VALUE  
-	val edges = arrayOf(  
-		intArrayOf(0, -1, 3, I, I),  
-		intArrayOf(I, 0, 3, 2, 2),  
-		intArrayOf(I, I, 0, I, I),  
-		intArrayOf(I, 1, 5, 0, I),  
-		intArrayOf(I, I, I, -3, 0)  
-	)  
-	println("before:")  
-	edges.forEach {  
-		it.forEach { num ->  
-			if (num != I) print("$num\t")  
-			else print("I\t")  
-		}  
-		println()  
-	}  
-	println("bellman-ford:")  
-	ShortestPath().shortestPath(edges).forEach { num -> print("$num ") }  
-	println()  
-	ShortestPath().floyd(link = edges)  
-	println("floyd:")  
-	edges.forEach {  
-		it.forEach { num ->  
-			if (num != I) print("$num\t")  
-			else print("I\t")  
-		}  
-		println()  
-	}  
-}
-```
-
-![[Homework/Algorithm/resources/Pasted image 20230511235307.png|center|200]]
+![[Homework/Algorithm/resources/Pasted image 20230528133202.png]]
