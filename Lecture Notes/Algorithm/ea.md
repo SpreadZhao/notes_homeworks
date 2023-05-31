@@ -426,7 +426,7 @@ $$
 
 **We do $a$ recursion instead of 3; we divide the number into $b$ pieces instead of 2; we cost $n^d$ time to put all of them together every recursion**. Now what is the time cost? After a series of decuction, the result is that:
 
-#keypoint Master Theorem
+#keypoint Master Theorem ^6cdbcb
 
 $$
 T(n) = \left\{ \begin{array}{lr} O(n^d \cdot logn) & a = b^d \\ O(n^d) & a < b^d \\ O(n^{log_ba}) & a > b^d \end{array} \right.

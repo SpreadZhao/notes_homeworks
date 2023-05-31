@@ -70,16 +70,22 @@ bool SortHelper::sumToTarget(vector<int> nums, int target){
 当我们想要在大顶堆上插入一个元素时，要做这样一些事情：
 
 1. 首先，让这个元素直接成为结构的最后一个元素：
-  ![[Homework/Algorithm/resources/Pasted image 20230325001908.png|200]]
+
+    ![[Homework/Algorithm/resources/Pasted image 20230325001908.png|200]]
+  
 2. 然后，看他和他的父亲谁大。如果它大，就要交换，并继续向上，直到没有他父亲大为止。
-  ![[Homework/Algorithm/resources/Pasted image 20230325002039.png|200]]
+
+    ![[Homework/Algorithm/resources/Pasted image 20230325002039.png|200]]
 
 因此，我们发现，**堆顶就是我们每次要弹出的元素**。那么在`dequeue`操作中，就需要这样做：
 
 1. 将堆顶和最后一个元素交换位置，并弹出最后一个元素(最后返回的就是它)；
-  ![[Homework/Algorithm/resources/Pasted image 20230325002217.png|200]]
+
+    ![[Homework/Algorithm/resources/Pasted image 20230325002217.png|200]]
+
 2. 让新的堆顶不断和自己的左儿子和右儿子比较。如果根儿小，那根儿就下去，儿子上来。直到这个堆顶找到自己的位置。
-  ![[Homework/Algorithm/resources/Pasted image 20230325002353.png|200]]
+
+    ![[Homework/Algorithm/resources/Pasted image 20230325002353.png|200]]
 
 通过以上叙述，我们首先总结一下我们需要的工具方法：
 

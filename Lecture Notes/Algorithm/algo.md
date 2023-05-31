@@ -4,7 +4,7 @@ Insertion Sort
 
 这样看起来，其实**从第二个元素开始就可以了，因为第一个元素一定是有序的**。下面给出伪代码：
 
-![[Lecture Notes/Algorithm/resources/Pasted image 20230531124013.png]]
+![[Lecture Notes/Algorithm/resources/Pasted image 20230531124013.png|500]]
 
 kotlin代码：
 
@@ -80,3 +80,113 @@ class MergeSort {
 	}  
 }
 ```
+
+Using substitution method to solve the recurrence:
+
+$$
+T(n) = 4T(\frac{n}{2}) + 100n
+$$
+
+* Guess: we guess that: $T(n) \leqslant cn^3$
+
+For $k = \dfrac{n}{2}$, this inequality should also be correct, which means:
+
+$$
+T(k) \leqslant ck^3 \Longrightarrow T(\frac{n}{2}) \leqslant c \cdot (\frac{n}{2})^3
+$$
+
+Put this in to the origin equation:
+
+$$
+\begin{array}{rcl}
+T(n) & = & 4T(\dfrac{n}{2}) + 100n \\
+& \leqslant & 4c \cdot (\dfrac{n}{2})^3 + 100n \\
+& = & (\dfrac{c}{2})n^3 + 100n \\
+& = & cn^3 - [(\dfrac{c}{2})n^3 - 100n] \\
+& \leqslant & cn^3
+\end{array}
+$$
+
+**一道容易错的题**：
+
+![[Lecture Notes/Algorithm/resources/Pasted image 20230531215550.png|500]]
+
+Recurtion Tree
+
+![[Lecture Notes/Algorithm/resources/Pasted image 20230531220321.png|500]]
+
+![[Lecture Notes/Algorithm/resources/Pasted image 20230531220806.png|500]]
+
+![[Lecture Notes/Algorithm/resources/Pasted image 20230531220936.png|500]]
+
+> **对于递归树的高度，它的底数一定是大于一的**！
+
+[[Lecture Notes/Algorithm/ea#^6cdbcb|Master Theorem]]
+
+Maximum Subarray Problem，使用Divide and Conquer:
+
+```kotlin
+class MaximumSubarray {  
+	fun maxSumDivideConquer(array: IntArray): Int {  
+		return coreDC(array, 0, array.lastIndex)  
+	}  
+	  
+	private fun coreDC(array: IntArray, low: Int, high: Int): Int {  
+		return if (low == high) array[low]  
+		else {  
+			val mid = (low + high) / 2  
+			val leftMaxSum = coreDC(array, low, mid)  
+			val rightMaxSum = coreDC(array, mid + 1, high)  
+			val crossMaxSum = coreDCCrossing(array, low, mid, high)  
+			maxOf(leftMaxSum, rightMaxSum, crossMaxSum)  
+		}  
+	}  
+	  
+	private fun coreDCCrossing(array: IntArray, low: Int, mid: Int, high: Int): Int {  
+		var leftMaxSum = Int.MIN_VALUE  
+		var sum = 0  
+		for (i in mid downTo low) {  
+			sum += array[i]  
+			if (sum > leftMaxSum) leftMaxSum = sum  
+		}  
+		var rightMaxSum = Int.MIN_VALUE  
+		sum = 0  
+		for (j in mid + 1 .. high) {  
+			sum += array[j]  
+			if (sum > rightMaxSum) rightMaxSum = sum  
+		}  
+		return leftMaxSum + rightMaxSum  
+	}  
+}
+```
+
+核心思想就是，对于一个序列，它的最大和只能出现在以下三种情况：
+
+* 只包含在前一半
+* 只包含在后一半
+* 跨越前一半和后一半
+
+所以，我们要分别计算这三种情况，最后三个数比大小。第一种，如果只包含前一半，那么直接使用原函数递归就可以，也就是从`low`到`mid`，对于后一半也是一样，从`mid + 1`到`high`。而比较麻烦的，是第三种跨越的情况。我们可以思考一下，如果是第三种，最后的答案**一定是包括`mid`和`mid + 1`这两个元素**。因此，我们使用两个循环，分别计算出包含`mid`的左边的最大和，以及包含`mid + 1`的右边的最大和：
+
+```kotlin
+private fun coreDCCrossing(array: IntArray, low: Int, mid: Int, high: Int): Int {  
+	var leftMaxSum = Int.MIN_VALUE  
+	var sum = 0  
+	for (i in mid downTo low) {  // 左边最大和
+		sum += array[i]  
+		if (sum > leftMaxSum) leftMaxSum = sum  
+	}  
+	var rightMaxSum = Int.MIN_VALUE  
+	sum = 0  
+	for (j in mid + 1 .. high) {  // 右边最大和
+		sum += array[j]  
+		if (sum > rightMaxSum) rightMaxSum = sum  
+	}  
+	return leftMaxSum + rightMaxSum  
+}  
+```
+
+最后返回的结果，**一定是把他们两个加起来，一定是**！！！因为如果你不加的话，等于承认结果中不包含`mid`或者不包含`mid + 1`，而这样的话其实和那三种情况的前两种是重的，我们的计算也就没有意义了。
+
+[[Lecture Notes/Algorithm/ea#3.1 Matrix Multiplication|Matrix Multiplication]]
+
