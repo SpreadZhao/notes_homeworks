@@ -123,7 +123,7 @@ Recurtion Tree
 
 [[Lecture Notes/Algorithm/ea#^6cdbcb|Master Theorem]]
 
-Maximum Subarray Problem，使用Divide and Conquer:
+[[Homework/Algorithm/practice2#3.4 Max Sum|Maximum Subarray Problem]]，使用Divide and Conquer:
 
 ```kotlin
 class MaximumSubarray {  
@@ -189,4 +189,97 @@ private fun coreDCCrossing(array: IntArray, low: Int, mid: Int, high: Int): Int 
 最后返回的结果，**一定是把他们两个加起来，一定是**！！！因为如果你不加的话，等于承认结果中不包含`mid`或者不包含`mid + 1`，而这样的话其实和那三种情况的前两种是重的，我们的计算也就没有意义了。
 
 [[Lecture Notes/Algorithm/ea#3.1 Matrix Multiplication|Matrix Multiplication]]
+
+Heap:
+
+[src/algo/MaxHeap.kt · SpreadZhao/leetcode - 码云 - 开源中国 (gitee.com)](https://gitee.com/spreadzhao/leetcode/blob/master/src/algo/MaxHeap.kt)
+
+构造函数中加了一个`Int.MIN_VALUE`是因为为了空出第一个节点，这样真正的堆中的元素是从第二个元素开始算。对于**自底向上**，也就是上面代码中的构建大顶堆的方式，时间复杂度是$O(n)$，并不是$O(nlogn)$。
+
+Priority Queue:
+
+[src/algo/PriorityQueue.kt · SpreadZhao/leetcode - 码云 - 开源中国 (gitee.com)](https://gitee.com/spreadzhao/leetcode/blob/master/src/algo/PriorityQueue.kt)
+
+QuickSort:
+
+[[Homework/Algorithm/practice1#3.3 Quick Sort|practice1]]
+
+[src/algo/QuickSort.kt · SpreadZhao/leetcode - 码云 - 开源中国 (gitee.com)](https://gitee.com/spreadzhao/leetcode/blob/master/src/algo/QuickSort.kt)
+
+里面介绍了另一种方法来进行partition操作：
+
+```kotlin
+private fun partition2(arr: IntArray, low: Int, high: Int): Int {  
+	val pivot = arr[high]  
+	var i = low - 1  
+	for (j in low until high) {  
+		if (arr[j] < pivot) {  
+			i++  
+			swap(arr, i, j)  
+		}  
+	}  
+	swap(arr, i + 1, high)  
+	return i + 1  
+}
+```
+
+在这个方法中，我们只需要**找出所有比`arr[high]`小的元素，并把它放在这些元素的右边即可**。走一走循环我们就能发现，我们并不关心比pivot大的元素在哪里，因为只需要有最后一句swap，就能保证所有比pivot大的元素都出现在pivot的右边。而for循环中做的就是找到所有比pivot小的元素，**并让i记住他们中的最后一个**。
+
+Counting Sort
+
+Counting Sort的核心思想就是：如果有5个数（包含我自己）小于等于我，那么我就可以被放在第5号。因为，从第6号开始，都一定是大于我的数字，所以我放在第五位一定是正确的。
+
+```kotlin
+class CountingSort {  
+	fun sort(arr: IntArray, range: IntRange): IntArray {  
+		val res = IntArray(arr.size)  
+		val location = IntArray(range.last + 1) { 0 }  
+		for (j in arr.indices) location[arr[j]]++  
+		for (i in 2 .. range.last) location[i] += location[i - 1]  
+		for (j in arr.lastIndex downTo 0) {  
+			res[location[arr[j]] - 1] = arr[j]  
+			location[arr[j]]--  
+		}  
+		return res  
+	}  
+}
+```
+
+第一个for循环：
+
+```kotlin
+for (j in arr.indices) location[arr[j]]++
+```
+
+是为了记录每个元素出现的次数：
+
+![[Lecture Notes/Algorithm/resources/Pasted image 20230601182115.png|500]]
+
+比如此时，1022就分别是1234在A中出现的次数。但是，即使这样还不行，因为我要知道**有多少个数字是小于等于我的**。而我目前只知道有多少个数字（包括自己）是等于我的。因此，下一个for循环就是为了计算这个：
+
+```kotlin
+for (i in 2 .. range.last) location[i] += location[i - 1]  
+```
+
+从第一个往后叠加，像多米诺骨牌一样，把前面的和不断累加到后面，最终C里存的就应该是我们要的，小于等于（包括自己）的数字有多少个。
+
+![[Lecture Notes/Algorithm/resources/Pasted image 20230601182438.png|500]]
+
+最后，我们从A的最后一个数字开始，找到它的位置。比如3，我知道整个数组中，**小于等于它（也包括它自己这个3）的数字有3个，所以它至少也要放在第三名**。因此，我们将3放在`小于等于这个3的数字的个数`名：
+
+```kotlin
+res[location[arr[j]] - 1] = arr[j]
+```
+
+> 这里需要注意，第三名是从1开始的，因此对应的下标还需要-1。
+
+![[Lecture Notes/Algorithm/resources/Pasted image 20230601182714.png|500]]
+
+那么，如果之后又遇到3该咋办？那么顺理成章，它应该放在第二名。所以我们直接把C中的值减掉，这样之后就能顺利放到对的位置：
+
+```kotlin
+location[arr[j]]--
+```
+
+![[Lecture Notes/Algorithm/resources/Pasted image 20230601182824.png|500]]
 
