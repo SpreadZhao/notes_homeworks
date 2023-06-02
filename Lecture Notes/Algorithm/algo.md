@@ -283,3 +283,7 @@ location[arr[j]]--
 
 ![[Lecture Notes/Algorithm/resources/Pasted image 20230601182824.png|500]]
 
+Dynamic Programming
+
+![[Lecture Notes/Algorithm/resources/Pasted image 20230602134555.png|500]]
+
