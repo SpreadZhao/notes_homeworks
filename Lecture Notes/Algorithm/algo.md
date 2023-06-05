@@ -292,3 +292,161 @@ location[arr[j]]--
 Dynamic Programming
 
 ![[Lecture Notes/Algorithm/resources/Pasted image 20230602134555.png|500]]
+
+[[Homework/Algorithm/practice2#3.1 Matrix-chain Product|Matrix-chain Product]]
+
+补充一下最优解的计算：
+
+```kotlin
+fun minCount3(p: IntArray): Int {  
+	val n = p.size  
+	val dp = Array(n) { IntArray(n) { -1 } }  
+	val cut = Array(n) { IntArray(n) }  
+	for (i in 1 until n) dp[i][i] = 0  
+	for (l in 2 until n) {  
+		for (i in 1 until n - l + 1) {  
+			val j = i + l - 1  
+			// if (j == n) continue  
+			dp[i][j] = Int.MAX_VALUE  
+			for (k in i until j) {  
+				val q = dp[i][k] + dp[k + 1][j] + p[i - 1] * p[k] * p[j]  
+				if (q < dp[i][j]) {  
+					dp[i][j] = q  
+					cut[i][j] = k // Remember where I've cut in the best solution  
+				}  
+			}  
+		}  
+	}  
+	return dp[1][n - 1]  
+}
+```
+
+`cut`数组记录了每一刀的位置。我们在得到结果之后，**从后往前查**：
+
+![[Lecture Notes/Algorithm/resources/Pasted image 20230603151012.png|250x250]] ![[Lecture Notes/Algorithm/resources/Pasted image 20230603151045.png|350x250]]
+
+```kotlin
+val arr3 = intArrayOf(30, 35, 15, 5, 10, 20, 25)
+```
+
+首先查`cut[1][6]`，发现是3，所以第一刀应该砍在$A_3$的后面：
+
+$$
+A_1A_2A_3|A_4A_5A_6
+$$
+
+由于这一刀把序列砍成了两半，所以我们要递归地搜索左右两半的最优解。左边，查的是`cut[1][3]`，得到的是1，所以应该这样：
+
+$$
+A_1|A_2A_3|A_4A_5A_6
+$$
+
+这一刀的左边只有一个，所以不用查，对于右边，查的就是`cut[2][3]`，在2后面，所以：
+
+$$
+A_1|A_2|A_3|A_4A_5A_6
+$$
+
+这里我们需要注意了，虽然我们模拟的是刀，但是我们需要区分**刀和递归之间的关系**。毕竟，刀和括号还是不一样的。没砍一刀，实际上是将序列看成了两半，**并给这两半分别都加上括号**。因此，上面这个看起来跟没砍一样的序列实际上是这样的：
+
+$$
+(A_1((A_2)(A_3)))(A_4A_5A_6)
+$$
+
+仔细分析一下能发现，我们先算的还是$A_2$和$A_3$，这和递归的逻辑是一样的。对于$A_4 \sim A_6$，也是一样的操作方法。
+
+Rod Cutting
+
+对于切木棍这个问题，我们可以这么想：如果采用暴力手段，就是考虑第一刀的位置，然后递归地考虑左半边和右半边的第一刀。这和矩阵相乘的问题非常类似，但是要简单得多。因为，**我们不需要考虑切成的段之间有什么区别**，比如这样：
+
+$$
+A_1A_2A_3A_4
+$$
+
+这四个矩阵，$A_1A_2A_3$和$A_2A_3A_4$是不一样的，但是如果他们都是木头的话，那就没啥区别了。
+
+```kotlin
+fun bestVal(profit: IntArray): Int {  
+	val n = profit.size - 1  
+	return bruceForce(profit, n)  
+}  
+  
+private fun bruceForce(profit: IntArray, n: Int): Int {  
+	if (n == 0) return 0  
+	var res = Int.MIN_VALUE  
+	for (i in 1 .. n) {  
+		res = max(  
+			res,  
+			profit[i] + bruceForce(profit, n - i)  
+		)  
+	}  
+	return res  
+}
+```
+
+这里`i`表示的还是这刀会砍在第i段的后面。输入需要注意一下：
+
+```kotlin
+val profit = intArrayOf(0, 1, 5, 8, 9, 10, 17, 17, 20, 24, 30)
+```
+
+第0号元素不计入，从1开始，表示长度为1的一段木头的价值是1。`i`从1遍历到n，~~这个n其实表示的是**最后一段木头的编号**，这和矩阵相乘中的`j`是一个意思~~，这个n表示的是**当前要切的木头的长度**，和矩阵相乘不同，因为不需要知道木头的编号，只需要知道**还剩多少段木头**就可以了。
+
+这个方法的缺点也非常明显：overlapping问题比矩阵相乘还要严重。因为每一段木头的价值都是固定的，所以比如我们在切第5段到第8段木头的时候，就要算一下1段、2段、3段木头的价值。然而，这些东西我们早就算过无数遍了。**你要是说算$A_5 \sim A_8$的时候还有可能没算$A_5 \sim A_6$的最优解，那我还可能相信**。
+
+我们想一想，如果我们记住了切成每一段的最优解，该是个什么情况。比如，一段的价值是2，两段的价值是5， 三段的价值是6。现在有一个长为三段的木头要切。那显然，应该切成1+2或者2+1的形式能得到最佳价值7。**如果我们能把3段以下（1段\~2段）所有的最佳情况都记住的话，那么我们其实只需要考虑最后一刀。切在第一段后面？答案是2+5（<mark class="square-solid">之所以不是2+(2+2)，是因为我们在算2段长的时候已经把2+2这种情况优化掉了，因为5>4</mark>）；切在第二段后面？答案是5+2；切在第三段后面？答案是6。因此，我们能得到最优解7**。这段解释==非常非常==重要，一定要弄懂！！！！！！
+
+```kotlin
+fun bestVal2(profit: IntArray): Int {  
+	if (profit.isEmpty()) return 0  
+	val dp = IntArray(profit.size) { Int.MIN_VALUE }  
+	val cut = IntArray(profit.size)
+	dp[0] = 0  
+	for (j in 1 until profit.size) {  
+		for (i in 1 .. j) {  
+			if (dp[j] < profit[i] + dp[j - i]) {  
+				dp[j] = profit[i] + dp[j - i]  
+				cut[j] = i // 记住刀的位置
+			}  
+		}  
+	}  
+	return dp.last()  
+}
+```
+
+> <font color="yellow">在i &#60 j的时候，所有的情况都必定在之前的循环中计算过最优解</font>。
+
+Top-down 和 Bottom-up有什么优缺点？
+
+Top-down:
+
+- [p] **子问题我真用的时候才回去求，不算没用的东西**。
+- [c] 子问题老反复求，效率低。
+- [c] 并且还有额外的递归开销。
+
+Bottom-up:
+
+- [p] 由小到大，有规律，节省时间和空间开销。
+- [p] 充分利用了overlapping的特点，不用反复算子问题。
+- [c] **把所有的子问题都给算了。有时候，我们是不需要所有子问题的解的**。
+
+鉴于Bottom-up的缺点，我们发明了dp的变形，也就是递归动态规划，也叫**备忘录**。其实在[[Homework/Algorithm/practice2#3.1.2 Dynamic Programming|practice2]]中已经介绍过这个方法了。它既是自顶向下的计算，而且只计算我需要的问题，并且效率还和Bottom-up差不多。
+
+[[Homework/Algorithm/practice2#3.2 Longset Common Subsequence|Longest Common Subsequence]]
+
+![[Lecture Notes/Algorithm/resources/Pasted image 20230603175547.png|500]]
+
+> * 如果相等：就是左上角的值+1；
+> * 如果不相等：就看上和左哪个大。
+
+![[Lecture Notes/Algorithm/resources/Pasted image 20230603175755.png|400]]
+
+这些箭头的作用就是打印出子序列的值。沿着箭头走，**只要遇到左上的箭头**，就把两边的字母取出来就可以了，并且它们也一定是相等的。在实际实现的时候，箭头可以用二维布尔数组来存。
+
+[[Lecture Notes/Networking/dn#19.5.2 Dijkstra|Dijkstra]]
+
+注意，我们每次都在未选集合顶点中选择距离最短的那个顶点，将它加入到已选集合中。传统的方式，是对所有未选顶点遍历一遍。那么有没有比较好的方式呢？有！就是[[Homework/Algorithm/practice1#3.2 Priority Queue|优先队列]]！另外，我们还可以使用一个先进先出的队列来管理。但是，这是有条件的，条件就是**这个图是无权图，或者所有边的权值都一样**。
+
+![[Lecture Notes/Algorithm/resources/Pasted image 20230605101411.png|500]]
+
+[[Homework/Algorithm/practice3#3.4 All-pairs shortest paths|Floyd]]
