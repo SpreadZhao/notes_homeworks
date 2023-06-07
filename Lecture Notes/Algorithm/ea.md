@@ -434,6 +434,24 @@ $$
 
 The formula is called **Master Theorem**. You just plug numbers in it, and it gives you the answer. ^b745d8
 
+Additionally, we extend this formula to a more common dimension:
+
+$$
+T(n) = \left\{ \begin{array}{lr} \Theta(n^{log_ba} \cdot lg^{k+1}n) & f(n) = nlog_ba \\ \Theta(f(n)) & f(n) > nlog_ba \\ \Theta(n^{log_ba}) & f(n) < nlog_ba \end{array} \right.
+$$
+
+where $f(n)$ is the constant time of a recurrence looks like:
+
+$$
+T(n) = aT(\frac{n}{b}) + f(n)
+$$
+
+Mostly, $f(n)$ is considered to be $c \cdot n^d$ while sometimes it will be a little weird:
+
+![[Lecture Notes/Algorithm/resources/Pasted image 20230607175434.png]]
+
+#example [[Happy-SE-in-XDU-master/Algorithm/2022-exam#^0ae97f|2022-exam]]
+
 # 3. More Divide and Conquer
 
 ## 3.1 Matrix Multiplication
@@ -493,6 +511,8 @@ MergeSort(a[1 .. n]){
 	return Merge(B, C);
 }
 ```
+
+^d06849
 
 We do recursion for 2 times; we divide the entire into 2 pieces and we take $cn$ times to combine those together. With the [[#^b745d8|Master Thorem]] introduced in 2.1.4, we can write the time cost down:
 

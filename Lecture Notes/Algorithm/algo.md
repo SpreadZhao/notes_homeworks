@@ -1,6 +1,8 @@
-Insertion Sort
+# 1. Introduction
 
-遍历一遍数组，为每一个元素找到它的位置。从第一个元素开始，由于目前还没有排序，所以它就在那里；之后第二个元素，需要和第一个元素比大小；第三个元素需要和前两个元素比大小；第四个元素需要和前三个元素比大小……
+## 1.1 Insertion Sort
+
+遍历一遍数组，为每一个元素找到它的位置。从第一个元素开始，由于目前还没有排序，所以它就在那里；之后第二个元素，需要和第一个元素比大小；第三个元素需要和前两个元素比大小；第四个元素需要和前三个元素比大小……我们的目的是，**把小的数字插回去，大的数字不用插**。
 
 这样看起来，其实**从第二个元素开始就可以了，因为第一个元素一定是有序的**。下面给出伪代码：
 
@@ -23,12 +25,44 @@ class InsertionSort {
 }
 ```
 
-loop-invariant
+#homework Insertion Sort
+
+Using Figure 2.2 as a model, illustrate the operation of INSERTION -SORT on the array A=<31, 41, 59, 26, 41, 58>.
+
+---
+
+```ad-info
+title: 注意
+
+框里的是i指向的元素，红色的是被插回去的小数。
+```
+
+1. After loop `i == 1`
+
+  > 31, <mark class="square-solid">41</mark>, 59, 26, 41, 58
+
+2. After loop `i == 2`
+
+  > 31, 41, <mark class="square-solid">59</mark>, 26, 41, 58
+
+3. After loop `i == 3`
+
+  > **26**, 31, 41, <mark class="square-solid">59</mark>, 41, 58 (26是小数，要插回去)
+
+4. After loop `i == 4`
+
+  > 26, 31, 41, **41**, <mark class="square-solid">59</mark>, 58  (41是小数，要插回去，注意两个41的位置，通过while循环的条件)
+
+5. After loop `i == 5`
+
+  > 26, 31, 41, 41, **58**, <mark class="square-solid">59</mark>
+
+## 1.2 loop-invariant
 
 使用循环不变式证明算法的正确，需要三个步骤：
 
 * Initialization: 循环开始前就正确
-* Maintenance: 在某一次循环之前是正确的
+* Maintenance: 在某一次循环之前是正确的，在下一次循环之前还是正确的
 * Termination: 循环结束时的结果时正确的
 
 ![[Lecture Notes/Algorithm/resources/Pasted image 20230531124245.png|500]]
@@ -36,16 +70,45 @@ loop-invariant
 使用loop-invariant证明插入排序的正确性：
 
 * 在循环开始之前，由于从第二个元素（j = 2）开始迭代，所以初始序列就是A\[1\]，它包含了原始序列的元素A\[1\]，并且**有序（这就代表最终的输出在一开始是对的）**；
-* 当一次循环结束时，我们给A\[j\]找到了它的位置。这证明我们中间的结果A\[1..j\]也是有序的；
+* 当其中一次循环开始前，对于第j个元素，它前面的序列A\[1..j-1\]是有序的；当一次循环结束时，我们给A\[j\]找到了它的位置。这证明我们中间的结果A\[1..j\]也是有序的；
 * 当j = n + 1时，我们跳出了循环，此时A\[1..j-1\]就是我们要的输出，所以结果也是有序的。
 
-Divide and Conquer
+#homework Invariant
+
+Consider the searching problem:
+
+**Input**: A sequence of n numbers A = <a1, a2; …, an> and a value v.
+
+**Output**: An index i such that v = A\[i\] or the special value NIL if v does not appear in A. 
+
+Write pseudocode for linear search, which scans through the sequence, looking for v. Using a loop invariant, prove that your algorithm is correct. Make sure that your loop invariant fulfills the three necessary properties.
+
+---
+
+Pseudocode:
+
+```kotlin
+fun search(A[1..n]) {
+	for (i in 1 .. n) {
+		if (A[i] == v) return i
+	}
+	return NIL
+}
+```
+
+Proof:
+
+1. Initialization：在循环开始前，序列是空的，不包括v，符合题目要求的后者（NIL）；
+2. Maintainance：当一次循环开始前，之前的序列A\[1..i-1\]是不包括v的，符合后者，在这次循环结束后，要么包括v（前者），要么不包括v（后者），也都是正确的；
+3. Termination：当`i == n + 1`时，序列中一定不包括v，会返回NIL，也就是后者（*注意，`i == n`时，其实是属于第二步的*）。
+
+# 2. Divide and Conquer
 
 ![[Lecture Notes/Algorithm/resources/Pasted image 20230531130007.png|500]]
 
 > **recursivevly千万不能落**！
 
-Merge Sort
+## 2.1 Merge Sort
 
 [[Lecture Notes/Algorithm/ea#3.2 Sorting(Merge sort)]]
 
@@ -80,6 +143,14 @@ class MergeSort {
 	}  
 }
 ```
+
+#homework Merge Sort
+
+Using Figure 2.4 as a model, illustrate the operation of merge sort on the array A = <3, 41, 52, 26, 38, 57, 9, 49>.
+
+![[Lecture Notes/Algorithm/resources/Pasted image 20230607195538.png|center|500]]
+
+## 2.2 Solving Recurrence
 
 Using substitution method to solve the recurrence:
 
@@ -121,7 +192,11 @@ Recurtion Tree
 
 > **对于递归树的高度，它的底数一定是大于一的**！
 
+## 2.3 Master Theorem
+
 [[Lecture Notes/Algorithm/ea#^6cdbcb|Master Theorem]]
+
+## 2.4 Maximum Subarray Problem
 
 [[Homework/Algorithm/practice2#3.4 Max Sum|Maximum Subarray Problem]]，使用Divide and Conquer:
 
@@ -188,7 +263,11 @@ private fun coreDCCrossing(array: IntArray, low: Int, mid: Int, high: Int): Int 
 
 最后返回的结果，**一定是把他们两个加起来，一定是**！！！因为如果你不加的话，等于承认结果中不包含`mid`或者不包含`mid + 1`，而这样的话其实和那三种情况的前两种是重的，我们的计算也就没有意义了。
 
+## 2.5 Matrix Multiplication
+
 [[Lecture Notes/Algorithm/ea#3.1 Matrix Multiplication|Matrix Multiplication]]
+
+## 2.6 Heap
 
 Heap:
 
@@ -196,9 +275,15 @@ Heap:
 
 构造函数中加了一个`Int.MIN_VALUE`是因为为了空出第一个节点，这样真正的堆中的元素是从第二个元素开始算。对于**自底向上**，也就是上面代码中的构建大顶堆的方式，时间复杂度是$O(n)$，并不是$O(nlogn)$。
 
-Priority Queue:
+`heapify()`的过程，就是对于我想调整的结点，先和它的左孩子比比，再和它的右孩子比比，然后**寻找它们三个里最大的那个，如果不是父亲的话，那就把父亲换下去，把最大的那个换上来**，直到不用再换了或者已经到了叶子结点为止。
+
+构件大顶堆的过程，就是从第一个不是叶子的结点开始往会找，调整每一个结点。
+
+[[Homework/Algorithm/practice1#3.2 Priority Queue|Priority Queue]]:
 
 [src/algo/PriorityQueue.kt · SpreadZhao/leetcode - 码云 - 开源中国 (gitee.com)](https://gitee.com/spreadzhao/leetcode/blob/master/src/algo/PriorityQueue.kt)
+
+## 2.7 Quick Sort
 
 QuickSort:
 
@@ -223,7 +308,11 @@ private fun partition2(arr: IntArray, low: Int, high: Int): Int {
 }
 ```
 
-在这个方法中，我们只需要**找出所有比`arr[high]`小的元素，并把它放在这些元素的右边即可**。走一走循环我们就能发现，我们并不关心比pivot大的元素在哪里，因为只需要有最后一句swap，就能保证所有比pivot大的元素都出现在pivot的右边。而for循环中做的就是找到所有比pivot小的元素，**并让i记住他们中的最后一个**。
+在这个方法中，我们只需要**找出所有比`arr[high]`小的元素，并把`arr[high]`放在这些元素的右边即可**。走一走循环我们就能发现，我们并不关心比pivot大的元素在哪里，因为只需要有*最后一句swap*，就能保证所有比pivot大的元素都出现在pivot的右边。而for循环中做的就是找到所有比pivot小的元素，**并让i记住他们中的最后一个**。
+
+> *最后一句swap*：`swap(arr, i + 1, high)`
+
+## 2.8 Other Sort
 
 Counting Sort
 
@@ -289,9 +378,13 @@ location[arr[j]]--
 
 [[Happy-SE-in-XDU-master/Algorithm/supplement_all#^13e1e0|supplement_all]]
 
+# 3. Dynamic Programming
+
 Dynamic Programming
 
 ![[Lecture Notes/Algorithm/resources/Pasted image 20230602134555.png|500]]
+
+## 3.1 Matrix-chain Product
 
 [[Homework/Algorithm/practice2#3.1 Matrix-chain Product|Matrix-chain Product]]
 
@@ -347,7 +440,7 @@ $$
 A_1|A_2|A_3|A_4A_5A_6
 $$
 
-这里我们需要注意了，虽然我们模拟的是刀，但是我们需要区分**刀和递归之间的关系**。毕竟，刀和括号还是不一样的。没砍一刀，实际上是将序列看成了两半，**并给这两半分别都加上括号**。因此，上面这个看起来跟没砍一样的序列实际上是这样的：
+这里我们需要注意了，虽然我们模拟的是刀，但是我们需要区分**刀和递归之间的关系**。毕竟，刀和括号还是不一样的。每砍一刀，实际上是将序列看成了两半，**并给这两半分别都加上括号**。因此，上面这个看起来跟没砍一样的序列实际上是这样的：
 
 $$
 (A_1((A_2)(A_3)))(A_4A_5A_6)
@@ -355,7 +448,7 @@ $$
 
 仔细分析一下能发现，我们先算的还是$A_2$和$A_3$，这和递归的逻辑是一样的。对于$A_4 \sim A_6$，也是一样的操作方法。
 
-Rod Cutting
+## 3.2 Rod Cutting
 
 对于切木棍这个问题，我们可以这么想：如果采用暴力手段，就是考虑第一刀的位置，然后递归地考虑左半边和右半边的第一刀。这和矩阵相乘的问题非常类似，但是要简单得多。因为，**我们不需要考虑切成的段之间有什么区别**，比如这样：
 
@@ -416,6 +509,8 @@ fun bestVal2(profit: IntArray): Int {
 
 > <font color="yellow">在i &#60 j的时候，所有的情况都必定在之前的循环中计算过最优解</font>。
 
+## 3.3 Top-down versus Bottom-up
+
 Top-down 和 Bottom-up有什么优缺点？
 
 Top-down:
@@ -432,6 +527,8 @@ Bottom-up:
 
 鉴于Bottom-up的缺点，我们发明了dp的变形，也就是递归动态规划，也叫**备忘录**。其实在[[Homework/Algorithm/practice2#3.1.2 Dynamic Programming|practice2]]中已经介绍过这个方法了。它既是自顶向下的计算，而且只计算我需要的问题，并且效率还和Bottom-up差不多。
 
+## 3.4 Longest Common Subsequence
+
 [[Homework/Algorithm/practice2#3.2 Longset Common Subsequence|Longest Common Subsequence]]
 
 ![[Lecture Notes/Algorithm/resources/Pasted image 20230603175547.png|500]]
@@ -443,10 +540,33 @@ Bottom-up:
 
 这些箭头的作用就是打印出子序列的值。沿着箭头走，**只要遇到左上的箭头**，就把两边的字母取出来就可以了，并且它们也一定是相等的。在实际实现的时候，箭头可以用二维布尔数组来存。
 
+# 4. Greedy
+
+![[Lecture Notes/Algorithm/resources/Pasted image 20230607191547.png|500]]
+
+问题的全局最优解是通过局部的最优选择或者贪心选择得到的。
+
+## 4.1 Activity Selection
+
+贪心4步走：
+
+1. 按照结束时间从小到大排序；
+2. 选出第一个活动，也就是最早结束的哪个；
+3. 将所有与这个活动冲突的活动删掉；
+4. 继续在剩下的活动里选最早结束的那个，直到没得选为止。
+
+## 4.2 Dijkstra
+
 [[Lecture Notes/Networking/dn#19.5.2 Dijkstra|Dijkstra]]
 
 注意，我们每次都在未选集合顶点中选择距离最短的那个顶点，将它加入到已选集合中。传统的方式，是对所有未选顶点遍历一遍。那么有没有比较好的方式呢？有！就是[[Homework/Algorithm/practice1#3.2 Priority Queue|优先队列]]！另外，我们还可以使用一个先进先出的队列来管理。但是，这是有条件的，条件就是**这个图是无权图，或者所有边的权值都一样**。
 
 ![[Lecture Notes/Algorithm/resources/Pasted image 20230605101411.png|500]]
 
+# 5. Graph
+
+## 5.1 Floyd
+
 [[Homework/Algorithm/practice3#3.4 All-pairs shortest paths|Floyd]]
+
+如果Floyd想得到最优解，可以再创建一个二维数组，每一行表示以当前行下标元素为起点，到达其它结点的父亲。每当在第三层for循环中算出最优解时，就把父亲数组中相应的父亲也给更新上。这样就能同时得到最优解和最优解的值。
