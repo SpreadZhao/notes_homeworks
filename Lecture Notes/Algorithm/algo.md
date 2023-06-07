@@ -534,7 +534,8 @@ Bottom-up:
 ![[Lecture Notes/Algorithm/resources/Pasted image 20230603175547.png|500]]
 
 > * 如果相等：就是左上角的值+1；
-> * 如果不相等：就看上和左哪个大。
+> * 如果不相等：就看上和左哪个大。如果上和左的值相等，那优先取上。
+> * 这里的相等指的是**字母字母字母**！！！不是数字！！！不相等里面的上和左相等指的才是格子里面的数字。
 
 ![[Lecture Notes/Algorithm/resources/Pasted image 20230603175755.png|400]]
 

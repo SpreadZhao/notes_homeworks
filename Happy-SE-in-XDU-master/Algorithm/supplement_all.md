@@ -1,25 +1,23 @@
 <center><font size=6> 算法补充1</font></center>
 1.Draw the recursion tree for
+
 $$
 T(n)=4T(\lfloor n/2 \rfloor)+cn
 $$
+
 where e is a constant,and provide a tight asymptotic bound on its solution. Verify your bound by the substitution method.
 
 > Answer: $\theta(n^2)$
 
 2.Given the following recurrence:
+
 $$
 T(n)=4T(n/2)+n^2lgn
 $$
+
 give an asymptotic upper bound for this recurrence.
 
 > Answer:  $O(n^2(lgn)^2)$
-
-
-
-<div style="page-break-after: always";></div>
-
-
 
 <center><font size=6> 算法补充2</font></center>
 
@@ -43,7 +41,7 @@ give an asymptotic upper bound for this recurrence.
 
 > All are $O(nlgn)$.
 >
-> Best case is controversial  $O(nlgn) \ \ \& \ O(n) $
+> Best case is controversial  $O(nlgn) \ \ \& \ O(n)$
 
 5、堆排序空间复杂度是 O(1)？ 
 
@@ -75,8 +73,6 @@ give an asymptotic upper bound for this recurrence.
 
 >  Respectively :  stable, unstable, unstable, stable, stable.
 
-
-
 14、如果待排序的元素有相同的值，那么快速排序需要比较多少次？
 
 > Suppose we have n numbers with the same value. We have to compare  $\frac{n(n-1)}{2}$ times using quick sort.
@@ -101,12 +97,6 @@ give an asymptotic upper bound for this recurrence.
 
 ^13e1e0
 
-
-<div style="page-break-after: always;"></div>
-
-
-
-
 <center><font size=6> 算法补充3</font></center>
 
 1、用括号写出矩阵链乘的最终形式
@@ -127,7 +117,7 @@ d) <7, 2, 4, 15, 20, 5>
 
 > Answer: $(A_1(((A_2A_3)A_4)A_5))$
 
-**BTW. Running time of the algorithm is $\theta(\frac{n(n-2)(n-3)}{6})$** . e.g. case (a) will iterate for 10 times.
+BTW. Running time of the algorithm is $\theta(\dfrac{n(n-2)(n-3)}{6})$** . e.g. case (a) will iterate for 10 times.
 
 2、写出矩阵链乘的递推表达式 (important)
 
@@ -136,7 +126,7 @@ d) <7, 2, 4, 15, 20, 5>
 > \underset {i \leq k} \min \left\{m[i, k]+m[k+1, j]+p_{i-1} p_{k} p_{j}\right\} & \text { if } i<j
 > \end{array}\right.$$
 
-3、判断题：$A_i, A_{i+1}, …, A_j $被完全加括号的开销等于计算矩阵 $A_{[i..k]}$与计 算矩阵 $A_{[k+1..j]}$的开销之和。 
+3、判断题：$A_i, A_{i+1}, …, A_j$被完全加括号的开销等于计算矩阵 $A_{[i..k]}$与计 算矩阵 $A_{[k+1..j]}$的开销之和。 
 
 > False.     $p_{i-1}p_{k}p_{j}$ missing.
 
@@ -174,13 +164,7 @@ d) <7, 2, 4, 15, 20, 5>
 
 > $b_{[i]}=max(b_{[i-1]}+a_{[i]},a_{[i]})$            $1\leq i \leq n$
 
-<div style="page-break-after:always";></div>
-
-
-
 <center><font size=6> 算法补充4</font></center>
-
-
 
 根据上机第三次第一题:
 
@@ -224,7 +208,7 @@ d) <7, 2, 4, 15, 20, 5>
 | pass2 | -1       | 2        | -2       | 1        |
 | pass3 | -1       | 2        | -2       | 1        |
 | pass4 | -1       | 2        | -2       | 1        |
-|       |          |          |          |          |
+
 在pass1就收敛了。
 
 2.写出上题采用的是哪个算法，为什么？
@@ -244,7 +228,6 @@ d) <7, 2, 4, 15, 20, 5>
 |               Dijkstra                | Bellmam-Ford | Floy-wallshall |             Johnson              |      |
 | :-----------------------------------: | :----------: | :------------: | :------------------------------: | ---- |
 | $\theta (VT_{extractmin}+ET_{DecreaseKey})$ |   $O(VE)$    |    $O(V^3)$    | $\theta (T_{Bellman-ford}+VT_{Dijkstra})$ |      |
-|  |              |                |||
 
 where V is the size of vertex set and E is the size of the edge set.
 
@@ -255,21 +238,13 @@ where V is the size of vertex set and E is the size of the edge set.
 > D_{ij}^{(m)}=min(D_{ik}^{(m-1)}+a_{kj}),\ \ \ \ \ m=1,2,3,...,n-1
 > $$
 
-
 2.Johnson算法在边少的情况效率是高还是低
 
 > 高。
 
-
-<div style="page-break-after:always";></div>
-
-
-
-
-
 <center><font size=6> 期末复习</font></center>
 
-> - 判断题 (8个[往年])，最基本的概念，分布广、均匀。绝对化词语
+> - 判断题 (8个\[往年\])，最基本的概念，分布广、均匀。绝对化词语
 > - 递归树求解递推式
 >   - 树根，树高（最左侧），每层开销（最右侧）；叶子节点T(1)万金油
 >   - 根据树计算得到递推式。正确使用等比、等差公式
