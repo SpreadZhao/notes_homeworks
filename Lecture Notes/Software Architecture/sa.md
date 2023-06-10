@@ -234,7 +234,7 @@ UML虽然一般用来建类图，但是因为学习成本低，好理解，在2.
 
 ![[Lecture Notes/Software Architecture/resources/Pasted image 20230608192356.png]]
 
-# 3. Availability and its Tactics
+# 3. QA and its Tactics
 
 Non-functional Requirements: Quality Attributes.
 
@@ -262,7 +262,7 @@ Quality Attribute Senario(质量属性场景)：
 
 ## 3.1 Availability
 
-是否发生了故障？故障的后果？
+是否发生了**故障**？故障的后果？
 
 Senario
 
@@ -295,7 +295,7 @@ Senario
 
 ## 3.2 Modifiability
 
-关注点：修改的成本，系统的哪些部分被修改，修改发生的时间，修改由谁来进行
+关注点：**修改**的成本，系统的哪些部分被修改，修改发生的时间，修改由谁来进行
 
 Senario
 
@@ -332,7 +332,7 @@ Senario
 
 ## 3.3 Performance
 
-关注点：系统响应事件的速度，和事件的数量和到达模式有关。
+关注点：系统**响应事件的速度**，和事件的数量和到达模式有关。
 
 Senario
 
@@ -347,7 +347,7 @@ Senario
 
 ## 3.4 Security
 
-关注点：在保证合法用户使用系统的前提下，抵抗对系统的攻击。
+关注点：在保证合法用户使用系统的前提下，**抵抗**对系统的攻击。
 
 Senario
 
@@ -368,7 +368,7 @@ Tactic
 
 关注点
 
-* 让软件的bug容易被测试出来
+* 让软件的**bug**容易被测试出来
 * 验证软件产品与它的需求规格是否匹配
 * 使用最小的成本和工作量来验证软件的质量
 
@@ -401,7 +401,7 @@ Tactic
 
 ## 3.6 Usability
 
-关注点：让用户使用软件的难度降低
+关注点：让**用户**使用软件的难度降低
 
 Senario
 
@@ -429,3 +429,32 @@ Tactic
 ## 3.7 Summary
 
 ![[Lecture Notes/Software Architecture/resources/Pasted image 20230610134210.png]]
+
+# 4. ATAM
+
+Architecture Trade-off Analysis Mehtod
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+![[Lecture Notes/Software Architecture/resources/Pasted image 20230610153123.png]]
