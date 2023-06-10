@@ -376,7 +376,56 @@ Senario
 
 * 刺激源（source）：不同的角色发起
 * 刺激（stimulus）：系统开发到达了里程碑
-* 制品（artifact）：系统被影响的地方
-* 环境（environment）：刺激发生时系统所处的状态
-* 响应（response）：刺激所产生的结果
-* 响应衡量指标（response measure）：如何评估响应
+* 制品（artifact）：一个设计、一段代码、整个系统
+* 环境（environment）：系统可能处于设计阶段/开发阶段/部署阶段/正常运行时
+* 响应（response）：理想的响应是可以进行测试，并且可以观察到测试结果；当测试结果无法被观察到时，测试难度很大
+* 响应衡量指标（response measure）：白盒测试中的覆盖率；未来继续发现bug的概率
+
+Tactic
+
+* 目标：让测试更轻松
+* 方向1：黑盒测试
+* 方向2：白盒测试
+
+![[Lecture Notes/Software Architecture/resources/Pasted image 20230610133628.png]]
+
+![[Lecture Notes/Software Architecture/resources/Pasted image 20230610133646.png]]
+
+![[Lecture Notes/Software Architecture/resources/Pasted image 20230610133652.png]]
+
+![[Lecture Notes/Software Architecture/resources/Pasted image 20230610133658.png]]
+
+![[Lecture Notes/Software Architecture/resources/Pasted image 20230610133719.png]]
+
+![[Lecture Notes/Software Architecture/resources/Pasted image 20230610133725.png]]
+
+## 3.6 Usability
+
+关注点：让用户使用软件的难度降低
+
+Senario
+
+* 刺激源（source）：终端用户
+* 刺激（stimulus）：终端用户希望学习系统的使用、提高系统的使用效率、减少出错
+* 制品（artifact）：整个系统
+* 环境（environment）：系统处于运行时或配置时
+* 响应（response）：系统响应用户的要求
+* 响应衡量指标（response measure）：用户完成任务的事件；用户出错的次数；用户满意度；用户操作的成功率
+
+Tactic
+
+![[Lecture Notes/Software Architecture/resources/Pasted image 20230610134010.png]]
+
+![[Lecture Notes/Software Architecture/resources/Pasted image 20230610134020.png]]
+
+![[Lecture Notes/Software Architecture/resources/Pasted image 20230610134029.png]]
+
+![[Lecture Notes/Software Architecture/resources/Pasted image 20230610134043.png]]
+
+![[Lecture Notes/Software Architecture/resources/Pasted image 20230610134049.png]]
+
+![[Lecture Notes/Software Architecture/resources/Pasted image 20230610134057.png]]
+
+## 3.7 Summary
+
+![[Lecture Notes/Software Architecture/resources/Pasted image 20230610134210.png]]
