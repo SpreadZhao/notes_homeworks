@@ -48,9 +48,9 @@
 * 构件中间件
 * 集成中间件
 
-
-
 # 2. J2EE
+
+![[Lecture Notes/Middleware/resources/Pasted image 20230611174042.png]]
 
 ![[Lecture Notes/Middleware/resources/Pasted image 20230611121849.png]]
 
@@ -62,6 +62,14 @@
 * JTA: Java Transaction API
 * JCA: J2EE Connector Architecture
 * Java IDL: 访问CORBA构件
+
+以上都是开发时的服务，除此之外，还有运行时的服务
+
+* Life cycle
+* Transaction
+* Security
+* Persistence
+* Resources
 
 J2EE中的角色：
 
@@ -85,6 +93,8 @@ Session
 ![[Lecture Notes/Middleware/resources/Pasted image 20230611153719.png]]
 
 # 3. Web Service
+
+![[Lecture Notes/Middleware/resources/Pasted image 20230611173559.png]]
 
 ## 3.1 SOA
 
@@ -210,8 +220,8 @@ BPEL是专为组合Web Services而制定的一项规范标准 ^fe8384
 EJB的6种构件：
 
 1. **Enterprise Bean**
-	1. Session Bean：传输
-	2. Entity Bean：数据库
+	1. Session Bean：传输![[Lecture Notes/Middleware/resources/Pasted image 20230611173144.png]]
+	2. Entity Bean：数据库![[Lecture Notes/Middleware/resources/Pasted image 20230611173446.png]]
 	3. Message Driven Bean
 2. **Home Interface**
 3. **Remote Interface**
