@@ -1,6 +1,6 @@
 # 1. Quality Attribute
 
-1. 质量属性，或者说非功能属性都有哪些？[[Lecture Notes/Software Architecture/sa#3. QA and its Tactics|答案]]
+1. 质量属性，或者说非功能需求都有哪些？[[Lecture Notes/Software Architecture/sa#3. QA and its Tactics|答案]]
 2. 如何描述质量属性？[[Lecture Notes/Software Architecture/sa#3. QA and its Tactics|答案]]
 3. 给出每个质量属性响应的Senario
 	1. [[Lecture Notes/Software Architecture/sa#3.1 Availability|Availability]]
@@ -61,3 +61,27 @@
 	49. Authorize Users -> [[Lecture Notes/Software Architecture/sa#3.4 Security|sa]]
 	50. Polymorphism -> [[Lecture Notes/Software Architecture/sa#3.2 Modifiability|sa]]
 
+# 2. 4+1 View
+
+1. View都有哪五个？-> [[Lecture Notes/Software Architecture/resources/Pasted image 20230608191447.png|sa]]
+2. Which diagram is suitable to represent an external view of a system? -> [[Lecture Notes/Software Architecture/resources/Pasted image 20230608191749.png|看最后一条]]
+3. What is [[Lecture Notes/Software Architecture/resources/Pasted image 20230611095550.png|this]]? -> [[Lecture Notes/Software Architecture/resources/Pasted image 20230608192134.png|sa]]
+4. Which diagram is suitable to show the interactions between objects? -> [[Lecture Notes/Software Architecture/resources/Pasted image 20230608192238.png|sa]]
+5. 什么图是对类图的补充？-> [[Lecture Notes/Software Architecture/resources/Pasted image 20230608192144.png|sa]]
+6. What is [[Lecture Notes/Software Architecture/resources/Pasted image 20230611103323.png|this]]? -> [[Lecture Notes/Software Architecture/resources/Pasted image 20230608192245.png|sa]]
+
+# 3. Architecture Style
+
+1. What is [[Lecture Notes/Software Architecture/resources/Pasted image 20230611103455.png|this]]? -> [[Lecture Notes/Software Architecture/sa#1.4.1 Interpreter|sa]]
+2. What is [[Lecture Notes/Software Architecture/resources/Pasted image 20230611103540.png|this]]? -> [[Lecture Notes/Software Architecture/sa#1.3.1 Repository|sa]]
+3. What is [[Lecture Notes/Software Architecture/resources/Pasted image 20230611103703.png|this]]? -> [[Lecture Notes/Software Architecture/sa#1.1.1 Batch Sequential|sa]]
+4. What is [[Lecture Notes/Software Architecture/resources/Pasted image 20230611103944.png|this]]? -> [[Lecture Notes/Software Architecture/sa#1.3.1 Repository|sa]]
+5. What is [[Lecture Notes/Software Architecture/resources/Pasted image 20230611104143.png|this]]? -> [[Lecture Notes/Software Architecture/sa#1.4.2 Rule-based|sa]]
+
+[(44条消息) 软件构架实践(第2版)学习笔记_byxdaz的博客-CSDN博客](https://blog.csdn.net/byxdaz/article/details/4764793)
+
+# 4. ATAM
+
+1. The level of confidentiality in a virtual private network might be sensitive to the number of bits of encryption. -> [[Lecture Notes/Software Architecture/sa#4.1 Sensitivity Points|sa]] also [[Lecture Notes/Software Architecture/sa#4.2 Risks|sa]]
+2. Changing the level of encryption could have a significant impact on both security and performance. -> [[Lecture Notes/Software Architecture/sa#4.4 Tradeoffs|sa]]
+3. Assuming message arrival rates of once per second, a processing time of less than 30 ms, and the existence of one higher priority process, a 1 second soft deadline seems reasonable. -> [[Lecture Notes/Software Architecture/sa#4.3 Non-risks|sa]]

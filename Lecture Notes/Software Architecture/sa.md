@@ -434,10 +434,31 @@ Tactic
 
 Architecture Trade-off Analysis Mehtod
 
+ATAM Phase 1 的六个步骤：
 
+![[Lecture Notes/Software Architecture/resources/Pasted image 20230611110026.png]]
 
+![[Lecture Notes/Software Architecture/resources/Pasted image 20230611110040.png]]
 
+![[Lecture Notes/Software Architecture/resources/Pasted image 20230611110049.png]]
 
+![[Lecture Notes/Software Architecture/resources/Pasted image 20230611110058.png]]
+
+![[Lecture Notes/Software Architecture/resources/Pasted image 20230611110127.png]]
+
+![[Lecture Notes/Software Architecture/resources/Pasted image 20230611110138.png]]
+
+![[Lecture Notes/Software Architecture/resources/Pasted image 20230611110713.png]]
+
+![[Lecture Notes/Software Architecture/resources/Pasted image 20230611110723.png]]
+
+## 4.1 Sensitivity Points
+
+## 4.2 Risks
+
+## 4.3 Non-risks
+
+## 4.4 Tradeoffs
 
 
 
