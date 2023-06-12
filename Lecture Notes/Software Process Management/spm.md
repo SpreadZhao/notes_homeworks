@@ -284,45 +284,47 @@
 
 ## 1. What is the PMBOK Guide, and what is its purpose?
 
-The PMBOK Guide, published by the Project Management Institute (PMI), is a globally recognized standard for project management. Its purpose is to provide a framework of best practices and knowledge areas essential for effective project management.
+The PMBOK Guide, published by the Project Management Institute (PMI), is a globally recognized standard for **project management**. Its purpose is to provide a framework of best practices and **knowledge areas** essential for effective project management.
 
 ## 2. What are the 10 knowledge areas defined in the PMBOK Guide?
 
-The 10 knowledge areas defined in the PMBOK Guide are: Integration Management, Scope Management, Schedule Management, Cost Management, Quality Management, Resource Management, Communication Management, Risk Management, Procurement Management, and Stakeholder Management.
+The 10 knowledge areas defined in the PMBOK Guide are: Integration Management, Scope Management, Schedule Management, **Cost** Management, **Quality** Management, **Resource** Management, Communication Management, **Risk** Management, Procurement Management, and **Stakeholder** Management.
 
 ## 3. Explain the concept of a project charter and its importance in project management.
 
-A project charter is a document that formally authorizes a project and provides the project manager with the authority to allocate resources and make decisions. It defines the project's objectives, scope, stakeholders, and high-level requirements. The project charter serves as a reference point throughout the project, ensuring alignment with organizational goals and providing a basis for decision-making.
+A project charter is a **document** that formally authorizes a project and provides the **project manager** with the authority to **allocate resources and make decisions**. It defines the **project's objectives, scope, stakeholders, and high-level requirements**. The project charter serves as a reference point throughout the project, ensuring alignment with organizational goals and providing a basis for **decision-making**.
 
 ## 4. What is the purpose of the Change Control process in project management?
 
-The Change Control process is used to manage and control changes to the project's scope, schedule, and cost. It involves assessing change requests, determining their impact, and making informed decisions on whether to approve, reject, or defer the changes. The Change Control process ensures that changes are evaluated, documented, and implemented in a controlled manner, minimizing risks and maintaining project stability.
+The Change Control process is used to manage and control changes to the project's **scope, schedule, and cost**. It involves assessing change requests, determining their impact, and making informed decisions on whether to approve, reject, or defer the changes. The Change Control process ensures that **changes are evaluated, documented, and implemented in a controlled manner**, minimizing risks and maintaining project stability.
 
 ## 5. How does the Perform Integrated Change Control process contribute to effective project management?
 
-The Perform Integrated Change Control process is responsible for reviewing and approving or rejecting change requests. It ensures that changes align with the project's objectives and are integrated into the project's overall plans. By carefully evaluating changes, considering their impact on scope, schedule, cost, and other project constraints, this process helps maintain project focus, minimize disruptions, and improve overall project performance.
+The Perform Integrated Change Control process is responsible for reviewing and **approving or rejecting change requests**. It ensures that changes align with the project's objectives and are **integrated into the project's overall plans**. By carefully evaluating changes, considering their impact on scope, schedule, cost, and other project constraints, this process helps maintain project focus, minimize disruptions, and improve overall project performance.
 
 ## 6. Explain the concept of the Work Breakdown Structure (WBS) and its role in project management.
 
-The Work Breakdown Structure (WBS) is a hierarchical decomposition of project deliverables and work into smaller, manageable components. It breaks down the project scope into smaller, more manageable tasks or work packages. The WBS serves as a foundation for planning, organizing, and controlling project activities, enabling better resource allocation, cost estimation, and progress tracking.
+The Work Breakdown Structure (WBS) is a **hierarchical** decomposition of project deliverables and work into smaller, **manageable components**. It breaks down the project scope into smaller, more manageable tasks or work packages. The WBS serves as a foundation for **planning, organizing, and controlling project activities**, enabling better **resource allocation, cost estimation, and progress tracking**.
 
 ## 7. What is the purpose of the Risk Register in project management?
 
-The Risk Register is a document that identifies and tracks potential risks throughout the project lifecycle. It includes information about identified risks, their potential impact, probability, and planned response strategies. The Risk Register helps project managers proactively manage risks by facilitating risk analysis, response planning, and monitoring, thereby reducing uncertainties and improving project outcomes.
+The Risk Register is a **document** that identifies and tracks potential risks throughout the project lifecycle. It includes information about **identified risks, their potential impact, probability, and planned response strategies**. The Risk Register helps project managers proactively manage risks by facilitating risk analysis, response planning, and monitoring, thereby **reducing uncertainties and improving project outcomes**.
 
 ## 8. How does effective stakeholder management contribute to project success?
 
-Effective stakeholder management involves identifying, analyzing, and engaging stakeholders throughout the project. It ensures that stakeholders' interests, expectations, and concerns are understood and addressed. By actively involving stakeholders, managing their expectations, and maintaining open communication channels, project managers can gain support, resolve conflicts, and enhance collaboration, leading to increased project success.
+Effective stakeholder management involves identifying, analyzing, and engaging stakeholders throughout the project. It ensures that stakeholders' **interests, expectations, and concerns** are understood and addressed. By actively involving stakeholders, managing their expectations, and maintaining open communication channels, project managers can gain support, resolve conflicts, and enhance collaboration, leading to increased project success.
 
 ## 9. What is the purpose of the Lessons Learned process in project management?
 
-The Lessons Learned process captures and documents knowledge gained from project experiences, both positive and negative. It involves reflecting on project performance, identifying successes and challenges, and documenting valuable insights and recommendations for future projects. The Lessons Learned process promotes continuous improvement, fosters organizational learning, and helps avoid repeating past mistakes.
+The Lessons Learned process **captures and documents** knowledge gained from project experiences, both positive and negative. It involves reflecting on project **performance, identifying successes and challenges**, and documenting valuable insights and recommendations for future projects. The Lessons Learned process promotes continuous improvement, fosters organizational learning, and helps avoid repeating past mistakes.
 
 ## 10. How does effective communication management contribute to project success?
 
-Effective communication management ensures that project information is shared, understood, and acted upon by the appropriate stakeholders. It facilitates collaboration, alignment, and timely decision-making. By establishing clear communication channels, fostering an open and transparent environment, and utilizing appropriate communication methods, project managers can enhance team performance, mitigate risks, and ultimately contribute to project success
+Effective communication management ensures that project information is shared, understood, and acted upon by the appropriate stakeholders. It **facilitates collaboration, alignment, and timely decision-making**. By establishing clear communication channels, fostering an **open and transparent environment, and utilizing appropriate communication methods**, project managers can enhance team performance, mitigate risks, and ultimately contribute to project success
 
 ## 11. Construct WBS for Library management system (scrum based)
+
+![[Lecture Notes/Software Process Management/resources/Pasted image 20230612185802.png]]
 
 ## 12. For the following table of information
 
@@ -332,3 +334,9 @@ Effective communication management ensures that project information is shared, u
 4. Determine the float for each activity
 
 ![[Lecture Notes/Software Process Management/resources/Pasted image 20230611202836.png]]
+
+![[Lecture Notes/Software Process Management/resources/O%9A@R9)28@L__`E4~62JNC.jpg]]
+
+> 小栾
+
+![[Lecture Notes/Software Process Management/resources/(7MJ%9]F`Q}JHJ1D`M[I`I3.jpg]]
