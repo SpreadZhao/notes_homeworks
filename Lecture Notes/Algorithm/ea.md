@@ -437,7 +437,7 @@ The formula is called **Master Theorem**. You just plug numbers in it, and it gi
 Additionally, we extend this formula to a more common dimension:
 
 $$
-T(n) = \left\{ \begin{array}{lr} \Theta(n^{log_ba} \cdot lg^{k+1}n) & f(n) = nlog_ba \\ \Theta(f(n)) & f(n) > nlog_ba \\ \Theta(n^{log_ba}) & f(n) < nlog_ba \end{array} \right.
+T(n) = \left\{ \begin{array}{ll} \Theta(n^{log_ba} \cdot lg^{k+1}n) & f(n) = n^{log_ba} \cdot lg^kn \\ \Theta(f(n)) & f(n) > n^{log_ba} \\ \Theta(n^{log_ba}) & f(n) < n^{log_ba} \end{array} \right.
 $$
 
 where $f(n)$ is the constant time of a recurrence looks like:
