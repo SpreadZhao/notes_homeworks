@@ -206,6 +206,12 @@
 
 ![[Lecture Notes/Software Architecture/resources/Pasted image 20230608191813.png]]
 
+1. 都有什么类？什么对象？它们之间什么关系？-> Logic View
+2. 整个项目的进程是什么样的？前前后后都会发生什么事情？-> Process View
+3. 这些类和组件都该放到什么包里？都被划分成了哪些部分？-> Development View
+4. 这些软件开发好后放在哪些硬件里？怎么分配？-> Physical View
+5. 最后用户是咋用的？产品有什么功能？-> Senario
+
 UML虽然一般用来建类图，但是因为学习成本低，好理解，在2.0版本也加入了很多用来建体系结构的元素。
 
 ![[Lecture Notes/Software Architecture/resources/Pasted image 20230608192051.png]]
@@ -446,6 +452,8 @@ ATAM Phase 1 的六个步骤：
 
 ![[Lecture Notes/Software Architecture/resources/Pasted image 20230611110127.png]]
 
+![[Lecture Notes/Software Architecture/resources/Pasted image 20230612170023.png]]
+
 ![[Lecture Notes/Software Architecture/resources/Pasted image 20230611110138.png]]
 
 ![[Lecture Notes/Software Architecture/resources/Pasted image 20230611110713.png]]
@@ -454,14 +462,19 @@ ATAM Phase 1 的六个步骤：
 
 ## 4.1 Sensitivity Points
 
+能得到一个特定的**质量属性**的响应。
+
 ## 4.2 Risks
+
+如果某个决策或需求可能会导致开发难题，那就是risk。
 
 ## 4.3 Non-risks
 
+能证明正常运行的需求。
+
 ## 4.4 Tradeoffs
 
-
-
+和Sensitivity Point的区别就是，它影响了多个质量属性。
 
 
 
