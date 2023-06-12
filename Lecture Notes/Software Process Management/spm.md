@@ -243,7 +243,7 @@
 3. True or False: Contingency reserves are funds set aside to address unknown risks that may occur during the project. Answer: True
 4. True or False: The risk register is a document that captures information about identified risks, including their probability, impact, and risk response plans. Answer: True
 5. True or False: Brainstorming is a technique used to generate ideas and identify risks by engaging stakeholders in a collaborative discussion. Answer: True
-6. ____________ is an uncertainty that can have a negative or positive effect on meeting project objectives Answer: Risk
+6. \_\_ is an uncertainty that can have a negative or positive effect on meeting project objectives Answer: Risk
 7. True or False: A decision tree is a visual representation that helps in evaluating different options and their potential outcomes based on probabilities. Answer: True
 8. True or False: The Expected Monetary Value (EMV) is a calculation used to assess risks by multiplying the probability of an event by its impact. Answer: True
 9. True or False: Risk tolerance refers to an organization's willingness to take on risks in pursuit of its objectives. Answer: True
