@@ -326,6 +326,8 @@ Effective communication management ensures that project information is shared, u
 
 ![[Lecture Notes/Software Process Management/resources/Pasted image 20230612185802.png]]
 
+![[Lecture Notes/Software Process Management/resources/Pasted image 20230614161036.png]]
+
 ## 12. For the following table of information
 
 1. Draw the network diagram
@@ -340,3 +342,5 @@ Effective communication management ensures that project information is shared, u
 > 小栾
 
 ![[Lecture Notes/Software Process Management/resources/(7MJ%9]F`Q}JHJ1D`M[I`I3.jpg]]
+
+![[Lecture Notes/Software Process Management/resources/Pasted image 20230614152901.png]]
