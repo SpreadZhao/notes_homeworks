@@ -76,7 +76,10 @@ Expanded use case:
 
 ![[Lecture Notes/System Analysis and Design/resources/Pasted image 20230619225046.png]]
 
+![[Lecture Notes/System Analysis and Design/resources/Pasted image 20230620122610.png]]
+
 ## 8.2 Functional Decomposition Diagram
 
 ![[Lecture Notes/System Analysis and Design/resources/Pasted image 20230619225338.png]]
 
+![[Lecture Notes/System Analysis and Design/resources/Pasted image 20230620122618.png]]
