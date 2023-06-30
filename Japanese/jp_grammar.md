@@ -8,8 +8,10 @@
 * 第6课：[[Article/story/2023-05-19#Japanese Daily Note|2023-05-19]]
 * 第7课：[[Article/story/2023-05-27#第七課の文法|2023-05-27]]
 * 第8课：[[Article/story/2023-05-28#第八课语法|2023-05-28]]
+* 第13课：[[Article/story/2023-06-30#第13课语法|2023-06-30]]
+* 第14课：[[Article/story/2023-06-30#第14课语法|2023-06-30]]
 
 # 重要语法
 
-* 动词三大类：[[Article/story/2023-05-21#Japanese Daily Note|2023-05-21]]
+* 动词三大类，ます型：[[Article/story/2023-05-21#Japanese Daily Note|2023-05-21]]
 * 授受动词：[[Article/story/2023-05-27#授受动词|2023-05-27]]
