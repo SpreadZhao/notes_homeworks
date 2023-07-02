@@ -86,7 +86,7 @@ Statement statement = connection.createStatement();
 
 再然后，就可以真正去执行我们的sql语句了。这里因为非常简单，所以直接给整个的代码。如果我们的数据库中某张表是这样的：
 
-![[Pasted image 20221107144409.png|300]]
+![[Article/resources/Pasted image 20221107144409.png|300]]
 
 那么我们就可以这样写：
 
@@ -243,17 +243,17 @@ public class Main {
 
 接下来，我们要使用maven去配置一个仓库。maven和gradle都是为了让我们更好得管理依赖而产生的工具，它们的使用并不难。首先，我们要[[software_qa#修改maven仓库位置|配置好本地的maven仓库]]，因为使用默认配置我感觉很不爽。然后，我们新建一个maven项目：
 
-![[Pasted image 20221115113328.png]]
+![[Article/resources/Pasted image 20221115113328.png]]
 
 并且还可以做如下自定义设置：
 
-![[Pasted image 20221115113414.png]]
+![[Article/resources/Pasted image 20221115113414.png]]
 
 这三个分别是包名，工程id，版本号。在新建完成之后，maven就会自动下载依赖到已经配置好的本地仓库中了。等下载完之后，我们就可以开始真正搭建jdbc了。
 
 首先，在根目录下新建这样的文件夹，这里保存的是我们的配置文件：
 
-![[Pasted image 20221115113603.png]]
+![[Article/resources/Pasted image 20221115113603.png]]
 
 在`db.properties`中写的就是mysql的几个基本属性：
 

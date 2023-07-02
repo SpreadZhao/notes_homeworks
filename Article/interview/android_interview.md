@@ -8,13 +8,13 @@
 
 启动Activity，将它加入返回栈，此时它处于栈顶。如果按下返回键或者调用`finish()`放法销毁它，它就从返回栈里弹出。
 
-![[Article/resources/Pasted image 20230323215937.png]]
+![[Article/interview/resources/Pasted image 20230323215937.png]]
 
 ## 1.2 Life Cycle
 
 [The activity lifecycle  |  Android Developers](https://developer.android.com/guide/components/activities/activity-lifecycle)
 
-![[Article/resources/Pasted image 20230323220228.png|400]]
+![[Article/interview/resources/Pasted image 20230323220228.png|400]]
 
 * onResume状态的Activity处于返回栈的栈顶，因为它**正在运行**；
 * 当其他Activity占据了返回栈的栈顶，而原来的Activity仍然可见时，被占用的Activity处于onPause状态(对话Activity占据时，下面的Acitivity仍然可见)。此时我们可以释放一些浪费CPU的资源；
@@ -47,7 +47,7 @@ A.onPause() -> A.onSaveInstanceState() -> A.onStop() -> A.onDestroy() -> A.onCre
 
 可以看到，Activity发生旋转时，会经历重建的过程。因此我们需要将数据在`onSaveInstanceState()`方法中以bundle(键值对)的形式保存起来。**该方法只要Acitivity被回收，就会被调用**。因此即使不是旋转屏幕，在后台的Activity被系统回收时，也要考虑用此方法保存数据。另外，我们可以通过配置AndroidManifest的方式来避免走完生命周期：
 
-![[Article/resources/Pasted image 20230323223145.png]]
+![[Article/interview/resources/Pasted image 20230323223145.png]]
 
 > 在MVVM架构中，旋转屏幕最好用带构造参数的ViewModel来解决。
 
@@ -68,7 +68,7 @@ A.onPause() -> A.onSaveInstanceState() -> A.onStop() -> A.onDestroy() -> A.onCre
 
 ## 2.1 Start of Service
 
-![[Article/resources/Pasted image 20230328205312.png|400]]
+![[Article/interview/resources/Pasted image 20230328205312.png|400]]
 
 ### 2.1.1 startService()
 
@@ -144,9 +144,9 @@ class MyBroadcastReceiver : BroadcastReceiver() {   
 
 标准广播和有序广播：
 
-![[Article/resources/Pasted image 20230329144050.png]]
+![[Article/interview/resources/Pasted image 20230329144050.png]]
 
-![[Article/resources/Pasted image 20230329144100.png]]
+![[Article/interview/resources/Pasted image 20230329144100.png]]
 
 # 4. Content Provider
 
