@@ -509,3 +509,9 @@ export PATH=$PATH:/usr/lib/jvm/jdk-17./bin
 ```
 
 之后source一下，这个`/usr/lib/jvm/jdk-17./bin`目录就添加到环境变量中了。**实际上，在这个文件的开头就能发现，每次WSL启动的时候都会默认执行一下这个脚本，所以不用担心**。
+
+# 9. Source Insight
+
+## 9.1 更改字体
+
+[(45条消息) Source Insight 4.0 字体设置_sourceinsight4字体_wowocpp的博客-CSDN博客](https://blog.csdn.net/wowocpp/article/details/87274027)

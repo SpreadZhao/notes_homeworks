@@ -132,7 +132,7 @@ public static int getDefaultSize(int size, int measureSpec) {
 }
 ```
 
-这是系统设置默认的尺寸，在`//8`可以看到如果specMode是AT_MOST或者EXACTLY，则返回的就是specSize。至于 UNSPECIFIED 的情况，则会返回一个建议的最小值，这个值和子元素设置的最小值它的背景大小有关（这一段话可先看看2.2小节再回来继续看）。
+这是系统设置默认的尺寸，在`//8`可以看到如果specMode是AT_MOST或者EXACTLY，则返回的就是specSize。至于 UNSPECIFIED 的情况，则会返回一个建议的最小值，这个值和子元素设置的最小值它的背景大小有关。
 
 从一开始执行的performMeasure()到最后设置宽高的setMeasuredDimension()方法，流程都比较清晰。并且可以发现有两个贯穿整个流程的变量，widthMeasureSpec和heightMeasureSpec，理解这两个变量才是关键。
 
@@ -177,11 +177,13 @@ public static int getSize(int measureSpec) {
 -   measure过程主要就是从顶层父View向子View递归调用view.measure方法进行测量（measure()中又回调onMeasure()方法）的过程;
 -   如果是ViewGroup则需执行要measure()并重写onMeasure()方法，在该方法中定义自己的测量方式，接着调用maesureChildren()方法遍历测量子View的宽高，最终根据子View宽高确定自己的宽高；
 -   ViewGroup类提供了measureChild()，measureChildren()和measureChildWithMargins()方法，简化了父子View的尺寸计算；
--   如果是子View则调用measure() -》 onMeasure()方法完成自身的测量即可；
+-   如果是子View则调用measure() -> onMeasure()方法完成自身的测量即可；
 -   View的measure()方法是final修饰的，不能重写，只能重写onMeasure()方法完成自己的测量，且重写时不建议把宽高设置为死值；
 -   使用View的getMeasuredWidth()和getMeasuredHeight()方法来获取View测量的宽高，必须保证这两个方法在onMeasure流程之后被调用才能返回有效值。
 
 ![[Study Log/android_study/resources/Pasted image 20230710145603.png]]
+
+> 一篇写的很好的文章：[一文理解 onMeasure -- 从 MeasureSpec 说起 - 掘金 (juejin.cn)](https://juejin.cn/post/6962438735426224136#comment)
 
 ## 3.3 Layout
 
