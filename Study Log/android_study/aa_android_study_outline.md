@@ -6,7 +6,7 @@
 - [ ] APK打包流程
 - [ ] View绘制流程 [[Study Log/android_study/view_create_flow|view_create_flow]]
 - [ ] 自定义View [[Study Log/android_study/custom_view|custom_view]]
-- [ ] 事件分发流程
+- [ ] 事件分发流程 [[Study Log/android_study/touch_event|touch_event]]
 - [ ] Window
 - [ ] DecorWindow
 - [ ] ViewRoot
@@ -35,6 +35,7 @@
 - [ ] Thread
 	- [ ] HandlerThread
 - [ ] Jetpack
+	- [ ] WorkManager
 - [ ] Retrofit
 - [ ] ActivityResultLauncher
 - [ ] Fragment
