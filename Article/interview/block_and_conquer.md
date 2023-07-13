@@ -12,6 +12,23 @@
 
 #TODO ANR
 
-- [ ] ANR问题怎么解决的？
+- [x] ANR问题怎么解决的？
 
 之后，我在自己的手机上也重新写了一个版本。但是让我意外的是，居然遇到了ANR问题。
+
+// 这里贴出ANR的图片
+
+这中间，我排查了很多原因。比如悬浮窗构建时Context到底要选什么？一开始我选的是Activity，后来又换成Service和Application；之后又在[这篇文章](https://blog.csdn.net/weixin_38322371/article/details/119185227)中发现，把悬浮窗的实例放在Service里，是需要在Service里用Handler来更新悬浮窗的UI的，然而我自己当时的设计是在悬浮窗内部更新UI，所以我也换成了这样的模式。之后，在公司的手机上测试，又发现了绘制的Frame的事件没有交付完毕的情况。所以我又思考下面的代码：
+
+```kotlin
+private val refreshTimeTask = object : Runnable {  
+	override fun run() {  
+		window.refreshTime()  
+		mHandler.postDelayed(this, 1000)  
+	}  
+}
+```
+
+如果就这样放着的话，这个程序放在后台一段时间，悬浮窗被回收了，而这个绘制过程恰好正在进行，那不是就不会提交了吗！于是，我又搞了一个[[监听屏幕开关的Listener]]，当屏幕关闭时，就上一个锁，不更新UI，然后等屏幕亮了就把它打开并让Handler提交一次任务；除了这些，还考虑了是否应该用前台Service。。。
+
+以上，**没有任何作用**！最终，是我把应用的省电策略调成不限制，就不会有ANR问题了。。。。。。。。。。。

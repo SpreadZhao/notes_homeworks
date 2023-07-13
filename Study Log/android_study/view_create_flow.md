@@ -185,6 +185,10 @@ public static int getSize(int measureSpec) {
 
 > 一篇写的很好的文章：[一文理解 onMeasure -- 从 MeasureSpec 说起 - 掘金 (juejin.cn)](https://juejin.cn/post/6962438735426224136#comment)
 
+面试问题：
+
+* [[Article/interview/interview_questions#1 onMeasure方法一般执行几次，什么情况下会执行多次|interview_questions]]
+
 ## 3.3 Layout
 
 刚才Measure的流程是performMeasure -> measure -> onMeasure。而Layout的流程是一模一样的，就像[[Study Log/android_study/resources/Pasted image 20230710142551.png|刚才图里]]画的那样。
