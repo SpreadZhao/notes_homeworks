@@ -348,6 +348,12 @@ override fun onStart() {
 }
 ```
 
+```ad-error
+title: 警告
+
+这种方式会导致程序崩溃，目前在调查原因。
+```
+
 ## layout和onLayout方法有什么区别
 
 [[Study Log/android_study/view_create_flow#3.3 Layout|view_create_flow#layout]]
