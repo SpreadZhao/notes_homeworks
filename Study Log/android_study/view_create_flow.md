@@ -73,7 +73,7 @@ public final void measure(int widthMeasureSpec, int heightMeasureSpec) {
 }
 ```
 
-measure()方法使用final修饰，代表不可重写。在measure()方法中会进行一系列逻辑处理后，调用onMeasure()方法，真正的测量都在onMeasure()方法中实现。
+measure()方法使用final修饰，代表不可重写。在measure()方法中会进行一系列逻辑处理后，调用onMeasure()方法，真正的测量都在onMeasure()方法中实现。 ^8894fd
 
 ```java
 //frameworks/base/core/java/android/view/View.java
@@ -187,7 +187,7 @@ public static int getSize(int measureSpec) {
 
 面试问题：
 
-* [[Article/interview/interview_questions#1 onMeasure方法一般执行几次，什么情况下会执行多次|interview_questions]]
+* [[Article/interview/interview_questions#onMeasure方法一般执行几次，什么情况下会执行多次]]
 
 ## 3.3 Layout
 
@@ -308,7 +308,7 @@ public void layout(int l, int t, int r, int b) {
 }
 ```
 
--   setFrame()：确定View自身位置；
+-   setFrame()：确定View自身位置； ^42577a
 -   setOpticalFrame()：也是确定View自身位置，其内部也是通过调用setFrame()来实现；
 -   onLayout()：确认该View里面的子View在父容器的位置，用protected修饰，在View.java文件里的onLayout()只是个空函数，需要子类进行重写。
 
@@ -550,12 +550,12 @@ public void draw(Canvas canvas) {
 
 以上的源码里的官方注释，draw()方法有以下步骤：
 
-1.  绘制View的背景；
+1.  **绘制View的背景**； ^2bf32e
 2.  如果有必要的话，保存画布的图层以准备fading；
-3.  绘制View的内容，即执行关键函数`onDraw()`;
-4.  绘制子View；
+3.  **绘制View的内容，即执行关键函数`onDraw()`**。这是一个空方法;
+4.  **绘制子View**；
 5.  如果有必要的话，绘制View的fading边缘并恢复图层；
-6.  绘制View的装饰（比如滚动条等等）
+6.  **绘制View的装饰（比如滚动条等等）**；
 7.  绘制默认焦点高亮
 
 无论是View还是ViewGroup，绘制的流程都是如此，还有两点需要了解：

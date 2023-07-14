@@ -262,6 +262,10 @@ Canvas在绘制文字时，纵坐标是从baseline开始的，而不是文字的
 
 ## 4.5 Summary & Extension
 
+[java - When is View.onMeasure() called? - Stack Overflow](https://stackoverflow.com/questions/6631105/when-is-view-onmeasure-called)
+
+[View  |  Android Developers](https://developer.android.com/reference/android/view/View.html)
+
 ![[Study Log/android_study/resources/Pasted image 20230711144603.png]]
 
 ![[Study Log/android_study/resources/Pasted image 20230711144648.png]]

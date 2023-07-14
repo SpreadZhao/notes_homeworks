@@ -16,7 +16,9 @@
 
 之后，我在自己的手机上也重新写了一个版本。但是让我意外的是，居然遇到了ANR问题。
 
-// 这里贴出ANR的图片
+![[Article/interview/resources/2c51e9e770fa49a34fa371f74c083cf.png]]
+
+![[Article/interview/resources/ANR问题.png]]
 
 这中间，我排查了很多原因。比如悬浮窗构建时Context到底要选什么？一开始我选的是Activity，后来又换成Service和Application；之后又在[这篇文章](https://blog.csdn.net/weixin_38322371/article/details/119185227)中发现，把悬浮窗的实例放在Service里，是需要在Service里用Handler来更新悬浮窗的UI的，然而我自己当时的设计是在悬浮窗内部更新UI，所以我也换成了这样的模式。之后，在公司的手机上测试，又发现了绘制的Frame的事件没有交付完毕的情况。所以我又思考下面的代码：
 

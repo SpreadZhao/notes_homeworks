@@ -1,5 +1,7 @@
 # 2 应用启动流程
 
+[Android启动过程分析(图+文)-腾讯云开发者社区-腾讯云 (tencent.com)](https://cloud.tencent.com/developer/article/1356506)
+
 从点击桌面的APP图标，到APP主页显示出来，大致会经过以下流程：
 
 1.  点击桌面App图标，Launcher进程采用Binder跨进程机制向system_server进程发起startActivity请求；
@@ -7,6 +9,8 @@
 3.  App进程，通过Binder机制向sytem_server进程发起attachApplication请求（绑定Application）；
 4.  system_server进程在收到请求后，进行一系列准备工作后，再通过binder机制向App进程发送scheduleLaunchActivity请求；
 5.  App进程的binder线程（ApplicationThread）在收到请求后，通过handler向主线程发送LAUNCH_ACTIVITY消息。主线程在收到Message后，通过发射机制创建目标Activity，并回调Activity.onCreate()/onStart()/onResume()等方法，经过UI渲染结束后便可以看到App的主界面。
+
+![[Study Log/android_study/resources/Pasted image 20230714144749.png]]
 
 一些基础知识：
 
