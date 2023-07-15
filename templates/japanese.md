@@ -1,3 +1,23 @@
-# Japanese Daily Note
+# 第课
 
-#language/communication/japanese #date {{date:YYYY-MM-DD}}
+#date {{date:YYYY-MM-DD}} #language/communication/japanese 
+
+## 单词
+
+
+
+## 语法
+
+### 1 
+
+
+
+### 2 
+
+
+
+### 3 
+
+
+
+## 课文
