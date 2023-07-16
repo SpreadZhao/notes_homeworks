@@ -15,6 +15,11 @@
 * 第15课：[[Article/story/2023-07-02#第15课语法|2023-07-02]]
 * 第16课：[[Article/story/2023-07-02#第16课语法|2023-07-02]]
 
+```dataview
+list 
+from "Japanese/jp_notes"
+```
+
 # 重要语法
 
 * 动词三大类，ます型：[[Article/story/2023-05-21#Japanese Daily Note|2023-05-21]]

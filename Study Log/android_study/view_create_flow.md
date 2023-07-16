@@ -22,6 +22,14 @@ View绘制的三大流程：Measure -> Layout -> Draw。下面是准备工作：
 
 ![[Study Log/android_study/resources/Pasted image 20230710142551.png]]
 
+**Measure和Layout的流程**：
+
+![[Study Log/android_study/resources/Pasted image 20230716223747.png]]
+
+![[Study Log/android_study/resources/Pasted image 20230716223856.png]]
+
+可以看到，就是一个递归调用的过程，而View就是这棵递归树的根节点。
+
 ## 3.2 Measure
 
 Measure翻译过来即是“测量”的意思，在此测量的是每个控件的宽和高。在代码层面，则是给每个View的mMeasuredWidth和mMeasuredHeight变量进行赋值。在测量时遵循：
@@ -155,11 +163,15 @@ public static int getSize(int measureSpec) {
 
 ### 3.2.2 测量模式
 
--   EXACTLY：确定大小，父View希望子View的大小是确定的。对应LayoutParams中的match_parent和具体数值这两种模式。检测到View所需要的精确大小，这时候View的最终大小就是SpecSize所指定的值；
--   AT_MOST ：最大大小，父View希望子View的大小最多是specSize指定的值。对应LayoutParams中的wrap_content。View的大小不能大于父容器的大小。
--   UNSPECIFIED ：不确定大小，父View完全依据子View的设计值来决定。系统不对View进行任何限制，要多大给多大，一般用于系统内部。
+-   EXACTLY：确定大小，~~父View~~希望子View的大小是确定的。对应LayoutParams中的match_parent和具体数值这两种模式。检测到View所需要的精确大小，这时候View的最终大小就是SpecSize所指定的值；
+-   AT_MOST ：最大大小，~~父View~~希望子View的大小最多是specSize指定的值。对应LayoutParams中的wrap_content。View的大小不能大于父容器的大小。
+-   UNSPECIFIED ：不确定大小，~~父View~~完全依据子View的设计值来决定。系统不对View进行任何限制，要多大给多大，一般用于系统内部。
 
 具体详见2.2.2小节的图。
+
+```ad-warning
+这里“父View”的说法是非常容易产生歧义的，见[[Article/story/2023-07-16#View测量布局流程的再感悟|我之后的感悟]]。
+```
 
 ### 3.2.3 MeasureSpec如何确定
 
@@ -263,7 +275,7 @@ private void performLayout(WindowManager.LayoutParams lp, int desiredWindowWidth
 }
 ```
 
-里面核心的逻辑就是调用了host的layout方法，而host同样也是一个View。**View的布局主要是通过确定上下左右四个关键点来确定其位置**。值得一说的是，测量时，先测量子View的宽高，再测量父View的宽高。但是在布局时顺序则相反，是父View先确定自身的布局，再确认子View的布局。
+里面核心的逻辑就是调用了host的layout方法，而host同样也是一个View。**View的布局主要是通过确定上下左右四个关键点来确定其位置**。值得一说的是，[[Article/story/2023-07-16#View测量布局流程的再感悟|测量时，先测量子View的宽高，再测量父View的宽高。但是在布局时顺序则相反，是父View先确定自身的布局，再确认子View的布局]]。 ^107fa1
 
 ```java
 /**

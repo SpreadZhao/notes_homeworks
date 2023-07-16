@@ -1,4 +1,9 @@
-遇到什么问题？都是怎么解决的？这篇文章总结的全部都是这样的问题。
+遇到什么问题？都是怎么解决的？这篇文章总结的全部都是这样的问题。其他文件中的问题会贴出 #block_and_conquer 的标签。
+
+```dataview
+list
+where contains(file.tags, "block_and_conquer")
+```
 
 # 1 测试的时候无法定位问题
 
