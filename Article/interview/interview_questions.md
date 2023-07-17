@@ -446,3 +446,7 @@ class CircleView : View {
     }  
 }
 ```
+
+# Looper
+
+## 一个线程有几个Looper？
