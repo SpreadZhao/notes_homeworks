@@ -85,4 +85,6 @@ hr
 	2. Compose刷新两遍的问题
 	3. Compose的copy函数
 	4. Kotlin Flow没有响应（传Unit）
+	5. 自定义View中的measuredWidth
+	6. Kotlin为啥没有SAM
 5. 提一嘴QEMU的东西
