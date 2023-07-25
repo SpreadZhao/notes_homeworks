@@ -32,6 +32,26 @@ Activity/Window --> ViewGroup --> View
 - onInterceptTouchEvent(MotionEvent ev)：进行事件拦截，在dispatchTouchEvent()中调用，在分发的过程中判断是否需要进行拦截，需要注意的是只有ViewGroup有该方法，View是没有提供该方法的。如果返回true代表拦截，返回false代表不拦截；
 - onTouchEvent(MotionEvent ev)：触摸事件处理，同样在dispatchTouchEvent()方法中进行调用，如果返回true代表已处理事件，返回false代表不处理事件，事件继续传递。
 
+在安卓中，当一个触摸事件发生时，涉及到触摸事件分发的三个方法的执行顺序如下：
+
+1.  `dispatchTouchEvent(MotionEvent event)`：
+    -   这是`View`和`ViewGroup`类中的方法。
+    -   当一个触摸事件发生时，首先会调用根布局的`dispatchTouchEvent`方法。
+    -   该方法用于分发触摸事件给`ViewGroup`的子View，从父View向子View递归分发，直到找到最终的触摸事件目标View。
+    -   在`dispatchTouchEvent`方法中，会依次调用`onInterceptTouchEvent`方法和`onTouchEvent`方法来决定是否拦截和处理触摸事件。
+2.  `onInterceptTouchEvent(MotionEvent event)`：
+    -   这是`ViewGroup`类中的方法。
+    -   当`dispatchTouchEvent`方法调用到某个`ViewGroup`时，会触发该`ViewGroup`的`onInterceptTouchEvent`方法。
+    -   该方法用于决定是否拦截子View的触摸事件，如果返回`true`，则拦截触摸事件，不会再将事件传递给子View的`onTouchEvent`方法；如果返回`false`，则不拦截触摸事件，继续将事件传递给子View。
+3.  `onTouchEvent(MotionEvent event)`：
+    -   这是`View`和`ViewGroup`类中的方法。
+    -   如果在`dispatchTouchEvent`过程中没有发生事件拦截，或者被拦截的子View的`onTouchEvent`方法返回了`false`，那么触摸事件会传递给最终的触摸事件目标View。
+    -   在目标View的`onTouchEvent`方法中，你可以处理触摸事件的具体操作，例如点击、滑动等。
+
+所以，**触摸事件的处理顺序是**：`dispatchTouchEvent` -> `onInterceptTouchEvent` -> `onTouchEvent`。
+
+需要注意的是，触摸事件的处理顺序可以在`ViewGroup`的子类中进行修改，通过重写这些方法并添加自定义的逻辑来实现特定的触摸事件处理需求。但在大多数情况下，不需要修改默认的事件处理顺序。
+
 **我们从ViewGroup的dispatchTouchEvent开始看起**：
 
 ```java
@@ -201,4 +221,6 @@ onTouch -> onTouchEvent -> onClick
 # 3 问题
 
 ![[Study Log/android_study/resources/Pasted image 20230713113930.png]]
+
+
 

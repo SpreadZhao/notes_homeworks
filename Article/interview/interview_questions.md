@@ -1,5 +1,10 @@
 拥有rating标签的是重要的面试问题。
 
+```dataview
+list
+where contains(file.tags, "question/interview")
+```
+
 # View
 
 ## onMeasure方法一般执行几次，什么情况下会执行多次
@@ -446,6 +451,122 @@ class CircleView : View {
     }  
 }
 ```
+
+# Touch Event
+
+## 触摸事件传递的流程都有哪些可能？
+
+首先，触摸事件是一个**一次性**的东西，也就是在传递的过程中，如果被某个View给拦截并消费了，就会终止。而这个消费的过程就写在onTouchEvent()中，所以这整个过程看起来就像一条L型的链子：
+
+![[Article/interview/resources/Pasted image 20230725094136.png|500]]
+
+而如果任何一个View都没有消费这个事件，那么这个事件就会最终重新回到Activity，变成一个U型的链：
+
+![[Article/interview/resources/Pasted image 20230725094305.png|500]]
+
+## 这些MotionEvent在触摸的时候都可能会触发多少次？
+
+我们可以在dispatchEvent和onTouchEvent上都打上日志来看一看：
+
+```
+dispatch, ev: MotionEvent { action=ACTION_DOWN, ...
+onTouch, ev: MotionEvent { action=ACTION_DOWN, ...
+dispatch, ev: MotionEvent { action=ACTION_MOVE, ...
+onTouch, ev: MotionEvent { action=ACTION_MOVE, ...
+dispatch, ev: MotionEvent { action=ACTION_MOVE, ...
+onTouch, ev: MotionEvent { action=ACTION_MOVE, ...
+... ...
+dispatch, ev: MotionEvent { action=ACTION_UP, ...
+onTouch, ev: MotionEvent { action=ACTION_UP, ...
+```
+
+可以看到，DOWN只有一次，而中间可能会经过若干次MOVE，最后来一个UP。这也是非常符合我们的常识的。
+
+![[Article/interview/resources/Pasted image 20230725100859.png|500]]
+
+## 如果要实现拖拽，需要如何重写方法？
+
+最简单地，只需要重写onTouchEvent()方法就可以了。当按下时，记住点击的位置，然后MOVE时，不断算出新的位置并更新：
+
+```kotlin
+override fun onTouchEvent(event: MotionEvent): Boolean {  
+	when (event.action) {  
+		MotionEvent.ACTION_MOVE -> {  
+			val x = event.rawX.toInt()  
+			val y = event.rawY.toInt()  
+			val destX = x - mLastFocusX  
+			val destY = y - mLastFocusY  
+			windowParams.x += destX  
+			windowParams.y += destY  
+			windowManager.updateViewLayout(this, windowParams)  
+			mLastFocusX = x  
+			mLastFocusY = y  
+		}  
+		MotionEvent.ACTION_DOWN -> {  
+			mLastFocusX = event.rawX.toInt()  
+			mLastFocusY = event.rawY.toInt()  
+			performClick()  
+		}  
+	}  
+	return true  
+}
+```
+
+上面的例子是一个可以拖拽的悬浮窗。当move时，首先算出新的位置保存到windowParams中，然后用它来更新悬浮窗。而如果我们想要设计一个可以全局拖拽的普通View的话，可以使用layout()方法：
+
+```kotlin
+override fun onTouchEvent(event: MotionEvent): Boolean {  
+    when (event.action) {  
+        MotionEvent.ACTION_MOVE -> {  
+            val x = event.rawX.toInt()  
+            val y = event.rawY.toInt()  
+            val destX = x - mLastFocusX  
+            val destY = y - mLastFocusY  
+            val left = left + destX  
+            val top = top + destY  
+            val right = right + destY  
+            val bottom = bottom + destY  
+            layout(left, top, right, bottom)  
+            mLastFocusX = x  
+            mLastFocusY = y  
+        }  
+        MotionEvent.ACTION_DOWN -> {  
+            mLastFocusX = event.rawX.toInt()  
+            mLastFocusY = event.rawY.toInt()  
+            performClick()  
+        }  
+    }  
+    return true  
+}
+```
+
+另外，我们要注意一下getX()和getRawX()的区别。前者获取的是相对于**屏幕**左上角的横坐标，而后者是相对于收到这个事件的**View**左上角的横坐标。
+
+## 什么时候才需要重写dispatchTouchEvent()方法？
+
+`dispatchTouchEvent`是一个用于分发触摸事件的方法，它负责将触摸事件传递给目标View和ViewGroup的方法。大部分情况下，你不需要重写`dispatchTouchEvent`方法，因为它在`View`和`ViewGroup`类中已经有了默认的实现，会自动处理触摸事件的分发。
+
+但有时候，你可能需要重写`dispatchTouchEvent`方法来实现一些特定的触摸事件分发逻辑。以下是一些需要重写`dispatchTouchEvent`方法的情况：
+
+1.  事件拦截：如果你希望在触摸事件到达目标View之前拦截并处理触摸事件，可以重写`dispatchTouchEvent`方法，然后在适当的时候返回`true`来拦截事件，或者返回`false`将事件传递给目标View。
+2.  自定义事件分发逻辑：在某些特殊情况下，你可能希望根据自己的业务需求定制触摸事件的分发逻辑。例如，你可能需要根据一些条件来决定是否将触摸事件传递给子View，或者在某些情况下将触摸事件传递给父View。
+3.  事件日志记录：有时候你可能需要在应用程序中记录触摸事件的信息，以便进行调试或分析。通过重写`dispatchTouchEvent`方法，你可以在事件分发过程中添加日志记录。
+
+值得注意的是，如果你决定重写`dispatchTouchEvent`方法，通常你需要在方法中实现一些复杂的逻辑来正确地处理触摸事件的分发。因此，在没有特定需求的情况下，最好不要随意重写`dispatchTouchEvent`方法，以免引入不必要的复杂性和潜在的错误。大多数情况下，可以通过在`onTouchEvent`方法中处理触摸事件来满足常规需求。
+
+## 什么时候才需要重写onInterceptTouchEvent()方法？
+
+`onInterceptTouchEvent`方法用于拦截子View的触摸事件，它是在`ViewGroup`类中定义的。当一个`ViewGroup`包含多个子View时，如果你希望在某些特定情况下拦截子View的触摸事件，并阻止其传递给子View的`onTouchEvent`方法，就可以重写`onInterceptTouchEvent`方法。
+
+一般情况下，你不需要经常重写`onInterceptTouchEvent`方法，因为它的默认实现已经满足大多数情况。但以下情况可能需要重写该方法：
+
+1.  滑动冲突解决：当`ViewGroup`中包含多个可滑动的子View（例如`ScrollView`、`RecyclerView`等）时，可能会出现滑动冲突。如果你希望在某些情况下阻止子View的滑动事件，就可以在`onInterceptTouchEvent`方法中实现相关逻辑来解决滑动冲突。
+2.  手势处理：在某些场景下，你可能需要在`ViewGroup`中检测特定的手势，例如双击、长按等，来触发一些自定义操作。在这种情况下，你可以重写`onInterceptTouchEvent`方法来实现手势的拦截和处理。
+3.  自定义触摸事件分发逻辑：如果你的`ViewGroup`需要定制触摸事件的分发逻辑，例如根据某些条件来决定是否拦截触摸事件，就可以在`onInterceptTouchEvent`方法中实现相应的逻辑。
+
+需要注意的是，当你重写`onInterceptTouchEvent`方法时，需要谨慎处理触摸事件的拦截逻辑，以免引入不必要的滑动冲突或触摸事件的混乱。正确处理触摸事件的拦截逻辑能够提供更好的用户体验，并确保各个子View能够正确响应用户的触摸操作。
+
+最后，与`dispatchTouchEvent`方法一样，在没有特定需求的情况下，最好不要随意重写`onInterceptTouchEvent`方法，以免引入复杂性和潜在的错误。在大多数情况下，通过在`onTouchEvent`方法中处理触摸事件已经能够满足常规需求。
 
 # Looper
 
