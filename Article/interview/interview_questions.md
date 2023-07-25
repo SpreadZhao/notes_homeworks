@@ -540,7 +540,9 @@ override fun onTouchEvent(event: MotionEvent): Boolean {
 }
 ```
 
-另外，我们要注意一下getX()和getRawX()的区别。前者获取的是相对于**屏幕**左上角的横坐标，而后者是相对于收到这个事件的**View**左上角的横坐标。
+另外，我们还可以在onDraw()方法里去处理，并在更新完之后调用invalidate()来触发绘画。可以参考自定义气泡的例子：[[Article/story/2023-07-25#自定义QQ气泡View|2023-07-25]]。
+
+我们要注意一下getX()和getRawX()的区别。前者获取的是相对于**屏幕**左上角的横坐标，而后者是相对于收到这个事件的**View**左上角的横坐标。
 
 ## 什么时候才需要重写dispatchTouchEvent()方法？
 
