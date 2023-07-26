@@ -91,7 +91,7 @@ val appService = ServiceCreator.create<AppService>()
 
 这里使用了Kotlin泛型实化。比如，如果定义一个函数：`fun getGenericType() = T::class.java`这里会产生语法错误。例如，假设我们创建了一个`List<String>`集合，虽然在编译时期只能向集合中添加字符串类型的元素，但是在运行时期JVM并不能知道它本来只打算包含哪种类型的元素，只能识别出来它是个List。所有基于JVM的语言，它们的泛型功能都是通过类型擦除机制来实现的，其中当然也包括了Kotlin。这种机制使得我们不可能使用`a is T`或者`T::class.java`这样的语法，因为T的实际类型在运行的时候已经被擦除了。因此，在编译时的泛型无法被具体实化成某个具体的类
 但是，如果这样写：`inline fun <reified T> getGenericType() = T::class.java`
-加上`inline`和`reified`，就可以在编译时通过了。
+加上`inline`和`reified`，就可以在编译时通过了。 ^c00665
 
 另外，郭神的《第一行代码》中的500页，第10.6讲也是在说这个事情。
 
