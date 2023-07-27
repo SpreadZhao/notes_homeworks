@@ -1,10 +1,5 @@
 拥有rating标签的是重要的面试问题。
 
-```dataview
-list
-where contains(file.tags, "question/interview")
-```
-
 # View
 
 ## onMeasure方法一般执行几次，什么情况下会执行多次
@@ -575,3 +570,35 @@ override fun onTouchEvent(event: MotionEvent): Boolean {
 # Looper
 
 ## 一个线程有几个Looper？
+
+# 其它位置
+
+```dataviewjs
+let data = [];
+for (let page of dv.pages("#question/interview")) {
+	let fileStr = await dv.io.load(page.file.path);
+	let lines = fileStr.split('\n');
+	let headers = "";
+	for (let line of lines) {
+		let hashCount = 0;
+		if (line.match(/^#+\s/)) {
+			hashCount += (line.match(/#/g) || []).length;
+			headers += generateNestedList(hashCount, line.replace(/^#+\s/, ""));
+		}
+	}
+	let fileLink = "[[" + page.file.path + "]]";
+	headers = "<div style=\"border: 2px solid #D58E06; padding: 10px;\">" + headers + "</div>";
+	data.push({fileLink, headers})
+}
+function generateNestedList(level, content) {
+	if (level === 0) { 
+		return content; 
+	} 
+	const nestedListContent = generateNestedList(level - 1, content); 
+	return `<ul><li>${nestedListContent}</li></ul>`; 
+}
+dv.table(
+	["File Name", "Headers"],
+	data.map(d => [d.fileLink, d.headers])
+);
+```

@@ -289,11 +289,21 @@ httpd -k install -n "Apache24"
 
 ![[Knowledge/resources/Pasted image 20221223140048.png]]
 
-## 3.3 DataView Implicit Fields
+## 3.3 DataView
+
+### 3.3.1  Implicit Fields
 
 DataView has some default metadata, you can see that in this website:
 
 [Metadata on Pages - Dataview (blacksmithgu.github.io)](https://blacksmithgu.github.io/obsidian-dataview/annotation/metadata-pages/)
+
+### 3.3.2 Dataview js
+
+List all places where I used dataview js to query the repository.
+
+```query
+content: "```dataviewjs"
+```
 
 ## 3.4 Center Images
 
