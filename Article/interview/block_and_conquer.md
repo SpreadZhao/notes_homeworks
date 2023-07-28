@@ -35,6 +35,46 @@ private val refreshTimeTask = object : Runnable {
 
 以上，**没有任何作用**！最终，是我把应用的省电策略调成不限制，就不会有ANR问题了。。。。。。。。。。。
 
+# 2 按钮元素居中
+
+有一个按钮：
+
+![[Article/interview/resources/Drawing 2023-07-28 23.45.00.excalidraw.png]]
+
+左边是一个加载的动画，中间是按钮的文字。这两个控件使用的都是公司的公控，而这个加载动画本身是一个ViewGroup（因为它们内部需要解决一些问题，所以才定义成了ViewGroup）。现在的需求是：
+
+* 当加载动画不显示的时候，让文字居中；
+* 当加载动画显示的时候，让文字和加载动画合在一起居中。
+
+首先，为了做测试，我仅仅是把这个ViewGroup中的drawable拿了过来。
+
+由于按钮内部本身已经定义好了一个drawText()方法用来画文字，所以为了不修改别人写的逻辑，我不能自己使用canvas来重绘。本来，最简单的方式是使用这个方法：
+
+```kotlin
+canvas.translate()
+```
+
+[android - What does canvas.translate do? - Stack Overflow](https://stackoverflow.com/questions/5789813/what-does-canvas-translate-do)
+
+这样直接就把文字和加载动画一起带过来了。然而，由于公控的按钮有一个背景，这个背景在移动了之后，点击效果就会出现偏移。就像正常点击一个按钮时会出现阴影：
+
+![[Article/interview/resources/Drawing 2023-07-28 23.52.04.excalidraw.png]]
+
+如果使用了`canvas.translate()`，点击的时候就变成了这样：
+
+![[Article/interview/resources/Drawing 2023-07-28 23.52.58.excalidraw.png]]
+
+也就是左边的一块给拖出去了。而这个背景的重绘也是别人负责的；另外，由于需求方最后还是要这个Button对象，所以我也不能再自定义一个ViewGroup。所以，**我只能试图以最小的代价，最小的代码侵入性来实现这个需求**。最后的实现如下：
+
+1. 将Button和加载动画的这个ViewGroup放到一个FrameLayout中；
+2. 在button内部定义一个是否正在加载的状态，并设置监听；
+3. **让加载动画也向Button注册一个监听，监听是否加载的状态**；
+4. 当显示为加载时，首先调用加载动画的回调，让他绘制出自己，然后通过自己安插接口来获得它的长宽属性；
+5. 然后在Button自己这里进行绘制。此时我们就可以拿到加载动画的各个属性了，根据自己的属性进行绘制，来确定横纵坐标；
+6. 当状态为不加载时，让加载动画停止显示，再调用Button的drawText把自己在中间画出来就可以了。
+
+通过这样的操作，既实现了需求，又没有修改别人的代码，并且最后返回的依然是原来的Button。美中不足就是只能配合FrameLayout使用了。最后，在重写onTouchEvent触摸的时候，当按下按钮的时候，只需要改变Button的加载状态，就可以自动触发这一系列任务了。
+
 # 其它位置
 
 ```dataviewjs

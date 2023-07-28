@@ -4,4 +4,5 @@ title: {{title}}
 category: 
 description: 
 link: 
+tags: 
 ---
