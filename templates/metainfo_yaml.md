@@ -4,5 +4,5 @@ title: {{title}}
 category: 
 description: 
 link: 
-tags: 
+tags: <%tp.file.tags%>
 ---
