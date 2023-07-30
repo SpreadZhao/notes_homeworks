@@ -4,7 +4,9 @@ cssclass: dashboard
 
 # Recent Modified
 
-`$=await dv.list(dv.pages('').sort(f=>f.file.mtime.ts,"desc").limit(10).file.link)`
+```dataviewjs
+await dv.list(dv.pages('').sort(f=>f.file.mtime.ts,"desc").limit(10).file.link)
+```
 
 # CS Study Notes
 
