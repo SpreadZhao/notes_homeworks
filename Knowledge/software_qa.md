@@ -341,6 +341,10 @@ Work with Minimal:
 
 ![[Knowledge/resources/Pasted image 20230525165603.png]]
 
+## 3.8 File Embed
+
+[嵌入文件 - Obsidian 中文帮助 - Obsidian Publish](https://publish.obsidian.md/help-zh/%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/%E5%B5%8C%E5%85%A5%E6%96%87%E4%BB%B6)
+
 # 4. MySQL
 
 ## 4.1 MySQL的配置
