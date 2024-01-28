@@ -1,3 +1,14 @@
+---
+title: Java中的锁
+date: 2024-01-28
+tags:
+  - language/coding/java
+  - language/coding/kotlin
+  - question/coding/practice
+  - question/interview
+mtrace:
+  - 2024-01-28
+---
 #language/coding/java #language/coding/kotlin #question/coding/practice  #question/interview 
 
 # Syncronized

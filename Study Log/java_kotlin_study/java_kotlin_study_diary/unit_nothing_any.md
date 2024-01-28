@@ -3,8 +3,9 @@ mtrace:
   - 2023-07-27
 tags:
   - language/coding/kotlin
-  - language/coding/java
   - question/coding/theory
+title: Unit, Nothing and Any
+date: 2023-07-27
 ---
 # Unit, Nothing and Any
 

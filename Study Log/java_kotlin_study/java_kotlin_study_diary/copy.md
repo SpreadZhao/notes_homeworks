@@ -2,10 +2,12 @@
 mtrace:
   - 2023-07-24
 tags:
-  - language/coding/kotlin
-  - language/coding/java
-  - question/coding/practice
-  - question/interview
+  - "#language/coding/kotlin"
+  - "#language/coding/java"
+  - "#question/coding/practice"
+  - "#question/interview"
+title: 浅拷贝和深拷贝
+date: 2023-07-24
 ---
 
 # 浅拷贝和深拷贝

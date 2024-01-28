@@ -2,14 +2,16 @@
 title: Delegation Usage
 description: 委托的原理与应用
 tags:
-  - language/coding/kotlin
-  - language/coding/java
-  - question/coding/practice
-  - rating/high
+  - "#language/coding/kotlin"
+  - "#language/coding/java"
+  - "#question/coding/practice"
+  - "#rating/high"
 mtrace:
   - 2023-11-11
+  - 2024-01-28
 links:
   - https://www.bilibili.com/video/BV1tM411D7Sz/
+date: 2023-11-11
 ---
 # DELEGATION
 

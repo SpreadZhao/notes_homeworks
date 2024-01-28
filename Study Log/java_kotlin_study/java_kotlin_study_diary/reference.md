@@ -5,6 +5,8 @@ tags:
   - language/coding/java
   - question/interview
   - rating/high
+title: Java的引用类型
+date: 2023-08-31
 ---
 # Java的引用类型
 

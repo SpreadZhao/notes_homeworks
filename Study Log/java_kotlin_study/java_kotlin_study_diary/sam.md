@@ -6,6 +6,8 @@ tags:
   - question/coding/practice
   - question/interview
   - rating/basic
+title: Kotlin的SAM
+date: 2023-07-15
 ---
 # Kotlin的SAM
 

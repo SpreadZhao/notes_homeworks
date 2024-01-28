@@ -1,20 +1,6 @@
----
-mtrace:
-  - 2023-10-26
-  - 2023-10-29
-  - 2023-11-25
-tags:
-  - question/coding/android
-  - language/coding/kotlin
-  - language/coding/java
-  - question/coding
-description: 安卓开发遇到的问题，bug，编译错误之类的。
----
-# 安卓开发遇到的问题
-
 ```dataviewjs
 let res = []
-for (let page of dv.pages('"Study Log/android_study/android_dev_trouble"')) {
+for (let page of dv.pages('"Study Log/java_kotlin_study/java_kotlin_study_diary"')) {
 	const date = new Date(page.date)
 	const link = "[[" + page.file.path + "|" + getDateString(date) + "]]"
 	const title = page.title
@@ -25,11 +11,9 @@ for (let page of dv.pages('"Study Log/android_study/android_dev_trouble"')) {
 			const tag = tags[i]
 			if (tag.indexOf("#") !== 0) {
 				tags[i] = "#" + tag
+				console.log("find illegal tag: " + tag)
 			}
-			realtag = realtag + tags[i]
-			if (i != tags.length - 1) {
-				realtag += " "
-			}
+			realtag = realtag + tags[i] + " "
 		}
 	} else {
 		realtag += "No tag"
@@ -44,7 +28,7 @@ function getDateString(date) {
 }
 res.sort((a, b) => b.date - a.date)
 dv.table(
-	["Date&Link", "Title"], 
-	res.map(x => [x.link, x.title])
+	["Date&Link", "Title", "Tags"], 
+	res.map(x => [x.link, x.title, x.realtag])
 )
 ```

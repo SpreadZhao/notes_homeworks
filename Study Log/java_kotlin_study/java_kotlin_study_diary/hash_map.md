@@ -2,6 +2,12 @@
 mtrace:
   - 2023-08-29
   - 2023-09-04
+title: 手动实现HashMap
+date: 2023-08-29
+tags:
+  - "#question/interview"
+  - "#language/coding/kotlin"
+  - "#rating/high"
 ---
 
 # 手动实现HashMap

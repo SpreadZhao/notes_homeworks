@@ -5,8 +5,10 @@ tags:
   - language/coding/java
   - language/coding/kotlin
   - question/coding/practice
+title: 接口能实例化吗
+date: 2023-07-15
 ---
-# 接口能实例化吗？
+# 接口能实例化吗
 
 我们经常能见到这样的代码：
 
