@@ -185,3 +185,6 @@ keva的解决方法是：
 因此，完整的Chunk File文件结构如下：
 
 > 完整的chunk file
+
+## fcntl
+
