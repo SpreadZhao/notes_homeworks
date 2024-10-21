@@ -37,6 +37,7 @@ mtrace:
 - `tldr`：一个简化的man。
 - `nmtui`：NetworkManager的TUI工具。
 - `bottom`：各种top的合体版本。
+- `mate-polkit`：帮你获取sudo权限的，比如vscode编辑root文件的时候。
 
 ## Website
 
