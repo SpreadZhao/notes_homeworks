@@ -259,6 +259,7 @@ forceStopPackage()
 - [ ] [谭玉刚的个人空间-谭玉刚个人主页-哔哩哔哩视频 (bilibili.com)](https://space.bilibili.com/41036636) 主要讲UEFI，CS和OS的基础知识。
 - [ ] [android/architecture-samples: A collection of samples to discuss and showcase different architectural tools and patterns for Android apps.](https://github.com/android/architecture-samples) 官方的案例，比如讲Hilt之类的例子，应用到具体应用上。
 - [ ] #TODO tasktodo1726763433768 [Implementing SSL](https://commandlinefanatic.com/cgi-bin/showpage.cgi?page=implementingssl) ➕ 2024-09-20 🔼 🆔 ood6fl 
+- [ ] #TODO tasktodo1729785126329 听说，注册一个广播，是监听app启动最早的方法？比attachBaseContext还早？ ➕ 2024-10-24 ⏫ 🆔 d8g94n 
 
 # Classified
 
