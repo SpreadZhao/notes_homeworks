@@ -66,7 +66,7 @@ OS解决这个问题的办法是，引入**用户态**（user mode）和**内核
 
 还有一个问题：trap是怎么知道运行哪段代码的？显然，这个代码的地址肯定不是让用户态的进程去指定的。比如打开文件的这个open，实际上我们不是通过调用`syscall(0x123456)`之类的方式。如果`0x123456`里的代码真就是open在内核中对应的系统调用的代码的地址，那么我完全可以传入一个随便的地址，甚至可以通过很多**邪恶**的手段执行任意代码（比如可以通过一个偏移量直接定位到一行代码，然后再这样，一点点拼成自己想执行的恶意程序）。
 
-OS解决这个问题的方式是通过**trap table**。当开机的时候，OS首先要做的事情就是：**当特定的事件发生的时候，硬件应该做什么**。比如硬盘的中断产生的时候做什么，键盘中断的时候做什么，一个进程发送一个系统调用的时候做什么等。这里的“做什么”具体来讲，就是一个函数，叫做**trap handler**。也就是陷入内核的处理者。<fieldset class="inline"><legend class="small">💬</legend>OS设置好trap table</fieldset>，并告知给硬件们，这样直到下一次启动之前，硬件都知道应该做什么了。 ^bf8972
+OS解决这个问题的方式是通过**trap table**。当开机的时候，OS首先要做的事情就是：**当特定的事件发生的时候，硬件应该做什么**。比如硬盘的中断产生的时候做什么，键盘中断的时候做什么，一个进程发送一个系统调用的时候做什么等。这里的“做什么”具体来讲，就是一个函数，叫做**trap handler**。也就是陷入内核的处理者。==OS设置好trap table==，并告知给硬件们，这样直到下一次启动之前，硬件都知道应该做什么了。 ^bf8972
 
 > [!comment] OS设置好trap table
 > 从这里也能看出，地址是随机的，这样攻击的程序就不能随便指定地址了。另外顺便说一下，trap handler其实就是系统调用的函数。只不过在前面会先进行一个==验证==。
@@ -147,6 +147,8 @@ OS重新获得控制权之后，需要做决定了：是继续运行当前程序
 	- CPU保存/恢复的是**user registers**，也就是程序员写的代码里相关的数据的寄存器。地点是进程的内核栈；
 	- OS保存/恢复的是**kernel registers**，是和OS相关的对于维护这个进程有用的数据的寄存器。地点是进程的结构；
 	- **OS的这个操作能使得系统好像是刚经过$B \xrightarrow{trap\ into} kernel$一样，即使事实情况是$A \xrightarrow{trap\ into} kernel$**。
+
+- [ ] #TODO tasktodo1731505523333 这里的内核栈是什么概念？有没有相对应的用户栈？是不是就是我理解的每个进程的栈空间？ ➕ 2024-11-13 🔼 🆔 n9h81t 
 
 xv6内核中上下文切换的代码：[.globl swtch swtch: movl 4(%esp), %eax movl 8(%esp), %edx # Save old callee-saved registers pushl %ebp pushl %ebx pushl %esi pushl %edi # Switch stacks movl %esp, (%eax) movl %edx, %esp # Load new callee-saved registers popl %edi popl %esi popl %ebx popl %ebp ret](https://github.com/mit-pdos/xv6-public/blob/master/swtch.S)
 
