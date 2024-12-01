@@ -295,7 +295,7 @@ if (workerCountOf(c) >= ((core ? corePoolSize : maximumPoolSize) & COUNT_MASK))
 
 接下来，会尝试增加worker的数量。还记得这个东西在哪儿存的吗？就是workerCount，那显然是在`ctl`里存的。所以我们要单独设置这个AtomicInteger，那显然就是会用CAS去设置。如果设置成功了，那当然继续就行了；如果失败了，就要重试。 ^283ad8
 
-到了这里，其实还有一种情况没有覆盖到。就是如果你的CAS一直失败，会一直重试。但是如果不断重试的过程中，外面把线程池给关了。这个时候要走一开始判断SHUTDOWN, STOP的逻辑。TPE的实现思路如下。我们重试CAS的过程，被包在一个无限的for循环里：
+到了这里，其实还有一种情况没有覆盖到。就是如果你的CAS一直失败，会一直重试。但是如果不断重试的过程中，外面把线程池给关了咋办？这个时候就要走一开始判断SHUTDOWN, STOP的逻辑，必须还得是正确的状态我们才能重试。TPE的实现思路如下。我们重试CAS的过程，被包在一个无限的for循环里：
 
 ```java
 for (;;) {
@@ -321,7 +321,10 @@ for (int c = ctl.get();;) {
 	// Check if queue empty only if necessary.
 	if (runStateAtLeast(c, SHUTDOWN) ...
 	for (;;) {
+		... ...
 		/* 不断尝试CAS，如果成功了就要跳出循环 */
+		if (compareAndIncrementWorkerCount(c))
+            break retry;
 		c = ctl.get();  // Re-read ctl
 		if (runStateAtLeast(c, SHUTDOWN))
 			continue retry;  // 这里跳到了retry，也就是外层循环
@@ -330,7 +333,7 @@ for (int c = ctl.get();;) {
 
 ```
 
-并且注意，外层循环的那个条件里，后面两个语句都是空的，也就意味着外层循环也只会拿一次`ctl`。所以这里我们才会在内层循环帮它拿一次`ctl`，这样到了外层循环重试，就会用我们刚刚在内层循环拿到的新的`ctl`去做状态判断，从而正确返回false。
+并且注意，外层for循环的那个条件里，后面两个语句都是空的，也就意味着外层循环也只会拿一次`ctl`。所以这里我们才会在内层循环帮它拿一次`ctl`，这样到了外层循环重试，就会用我们刚刚在内层循环拿到的新的`ctl`去做状态判断，从而正确返回false。
 
 这部分完整的代码：
 
@@ -381,9 +384,11 @@ private final HashSet<Worker> workers = new HashSet<>();
 ```
 
 > [!question]-
-> 这个时候你可能就会问了：*我用一些并发的集合，比如CopyOnWriteArrayList之类的，不是就能避免使用锁了吗*？确实。但是这里选择用锁的原因，也写在mainLock的注释里了。最主要的原因就是**避免"interrupt storm"**。在TPE里有个方法叫`interruptIdleWorkers()`，功能是中断正在等着任务的线程。大概看一眼实现就能明白，这里面做的其实就是尽可能，把`workers`里所有的线程都给中断。线程是否在执行任务是通过`w.tryLock()`的返回值决定的。这个我们后面会说。显然，如果有多个线程并发地调用这个方法，那还真就是一个"interrupt storm"。因为相当于同时有多个线程对`workers`进行遍历，并且对其中的worker进行中断（正在退出的线程并发地中断那些还没被中断的线程）。为了避免这种情况，我们只能将`interruptIdleWorkers()`的执行给原子化，也就是注释中说的"serializes"（序列化，就是指把多个`interruptIdleWorkers()`的调用排成一排，这样每一个调用就会被认为是原子的）。而如果不这么做的话，可以看看`processWorkerExit()`方法。它是worker执行结束的时候调用的。这里面最终就会调用到`interruptIdleWorkers()`。意味着，这些将要结束的线程，如果同时结束，很有可能会并发地调用到`interruptIdleWorkers()`，导致之前所说的"interrupt storm"。而**如果我们调用了`shutdown()`，这种情况会更加严重**。因为每个结束的线程都会来一遍这样的操作。
+> 这个时候你可能就会问了：*我用一些并发的集合，比如CopyOnWriteArrayList之类的，不是就能避免使用锁了吗*？确实。但是这里选择用锁的原因，也写在mainLock的注释里了。最主要的原因就是**避免"interrupt storm"**。在TPE里有个方法叫`interruptIdleWorkers()`，功能是中断正在等着任务的线程。大概看一眼实现就能明白，这里面做的其实就是尽可能，把`workers`里所有的线程都给中断。线程是否在执行任务是通过`w.tryLock()`的返回值决定的。这个我们后面会说。显然，如果有多个线程并发地调用这个方法，那还真就是一个"interrupt storm"。因为相当于同时有多个线程对`workers`进行遍历，并且对其中的worker进行中断（正在退出的线程并发地中断那些还没被中断的线程）。为了避免这种情况，我们只能将`interruptIdleWorkers()`的执行给原子化，也就是注释中说的"serializes"（序列化，就是指把多个`interruptIdleWorkers()`的调用排成一排，这样每一个调用就会被认为是原子的）。而如果不这么做的话，可以看看`processWorkerExit()`方法。它是worker执行结束的时候调用的。这里面最终就会调用到`interruptIdleWorkers()`。意味着，这些将要结束的线程，如果同时结束，很有可能会并发地调用到`interruptIdleWorkers()`，导致之前所说的"interrupt storm"。~~而**如果我们调用了`shutdown()`，这种情况会更加严重**。因为每个结束的线程都会来一遍这样的操作。~~
 > 
 > 除了给workers加锁，mainLock还有一个更重要的作用，就是**让[[Study Log/java_kotlin_study/concurrency_art/resources/Drawing 2024-08-21 23.57.38.excalidraw.svg|线程池状态的转移]]也要原子化**。一旦获取了mainLock，我能保证之后获取的线程池状态，**在锁的作用域内一定是正确的**，绝对不会被别人改变。这个功能马上就会体现。
+> 
+> 这里对上面删掉的话存疑。应该是我自己加的。`shutdown()`是谁都能调用的，因此可以是线程池外部的线程。而`shutdown()`里面就是调用了一下`interruptIdleWorkers()`，因此并不会导致“每个结束的线程都会来一遍这样的操作”。
 
 - [ ] #TODO tasktodo1724436111909 结合妥善终结线程的方法，来说明TPE的shutdown是怎么实现的。 ➕ 2024-08-24 🔺 🆔 oqel59 
 
@@ -407,7 +412,7 @@ if (isRunning(c) || (runStateLessThan(c, STOP) && firstTask == null)) {
 
 从注释的提示可以看出，如果在mainLock的获取之前，更准确来说，在上面那两个for循环跳出来之后，和mainLock获取之前，如果有人关掉了线程池，那么在这里会进行最后一次捕捉。捕捉的代码就是if里面的条件。
 
-`isRunning(c)`这个很好懂，就不说了，但是后面又是啥意思。`isRunning`表示当前是RUNNING状态，如果不满足，并且后面这个条件也满足了，less than STOP，那么当前的状态肯定是SHUTDOWN，因为我们已经获取mainLock了。此时，如果firstTask还是空的话，代表没有新任务提交，所以我们还可以让这个新的worker去处理队列中的任务。所以这里允许添加；而如果firstTask不是空，代表这个worker要处理新任务。但是SHUTDOWN状态不允许处理新任务，所以这里不让添加。
+`isRunning(c)`这个很好懂，就不说了，但是后面又是啥意思。`isRunning`表示当前是RUNNING状态，如果不满足，并且后面这个条件也满足了，less than STOP，那么当前的状态肯定是SHUTDOWN（比STOP小的是SHUTDOWN和RUNNING，而刚刚判断过不是RUNNING，那肯定是SHUTDOWN）。此时，如果firstTask还是空的话，代表没有新任务提交，所以我们还可以让这个新的worker去处理队列中的任务。所以这里允许添加；而如果firstTask不是空，代表这个worker要处理新任务。但是SHUTDOWN状态不允许处理新任务，所以这里不让添加。
 
 > [!summary]
 > 总结一下上面“允许添加worker”的情况。就是两种：
@@ -416,6 +421,9 @@ if (isRunning(c) || (runStateLessThan(c, STOP) && firstTask == null)) {
 > - SHUTDOWN状态，并且这个添加的worker是要去处理队列中的任务的，而不是firstTask。
 > 
 > 如果你是STOP及以上的状态，啥线程也不让你加了，这里就直接不会执行。
+
+> [!attention]
+> 这里就反应了刚刚说的mainLock的第二个作用：让状态转移原子化，并且在锁的作用域内保持稳定。只要我们获取了mainLock，在lock生效的区间内，线程池的状态是一定的。所以只要我们在lock里面检查出线程池的状态允许创建新的线程，那么就可以放心创建。
 
 好了，看第二个，线程是否正常启动。这个判断就很简单了：
 
@@ -457,7 +465,7 @@ if (workerAdded) {
 
 然后是失败。这里需要进行回滚。回滚的操作当然是从workers里移除添加的worker，然后把workerCount设置回来。因为也要操作workers，所以也要获取mainLock。 ^ffb99a
 
-我当时看到这段代码，最奇怪的就是，为什么会去remove。我们看看失败的出发点：
+我当时看到这段代码，最奇怪的就是，为什么会去remove。如果添加失败的话，workers里面不是应该没有worker吗？为啥会remove呢？我们看看失败的出发点：
 
 ```java
 if (!workerStarted)  
@@ -544,7 +552,7 @@ Worker这个类是继承自AQS。那自然它其实也是一个锁。这个锁�
 1. 避免有多个工作线程同时结束，并发地调用interruptIdleWorkers()，导致线程疯狂（并发地）被interrupt，引发interrupt storm；
 2. 保证状态的改变是原子的。这样只要我获取了mainLock，在我释放它之前，线程池的状态就一定会保持不变。因为任何人想要改变线程池的状态都要先获取mainLock。
 
-可以看到，mainLock的限制都是加在整个线程池上的，更准确的来说，是**workers set**。就像注释里说的那样；而每一个worker如果也是个锁的话，自然就是为了给没一个worker执行任务的时候加上一点限制。从注释里也能看到，这个实现是opportunistically，投机取巧地。所以其实可以用其它的实现，比如给每一个worker单独安排一个锁之类的。而这里因为需要的并发控制比较简单，所以没有像mainLock一样用ReentrantLock，而是自己实现了一个**简单的不可重入的互斥锁**。至于更具体的原因，我们接下来进行探究。
+可以看到，mainLock的限制都是加在整个线程池上的，更准确的来说，是**workers set**。就像注释里说的那样；而每一个worker如果也是个锁的话，自然就是为了给每一个worker执行任务的时候加上一点限制。从注释里也能看到，这个实现是opportunistically，投机取巧地。所以其实可以用其它的实现，比如给每一个worker单独安排一个锁之类的。而这里因为需要的并发控制比较简单，所以没有像mainLock一样用ReentrantLock，而是自己实现了一个**简单的不可重入的互斥锁**。至于更具体的原因，我们接下来进行探究。
 
 明确一点，Worker这个锁有两个状态：
 
