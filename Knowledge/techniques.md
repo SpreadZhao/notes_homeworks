@@ -415,6 +415,7 @@ forceStopPackage()
 - [ ] #TODO tasktodo1727192546020 java真的没有栈内存中的对象吗？ ➕ 2024-09-24 ⏫ 🆔 epnzrv 
 - [ ] #TODO tasktodo1727368850339 最近的Loading Auto Fill实验全量了。把这个过程总结到的经验写一个日记 ➕ 2024-09-27 🔺 🆔 x6ke36 
 - [ ] #TODO tasktodo1727698377556 keva的分享视频要总结，尤其是和mmkv的对比。 ➕ 2024-09-30 ⏫ 🆔 i2da2g 
+- [ ] #TODO tasktodo1734705517560 看看Soraka的封装 ➕ 2024-12-20 ⏫ 🆔 osvkj4 
 
 ## 其他方向
 
