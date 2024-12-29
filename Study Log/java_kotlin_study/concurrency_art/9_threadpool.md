@@ -780,8 +780,15 @@ private Runnable getTask() {
 - [ ] #TODO tasktodo1725805658470 最后的异常处理是为了应对线程在等待任务的时候被中断。可以看到getTask()的调用者——runWorker()方法在一开始就执行了w.unlock()，旁边一句注释allow interrupts。那么这里为啥要允许别人中断它呢？ ➕ 2024-09-08 ⏫ 🆔 lbku3q 
 - [ ] #TODO tasktodo1725805757050 这里只有for循环一开始进行了线程池状判断。那如果刚检查完状态，甚至是已经获取到了任务的时候，有人把线程池关了，会发生什么？ ➕ 2024-09-08 ⏫ 🆔 7lpbsb 
 
+说完了getTask，下一步应该回到runWorker了。突然发现，其实runWorker的注释也说的挺好的，这里给全篇翻译一下：
 
-
+> 这是主要的worker运行的循环。重复从队列中取任务，执行它们，当然这个过程中需要处理一系列问题。
+> 
+> 1. 开始的时候，有可能需要处理一个初始任务（就是我们提交的firstTask）。这个时候，就不用从队列里取了。否则，只要线程池在运行，我们就会通过getTask方法获取一个任务执行。如果getTask返回空，那么就是worker因为线程池状态改变，参数改变导致退出。其它的退出情况，就是外部代码抛出了异常。这个时候就是`completeAbruptly == true`（突然退出）的时候，会调用processWorkerExit来退出这个线程。
+> 2. 在运行任务之前，都需要获得一个锁（就是worker本身这个AQS）。这是为了保证其它线程池不会在任务正在运行的时候打断它。另外还能保证，只要线程池没停止，线程就不会设置interrupt位。
+> 3. 每一个任务运行之前都要调用一下beforeExecuter，这个方法可能会抛出异常，这个时候就会提前终止，然后就是`completeAbruptly == true`的状态结束。任务也不会执行。
+> 4. 假设beforeExecutor正常完成，我们就运行任务，收集任何这个过程中抛出的异常，然后统一堆积到afterExecute。
+> 5. 当任务完成后，我们会调用afterExecute，这个方法也可能抛出异常，也会导致线程死亡。这个看代码，在catch块里也有afterExecute，所以这里抛出异常就直接挂壁了，就直接跳到外层finally里执行processWorkerExit了。这个就应该是注释里说的参考的[JLS Sec 14.20](https://docs.oracle.com/javase/specs/jls/se8/html/jls-14.html#jls-14.20)
 
 
 
