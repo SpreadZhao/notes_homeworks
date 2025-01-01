@@ -14,7 +14,7 @@ mtrace:
 
 连接设备的时候是这样的：
 
-![[Study Log/android_study/android_dev_trouble/resources/Pasted image 20240204163601.png]]
+![[Study Log/android_study/android_diary/resources/Pasted image 20240204163601.png]]
 
 根据这篇文章：[Ubuntu adb 报错：no permissions (missing udev rules? user is in the plugdev group)；-CSDN博客](https://blog.csdn.net/weixin_43230861/article/details/119422383#commentBox)
 
@@ -98,7 +98,7 @@ Bus 005 Device 008: ID 18d1:4ee2 Google Inc. Nexus/Pixel Device (MTP + debug)
 SUBSYSTEM=="usb",ATTRS{idVendor}=="18d1",ATTRS{idProduct}=="4ee2",MODE="0666",GROUP="plugdev",SYMLINK+="android",SYMLINK+="android_adb"
 ```
 
-然后多试几次就行了。但是很奇怪，根据我找到的[资料](https://stackoverflow.com/questions/28704636/insufficient-permissions-for-device-in-android-studio-workspace-running-in-opens#comment45742469_28724457)，需要把`plugdev`用户组添加到系统里才可以。但是我找了我的用户组，[[Study Log/android_study/android_dev_trouble/resources/Pasted image 20240831225443.png|完全没找到]]。所以不知道到底是为什么。如果后面发现了就确定一下吧。就不记todo了。
+然后多试几次就行了。但是很奇怪，根据我找到的[资料](https://stackoverflow.com/questions/28704636/insufficient-permissions-for-device-in-android-studio-workspace-running-in-opens#comment45742469_28724457)，需要把`plugdev`用户组添加到系统里才可以。但是我找了我的用户组，[[Study Log/android_study/android_diary/resources/Pasted image 20240831225443.png|完全没找到]]。所以不知道到底是为什么。如果后面发现了就确定一下吧。就不记todo了。
 
 补充一下，我的pixel需要如下条件：
 

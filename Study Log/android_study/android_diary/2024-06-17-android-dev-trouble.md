@@ -8,7 +8,7 @@ mtrace:
 
 # ADB insufficient permissions
 
-和[[Study Log/android_study/android_dev_trouble/2024-02-04-android-dev-trouble|2024-02-04-android-dev-trouble]]类似的问题。启动的时候报这个错误：
+和[[Study Log/android_study/android_diary/2024-02-04-android-dev-trouble|2024-02-04-android-dev-trouble]]类似的问题。启动的时候报这个错误：
 
 ```shell
 ❯ adb start-server

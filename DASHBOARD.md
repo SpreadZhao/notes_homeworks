@@ -9,7 +9,7 @@
 
 ## Diary
 
-- Android Dev Trouble: [[Study Log/android_study/android_dev_trouble|android_dev_trouble]]
+- Android Dev Trouble: [[Study Log/android_study/android_diary|android_diary]]
 - C Study Diary: [[Study Log/c_study/c_study|c_study]]
 - Java/Kotlin Study Diary: [[Study Log/java_kotlin_study/java_kotlin_study|java_kotlin_study]]
 - Work Diary: [[Work Diary/README|README]]

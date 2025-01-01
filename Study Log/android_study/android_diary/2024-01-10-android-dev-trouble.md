@@ -11,11 +11,11 @@ date: 2024-01-10
 
 外网确实慢，但是我有梯子啊！为什么还是走不到？我当时就在疑惑，是不是因为Android Studio根本没走本地的代理。现在看果然是这样，而且设置也非常简单。首先看你代理的本地端口号：
 
-![[Study Log/android_study/android_dev_trouble/resources/Pasted image 20240110215342.png]]
+![[Study Log/android_study/android_diary/resources/Pasted image 20240110215342.png]]
 
 然后，在Android Studio的设置里，设置本机的ip，然后填上代理的端口：
 
-![[Study Log/android_study/android_dev_trouble/resources/Pasted image 20240110215517.png]]
+![[Study Log/android_study/android_diary/resources/Pasted image 20240110215517.png]]
 
 同时，还可以点下面的Check connection来测试代理是否跑通。
 

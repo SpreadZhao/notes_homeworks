@@ -10,11 +10,11 @@ tags:
   - question/coding
 description: 安卓开发遇到的问题，bug，编译错误之类的。
 ---
-# 安卓开发遇到的问题
+# 安卓日记
 
 ```dataviewjs
 let res = []
-for (let page of dv.pages('"Study Log/android_study/android_dev_trouble"')) {
+for (let page of dv.pages('"Study Log/android_study/android_diary"')) {
 	const date = new Date(page.date)
 	const link = "[[" + page.file.path + "|" + getDateString(date) + "]]"
 	let title = page.title

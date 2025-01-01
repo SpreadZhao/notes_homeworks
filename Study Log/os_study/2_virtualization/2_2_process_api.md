@@ -92,7 +92,7 @@ int main(int argc, char *argv[]) {
 > - C中的线程的行为也是一样的。main线程不会等待其它线程是否结束，除非调用join；
 > - 而java中不一样，只有所有非守护线程结束之后程序才会退出。
 > 
-> 另外可参考：[[Study Log/android_study/android_dev_trouble/2024-02-21-android-dev-trouble#^6d7bc5|2024-02-21-android-dev-trouble]]
+> 另外可参考：[[Study Log/android_study/android_diary/2024-02-21-android-dev-trouble#^6d7bc5|2024-02-21-android-dev-trouble]]
 
 然而，wait不是必然等待进程结束之后才返回的。实际上，它等待的是子进程状态的变化。参照[manual page](https://man7.org/linux/man-pages/man2/waitpid.2.html)：
 

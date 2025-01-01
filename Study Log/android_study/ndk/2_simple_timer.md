@@ -304,7 +304,7 @@ env->CallVoidMethod(thiz, setCurrTime, curr_time_j);
 首先，用子线程计时的操作如下：
 
 > [!error] Deprecated
-下面的代码是错的！！！见[[Study Log/android_study/android_dev_trouble/2024-02-21-android-dev-trouble|2024-02-21-android-dev-trouble]]。之后有`pthread_join`的代码也都是错的。
+下面的代码是错的！！！见[[Study Log/android_study/android_diary/2024-02-21-android-dev-trouble|2024-02-21-android-dev-trouble]]。之后有`pthread_join`的代码也都是错的。
 
 - [ ] 有时间给出正确的代码，不着急。 🔽 ➕ 2024-02-21
 
