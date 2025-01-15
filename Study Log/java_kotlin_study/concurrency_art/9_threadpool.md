@@ -790,6 +790,55 @@ private Runnable getTask() {
 > 4. 假设beforeExecutor正常完成，我们就运行任务，收集任何这个过程中抛出的异常，然后统一堆积到afterExecute。
 > 5. 当任务完成后，我们会调用afterExecute，这个方法也可能抛出异常，也会导致线程死亡。这个看代码，在catch块里也有afterExecute，所以这里抛出异常就直接挂壁了，就直接跳到外层finally里执行processWorkerExit了。这个就应该是注释里说的参考的[JLS Sec 14.20](https://docs.oracle.com/javase/specs/jls/se8/html/jls-14.html#jls-14.20)
 
+剩下的我们也不打算在第一次分析的时候介绍了。后面如果有机会会根据一些公众号文章等进行补充。当然，其实很多细节我们没介绍，比如线程池关闭的时候有什么要注意的，一些不太常用的api（比如drainQueue），还有TPE的子类有什么补充逻辑等等。
+
+## 9.3 线程池的使用
+
+接下来我们从书里摘一些比较重要的点。
+
+### 9.3.1 创建
+
+TPE的构造需要这几个比较重要的参数（这里我是直接翻译的注释）：
+
+1. corePoolSize：即使线程处于idle状态，也能让它在线程池里面呆着。这样的一个最大数量就是核心线程数。但是如果allowCoreThreadTimeOut被设置为true，那就不行了，核心线程也会死。
+2. workQueue：任务队列。在java17里必须是BlockingQueue的子类。书里介绍了一个SynchronousQueue。有时间可以详细分析一下。这个队列的特点是你insert的时候必须等待一次remove才行。
+3. threadFactory：用于设置创建线程的工厂，可以通过线程工厂给每个创建出来的 线程设置更有意义的名字。使用开源框架 guava 提供的ThreadFactoryBuilder 可 以快速给线程池里的线程设置有意义的名字
+4. handler：饱和策略。当任务提交被阻塞的时候，提交给它处理。原因可能是线程数量超了，或者任务队列满了等等。
+
+### 9.3.2 提交任务
+
+上面我们只介绍了execute，用于处理不需要返回值的任务：
+
+```java
+threadsPool.execute(new Runnable() {
+	@Override
+	public void run () {
+		// TODO Auto-generated method stub
+	}
+});
+```
+
+然后其实还有一个submit方法，它会返回一个Future对象，可以通过get来获取线程池执行的结果。
+
+我们看TPE的代码，会发现它其实没有实现submit。因为submit其实只是在execute的基础上加了返回值，因此交给更抽象的类来实现就行。也就是AbstractExecutorService：
+
+```java
+/**
+ * @throws RejectedExecutionException {@inheritDoc}
+ * @throws NullPointerException       {@inheritDoc}
+ */
+public Future<?> submit(Runnable task) {
+	if (task == null) throw new NullPointerException();
+	RunnableFuture<Void> ftask = newTaskFor(task, null);
+	execute(ftask);
+	return ftask;
+}
+```
+
+- [ ] #TODO tasktodo1736956647819 显然，这里我们就需要介绍一下future是个啥了。其实也可以对标一下kotlin协程里的Defer。 ➕ 2025-01-15 ⏫ 🆔 ytda35 
+
+### 9.3.3 关闭线程池
+
 
 
 ---
