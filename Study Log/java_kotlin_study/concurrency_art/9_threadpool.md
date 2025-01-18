@@ -31,6 +31,8 @@ chapter_root: true
 
 [Java并发常见面试题总结（下） | JavaGuide](https://javaguide.cn/java/concurrent/java-concurrent-questions-03.html#%E7%BA%BF%E7%A8%8B%E6%B1%A0)
 
+### 9.2.1 线程池的配置
+
 现在看看java线程池的工作原理。java线程池为了能节省线程资源，通常会有一些配置：
 
 - 核心线程池数。这个是线程池刚被创建，任务还不多的时候，可以同时运行的最大线程数。比如如果是4，我提交了一个任务，1个线程运行来执行（**需要获取全局锁**）；然后我又提交了一个，这个时候会再创建一个线程运行（**需要获取全局锁**）；当4个线程都在执行任务时，我如果再提交，那么就不会再创建新的线程了。
@@ -39,6 +41,8 @@ chapter_root: true
 - 拒绝策略：如果最大线程数也达到了，就直接拒绝任务执行。抛出一个异常。
 
 通过上面的解释，我们可以看出来，比较影响性能的就是这两个创建线程的过程，这个过程[[#^ca5c6d|需要获取全局锁]]。因此，如果没有核心线程数只有最大线程数的话，全局锁获取就会很频繁。比如一个脑瘫写的代码，直接创建了100个线程的线程池，但是他提交的任务就星崩几个，而每次提交，调用execute，里面的addWorker方法（增加线程的方法）都要获取一次全局锁。这样就太浪费了。所以，这里将两个数字拆开，把任务队列放到中间作为缓冲，这样绝大多数情况都会走入队的操作，这样就不用获取全局锁了。
+
+### 9.2.2 提交任务
 
 看看execute的实现（ThreadPoolExecutor）：
 
@@ -166,6 +170,8 @@ else if (!addWorker(command, false))
 
 [JAVA-ThreadPoolExecutor why we need to judge the worker count in the execute function during the recheck procedure? - Stack Overflow](https://stackoverflow.com/questions/46901095/java-threadpoolexecutor-why-we-need-to-judge-the-worker-count-in-the-execute-fun)
 
+### 9.2.3 任务的执行
+
 接下来，介绍worker是如何工作的。它会不断从队列中取出任务执行。
 
 > [!Attention] With Code!
@@ -174,6 +180,8 @@ else if (!addWorker(command, false))
 - ~~线程池的几个状态，RUNNING, SHUTDOWN... 是怎么转换的，还有runStateAtLeast的意思；~~
 - getTask里是如何处理，worker在长时间获取不到任务，也就是idle的时候会干嘛。分为非核心线程和核心线程。这里分allowCoreThreadTimeOut去说；
 - 核心线程在获取不到任务时，会空转还是park？
+
+#### 9.2.3.1 线程池的状态
 
 介绍一下**线程池的**几个状态：
 
@@ -265,6 +273,8 @@ if (runStateAtLeast(c, SHUTDOWN)
 然后给一下线程池状态之间的流转。当然，只能单向流转。
 
 ![[Study Log/java_kotlin_study/concurrency_art/resources/Drawing 2024-08-21 23.57.38.excalidraw.svg]]
+
+#### 9.2.3.2 增加worker
 
 接下来，介绍工作线程，也就是worker的添加。唯一添加worker的方法是调用`addWorker()`，而这个方法绝大多数情况是调用`execute()`提交任务的时候会进行。剩下的情况都是一些边界情况，比如修改核心线程数量等。我们很少会调整核心线程数，嗯。
 
@@ -389,6 +399,8 @@ private final HashSet<Worker> workers = new HashSet<>();
 > 除了给workers加锁，mainLock还有一个更重要的作用，就是**让[[Study Log/java_kotlin_study/concurrency_art/resources/Drawing 2024-08-21 23.57.38.excalidraw.svg|线程池状态的转移]]也要原子化**。一旦获取了mainLock，我能保证之后获取的线程池状态，**在锁的作用域内一定是正确的**，绝对不会被别人改变。这个功能马上就会体现。
 > 
 > 这里对上面删掉的话存疑。应该是我自己加的。`shutdown()`是谁都能调用的，因此可以是线程池外部的线程。而`shutdown()`里面就是调用了一下`interruptIdleWorkers()`，因此并不会导致“每个结束的线程都会来一遍这样的操作”。
+
+^401fef
 
 - [ ] #TODO tasktodo1724436111909 结合妥善终结线程的方法，来说明TPE的shutdown是怎么实现的。 ➕ 2024-08-24 🔺 🆔 oqel59 
 
@@ -544,6 +556,8 @@ private boolean addWorker(Runnable firstTask, boolean core) {
 	return workerStarted;
 }
 ```
+
+#### 9.2.3.3 获取任务
 
 接下来我们从每一个worker的生命周期出发，来看线程是怎么接收任务，处理任务，最后又是怎么结束自己的。
 
@@ -780,6 +794,8 @@ private Runnable getTask() {
 - [ ] #TODO tasktodo1725805658470 最后的异常处理是为了应对线程在等待任务的时候被中断。可以看到getTask()的调用者——runWorker()方法在一开始就执行了w.unlock()，旁边一句注释allow interrupts。那么这里为啥要允许别人中断它呢？ ➕ 2024-09-08 ⏫ 🆔 lbku3q 
 - [ ] #TODO tasktodo1725805757050 这里只有for循环一开始进行了线程池状判断。那如果刚检查完状态，甚至是已经获取到了任务的时候，有人把线程池关了，会发生什么？ ➕ 2024-09-08 ⏫ 🆔 7lpbsb 
 
+#### 9.2.3.4 执行任务
+
 说完了getTask，下一步应该回到runWorker了。突然发现，其实runWorker的注释也说的挺好的，这里给全篇翻译一下：
 
 > 这是主要的worker运行的循环。重复从队列中取任务，执行它们，当然这个过程中需要处理一系列问题。
@@ -789,6 +805,8 @@ private Runnable getTask() {
 > 3. 每一个任务运行之前都要调用一下beforeExecuter，这个方法可能会抛出异常，这个时候就会提前终止，然后就是`completeAbruptly == true`的状态结束。任务也不会执行。
 > 4. 假设beforeExecutor正常完成，我们就运行任务，收集任何这个过程中抛出的异常，然后统一堆积到afterExecute。
 > 5. 当任务完成后，我们会调用afterExecute，这个方法也可能抛出异常，也会导致线程死亡。这个看代码，在catch块里也有afterExecute，所以这里抛出异常就直接挂壁了，就直接跳到外层finally里执行processWorkerExit了。这个就应该是注释里说的参考的[JLS Sec 14.20](https://docs.oracle.com/javase/specs/jls/se8/html/jls-14.html#jls-14.20)
+
+^80a203
 
 剩下的我们也不打算在第一次分析的时候介绍了。后面如果有机会会根据一些公众号文章等进行补充。当然，其实很多细节我们没介绍，比如线程池关闭的时候有什么要注意的，一些不太常用的api（比如drainQueue），还有TPE的子类有什么补充逻辑等等。
 
@@ -839,7 +857,117 @@ public Future<?> submit(Runnable task) {
 
 ### 9.3.3 关闭线程池
 
+首先，线程池咋关闭？当然是让线程停止干活儿。那怎么让线程停止干活儿？[[Study Log/java_kotlin_study/concurrency_art/4_2_thread_life#4.2.5 安全地终止线程|4_2_thread_life]]里我们提到过，就是interrupt。
 
+关闭线程池，首先就要将线程池的状态设置成SHUTDOWN。结合前面提到的，此时不接受新的任务，但是也会处理队列中的任务。然后，就是尝试将~~所有的~~线程都中断。也就是前面提到过的[[#^401fef|interruptIdleWorkers]]。
+
+说错了，看了下代码，发现关闭线程池有两个方法：
+
+- shutdown()
+- shutdownNow()
+
+这俩方法都会中断线程，但是调用的方法不一样。前者调用的是interruptIdleWorkers，后者调用的是interruptWorkers。从名字就能看出来，shutdown()只会中断休眠的线程；而shutdownNow()会终止所有的线程。
+
+现在有一个问题，怎么判断一个线程是在干活儿还是在休息？这个我们在补充runWorker注释的时候有提到：[[#^80a203]]。第二点，在执行任务的时候会获得一个锁，这个锁就是worker本身来实现。因此，其实我们可以知道：
+
+**对于每一个worker，如果我获取它的锁，获取成功了，那这个worker（线程）就没有在执行任务；反之则它正在执行任务**。
+
+所以也很简单了，对于shutdown()方法，它只中断没有在执行任务的线程，所以每个线程尝试获得一下锁就行了：
+
+```java
+private void interruptIdleWorkers(boolean onlyOne) {
+	final ReentrantLock mainLock = this.mainLock;
+	mainLock.lock();
+	try {
+		for (Worker w : workers) {
+			Thread t = w.thread;
+			if (!t.isInterrupted() && w.tryLock()) {
+				// tryLock返回true，说明获取锁成功，说明线程没有在执行任务
+				// 所以尝试中断它。
+				try {
+					t.interrupt();
+				} catch (SecurityException ignore) {
+				} finally {
+					w.unlock();
+				}
+			}
+			if (onlyOne)
+				break;
+		}
+	} finally {
+		mainLock.unlock();
+	}
+}
+```
+
+相反，我们看看interruptWorkers()方法，就没有worker锁的获取。
+
+```java
+private void interruptWorkers() {
+	// assert mainLock.isHeldByCurrentThread();
+	for (Worker w : workers)
+		w.interruptIfStarted();
+}
+
+void interruptIfStarted() {
+	Thread t;
+	if (getState() >= 0 && (t = thread) != null && !t.isInterrupted()) {
+		// 只判断了isInterrupted，没有判断worker的锁状态。
+		// getState() >= 0包含了上锁和没上锁。
+		try {
+			t.interrupt();
+		} catch (SecurityException ignore) {
+		}
+	}
+}
+```
+
+这就是关闭线程池两个方法最大的区别。另一个小区别是，shutdownNow()会把还没执行的任务也返回。很大概率其实就是workQueue里面的内容。具体的操作是通过drainQueue方法。方法里面会把workQueue的内容都排到返回的list里面，分成两步：
+
+1. 调用drainTo尝试先排干净；
+2. 如果没排干净，比如workQueue是一个DelayQueue之类的，会手工删除。
+
+```java
+private List<Runnable> drainQueue() {
+	BlockingQueue<Runnable> q = workQueue;
+	ArrayList<Runnable> taskList = new ArrayList<>();
+	q.drainTo(taskList);     // 1 调用drainTo尝试先排干净
+	if (!q.isEmpty()) {
+		// 2 如果没排干净，比如workQueue是一个DelayQueue之类的，会手工删除
+		for (Runnable r : q.toArray(new Runnable[0])) {
+			if (q.remove(r))
+				taskList.add(r);
+		}
+	}
+	return taskList;
+}
+```
+
+### 9.3.4 合理配置线程池
+
+这块我就直接贴书上原话了：
+
+要想合理地配置线程池，就必须首先分析任务特性，可以从以下几个角度来分析。
+
+- 任务的性质：CPU 密集型任务、IO 密集型任务和混合型任务。
+- 任务的优先级：高、中和低。
+- 任务的执行时间：长、中和短。 
+- 任务的依赖性：是否依赖其他系统资源，如数据库连接。
+
+性质不同的任务可以用不同规模的线程池分开处理。CPU 密集型任务应配置尽可能小的线程，如配置$Ncpu+1$个线程的线程池。由于IO密集型任务线程并不是一直在执行任务，则应配置尽可能多的线程，如$2 \times Ncpu$。混合型的任务，如果可以拆分，将其拆分成一个 CPU 密集型任务和一个IO密集型任务，只要这两个任务执行的时间相差不是太大，那么分解后执行的吞吐量将高于串行执行的吞吐量。如果这两个任务执行时间相差太大，则没必要进行分解。可以通过`Runtime.getRuntime().availableProcessors()`方法获得当前设备的CPU个数。
+
+优先级不同的任务可以使用优先级队列PriorityBlockingQueue来处理。它可以让优先级高的任务先执行。 
+
+> [!Attention] 注意
+> 如果一直有优先级高的任务提交到队列里，那么优先级低的任务可能永远不能执行。 
+
+执行时间不同的任务可以交给不同规模的线程池来处理，或者可以使用优先级队列，让执行时间短的任务先执行。 
+
+依赖数据库连接池的任务，因为线程提交SQL后需要等待数据库返回结果，等待的时间越长，则 CPU 空闲时间就越长，那么线程数应该设置得越大，这样才能更好地利用CPU。
+
+建议使用有界队列。有界队列能增加系统的稳定性和预警能力，可以根据需要设大一点儿，比如几千。有一次，我们系统里后台任务线程池的队列和线程池全满了，不断抛出抛弃任务的异常，通过排查发现是数据库出现了问题，导致执行 SQL 变得非常缓慢，因为后台任务线程池里的任务全是需要向数据库查询和插入数据的，所以导致线程池里的工作线程全部阻塞，任务积压在线程池里。如果当时我们设置成无界队列，那么线程池的队列就会越来越多，有可能会撑满内存，导致整个系统不可用，而不只是后台 、任务出现问题。当然，我们的系统所有的任务是用单独的服务器部署的，我们使用不同规模的线程池完成不同类型的任务，但是出现这样问题时也会影响到其他任务。
+
+> 最后监控线程池太easy，不说了，调那些api就行，还有hook对应的生命周期。
 
 ---
 
