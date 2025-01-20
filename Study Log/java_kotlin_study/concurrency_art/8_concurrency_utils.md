@@ -401,3 +401,41 @@ final int nonfairTryAcquireShared(int acquires) {
 最后是Exchanger。看名字也知道是用来交换东西的。两个线程都到达一个交换点之后，可以互相传送数据。这个东西就不多说了。看看代码吧。
 
 - [ ] #TODO tasktodo1722781482971 这一章里的东西之后都补上实现。 ➕ 2024-08-04 🔼 🆔 0y8h2f
+
+---
+
+```dataviewjs
+const pages = dv.pages('"Study Log/java_kotlin_study/concurrency_art"')
+let nextChapterHead = undefined
+let res = undefined
+const current = dv.current()
+for (let page of pages) {
+	if (page.chapter_root == true && page.order == Number(current.chapter) + 1) {
+		console.log("found next head: " + page.name)
+		nextChapterHead = page
+		continue
+	}
+	if (page.chapter == undefined || page.chapter != current.chapter) {
+		console.log("not current chapter: " + page.file.name)
+		continue
+	}
+	if (page.order == Number(current.order) + 1) {
+		res = page
+	}
+}
+console.log("res: " + res)
+console.log("next: " + nextChapterHead)
+if (res == undefined) {
+	res = nextChapterHead
+}
+let text = ""
+if (res != undefined) {
+	const path = res.file.path
+	const title = res.title
+	const decoLink = "[[" + path + "|" + title + "]]"
+	text = "Next Article: " + decoLink
+} else {
+	text = "旅途的终点！"
+}
+dv.el("p", text, { attr: { align: "right" } })
+```
