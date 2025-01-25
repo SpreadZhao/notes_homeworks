@@ -374,7 +374,7 @@ forceStopPackage()
 - [ ] 为什么 Interface 里的方法必须是 public 的？
 - [ ] 日记：谁的职责就写在谁的类里。FeedFpsSettings.sampleForVideoPlay判断，是block中了实验才加listener而不是director通过实验判断是否应该加listener
 - [ ] pdd攻击分享总结一下
-- [ ] #TODO work diary 回滚 经常记录产出 工作日记同步 ➕ 2024-04-18 🔼 
+- [ ] #TODO work diary 回滚 经常记录产出 工作日记同步 🔼 ➕ 2024-04-18
 - [ ] #TODO 组合优于继承，有时候你加一个方法，只能在接口里加，导致很多子类有很多空实现。 ➕ 2024-04-18 🔼 
 - [ ] #TODO viewtreeobserver的scroll在首刷的时候会触发吗？ ➕ 2024-04-19 🔼 
 - [ ] #TODO View.post do what? ➕ 2024-04-22 ⏫ 
@@ -411,11 +411,11 @@ forceStopPackage()
 - [ ] #TODO tasktodo1726751853794 在RecyclerView bind的时候，如果对RV做修改，会怎样？ ➕ 2024-09-19 ⏫ 🆔 2qpu3x 
 - [ ] #TODO tasktodo1727192446778 AppLog就有监听应用退出，启动的功能，还抽象成了session。 ➕ 2024-09-24 ⏫ 🆔 f6f2g4 
 - [ ] #TODO tasktodo1727192477294 XiguaCrashHandler, to SpreadLib ➕ 2024-09-24 ⏫ 🆔 719tb0 
-- [ ] #TODO tasktodo1727192519624 Smart Router of bytedance ➕ 2024-09-24 ⏫ 🆔 vmeol5 
+- [ ] #TODO tasktodo1727192519624 Smart Router of bytedance 🆔 vmeol5 ⏫ ➕ 2024-09-24
 - [ ] #TODO tasktodo1727192546020 java真的没有栈内存中的对象吗？ ➕ 2024-09-24 ⏫ 🆔 epnzrv 
 - [ ] #TODO tasktodo1727368850339 最近的Loading Auto Fill实验全量了。把这个过程总结到的经验写一个日记 ➕ 2024-09-27 🔺 🆔 x6ke36 
 - [ ] #TODO tasktodo1727698377556 keva的分享视频要总结，尤其是和mmkv的对比。 ➕ 2024-09-30 ⏫ 🆔 i2da2g 
-- [ ] #TODO tasktodo1734705517560 看看Soraka的封装 ➕ 2024-12-20 ⏫ 🆔 osvkj4 
+- [ ] #TODO tasktodo1734705517560 看看Soraka的封装 🆔 osvkj4 ⏫ ➕ 2024-12-20
 
 ## 其他方向
 
