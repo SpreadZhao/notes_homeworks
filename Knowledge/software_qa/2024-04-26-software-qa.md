@@ -32,6 +32,8 @@ ip link set _<设备名>_ up
 - [fcitx5-im](https://archlinux.org/groups/x86_64/fcitx5-im/)
 - [fcitx5-chinese-addons](https://archlinux.org/packages/?name=fcitx5-chinese-addons)
 
+> fcitx5-im这个group里的所有包都是要的。有一次我没装fcitx5-gtk，发现比如edge，obsidian之类的软件都没法输入。gtk和qt就是为了针对对应的sdk开发的软件接入输入的功能的。
+
 之后Input Method里面加Pinyin就行了：
 
 ![[Knowledge/software_qa/resources/Pasted image 20240427183710.png]]
