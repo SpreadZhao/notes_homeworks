@@ -86,7 +86,7 @@ $$
 > [!tip]
 > 这里想想，我的需求是什么？其实是让A分到$\dfrac{100}{100 + 50 + 250} = 25\%$的时间片；B分到$\dfrac{50}{100 + 50 + 250} = 12.5\%$的时间片；C分到$\dfrac{250}{100 + 50 + 250} = 62.5\%$的时间片。
 
-下一步，用一个大数字处以这三个数字。为了方便计算，最好是能整除。这里我们用10000去除，就得到了每个job的stride：
+下一步，用一个大数字处以这三个数字。为了方便计算，最好是能整除。这里我们用10000去除，**就得到了每个job的stride**：
 
 - A $\dfrac{10000}{100} = 100$
 - B $\dfrac{10000}{50} = 200$
@@ -113,6 +113,43 @@ $$
 
 ### 2.6.7 The Linux Completely Fair Scheduler (CFS)
 
+#### 2.6.7.1 Basic Operation
+
+我们介绍的所有的**公平**调度器，以及市面上大多数的**公平**调度器，都是基于固定的时间片的。本节的彩票调度，步幅调度就是这样。他们都是让一个程序运行固定的时间片，然后换成其它的，来实现公平调度。
+
+下面，我们介绍linux的调度器，CFS。它不是基于固定的时间片，也就是说，我挑选一个任务该运行，但是它不会运行固定的时间。那么你就要问了：它要运行多久？你先别急，我慢慢说。
+
+CFS的核心思想是这样的：我们之前讨论过一个问题，[[Study Log/os_study/2_virtualization/2_4_scheduling_introduction#^b0a24f|性能和公平是不可兼得的]]。在公平调度上，当然也存在这个问题：
+
+- 如果我们越频繁选择进程去调度，那么其实公平性在提升的，因为更多任务会得到运行；但是频繁地切换进程会有额外的性能开销；
+- 如果我们越**不**频繁地切换进程，那么公平性就会降低，但是性能会有提升。
+
+CFS的核心思路，就是通过调节这个平衡，加上步幅调度的思想来完成的。
+
+步幅调度用的是pass，对应到linux上就是virtual runtime (vruntime)。任务在运行的时候，就会积累它的vruntime。这个时间是和真实的物理时间成正比的（说实话，我感觉这句是废话，不成正比就没意义了）。也可以理解为就是真实的运行时间吧。
+
+当需要调度时，CFS会选择vruntime最低的那个任务运行，这个和步幅调度是一样的。
+
+然后是怎么保证平衡。第一，CFS会实时保证每个任务的运行时间。有一个参数叫`sched_latency`，一般是48ms。用它处以此时任务的数量，就能得到每个进程运行的时间片。
+
+举个例子，ABCD 4个进程，可以得到每个进程的运行时间片是12ms。然后按照类似步幅调度的思想，增加vruntime，能得到运行情况：
+
+![[Study Log/os_study/2_virtualization/resources/Pasted image 20250208005215.png]]
+
+这里后半段CD就已经结束了，只剩AB运行。这里就体现出CFS的实时性：只剩俩进程，所以每个进程的时间片从12ms变成了24ms。
+
+> [!question] 为啥这里看着这么像round robin？
+> 你可能已经注意到了，CFS里并没有ticket的概念，又或者说，每个进程的ticket都是一样的。所以这个例子看起来就像round robin一样。其实，这就是CFS本身的目标：**公平地将CPU的时间片等分给每一个参与竞争的任务**。
+
+这里问题就来了，假设我们有100万个任务要参与竞争。那时间片会非常小，切换会太频繁。解决办法也很简单粗暴：设置一个最小的时间片，叫`min_granularity`，通常是6ms。还是刚才的例子，如果有10个任务，那么每个任务的时间片就只有4.8ms。但是它小于了`min_granularity`，所以最后还是6ms。
+
+这样稍微损失了一些公平（因为进程数量没有等分`sched_latency`），但是也还行，同时也保证了性能。
+
+最后稍微有个注意点，不重要，贴原文了：
+
+> Note that CFS utilizes a periodic timer interrupt, which means it can only make decisions at fixed time intervals. This interrupt goes off frequently (e.g., every 1 ms), giving CFS a chance to wake up and determine if the current job has reached the end of its run. If a job has a time slice that is not a perfect multiple of the timer interrupt interval, that is OK; CFS tracks vruntime precisely, which means that over the long haul, it will eventually approximate ideal sharing of the CPU.
+
+#### 2.6.7.2 Weighting (Niceness)
 
 
 

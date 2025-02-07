@@ -35,7 +35,7 @@ $$
 T_{turnaround} = T_{completion} - T_{arrival}
 $$
 
-因为前面假设所有的任务同时到达，所以其实就可以认为$T_{arrival} = 0$，因此$T_{turnaround} = T_{completion}$。Turnaround time是一个**性能**指标，这东西越短代表性能越好。**除了性能，指标关注的还有公平**。但是我们之后会发现（[[Study Log/java_kotlin_study/concurrency_art/5_3_reentrant_lock#^e43b0b|其实我早就发现了]]），性能和公平这俩东西本身就是不可兼得的。
+因为前面假设所有的任务同时到达，所以其实就可以认为$T_{arrival} = 0$，因此$T_{turnaround} = T_{completion}$。Turnaround time是一个**性能**指标，这东西越短代表性能越好。**除了性能，指标关注的还有公平**。但是我们之后会发现（[[Study Log/java_kotlin_study/concurrency_art/5_3_reentrant_lock#^e43b0b|其实我早就发现了]]），性能和公平这俩东西本身就是不可兼得的。 ^b0a24f
 
 ### 2.4.3 First In, First Out (FIFO)
 
