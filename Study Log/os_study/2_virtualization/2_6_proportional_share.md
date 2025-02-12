@@ -211,6 +211,8 @@ CFS也有和[[#^acf670|步幅调度一样的问题]]。比如进程A一直在运
 
 解决办法是，CFS会给所有刚恢复运行的任务设置一个高一点的vruntime。多高呢？一般是这棵树里最小的vruntime（注意树里只有运行任务，所以这个时间是不会很小的）。但是，这样其实也有其它的问题，就是那些频繁睡眠，但是睡眠时间很短的任务，就很难得到公平的时间片分配。
 
-剩下的就不说了，看书吧。没啥东西了也。
+剩下的就不说了，看书吧。没啥东西了也。突然发现一个好玩的，Linux还有BFS调度，但是名字很牛逼，[Brain Fuck Scheduler - Wikipedia](https://en.wikipedia.org/wiki/Brain_Fuck_Scheduler)。除此之外，还有[O(1) scheduler - Wikipedia](https://en.wikipedia.org/wiki/O(1)_scheduler)可以选择。
+
+
 
 [[Study Log/os_study/0_ostep_index|Return to Index]]
