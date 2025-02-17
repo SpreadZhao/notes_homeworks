@@ -284,10 +284,10 @@ public V get(Object key) {
 > [!question] segments还有table已经是volatile的了，那为什么还要用getObjectVolatile？
 > 看这里：[java - concurrentHashMap has a volatile table , why need unsafe.getObjectVolatile() when get() - Stack Overflow](https://stackoverflow.com/questions/59908363/concurrenthashmap-has-a-volatile-table-why-need-unsafe-getobjectvolatile-whe)按他的回答，主要有两点：
 > 
-> 1. 比如table，我们使用tab访问的。而tab这个方法内部的引用不是volatile的，所以访问的时候要用Unsafe；
-> 2. 实际上java就不支持volatile数组。所以只能用Unsafe提供的方法。
+> 1. 我们访问segment中的链表的时候，通过的是`s.table`。它是volatile的。但是，我们将它赋值给了`tab`变量。而tab这个方法内部的引用不是volatile的，所以访问的时候要用Unsafe；
+> 2. `s.table`是volatile的，但是只能保证`table`这个变量本身的读写是volatile的。而对于CHM来说，get和set读写的不是`s.table`这个变量本身，而是它指向的内存（注意table是一个数组）。实际上java就不支持volatile数组。所以只能用Unsafe提供的方法。
 > 
-> - [ ] #TODO tasktodo1718639680872 进一步补充问题：segments还有table已经是volatile的了，那为什么还要用getObjectVolatile？ ➕ 2024-06-17 🔼 🆔 50m036
+> - [x] #TODO tasktodo1718639680872 进一步补充问题：segments还有table已经是volatile的了，那为什么还要用getObjectVolatile？ 🆔 50m036 🔼 ➕ 2024-06-17 ✅ 2025-02-17
 
 #### 6.1.4.2 put
 
