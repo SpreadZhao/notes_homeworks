@@ -1,8 +1,11 @@
 ---
-title: LiveData get the recent available data immediately on observation
+title:
+  - LiveData get the recent available data immediately on observation
 date: 2025-02-20
-tags: 
-mtrace: 
+tags:
+  - livedata
+  - bugfix
+mtrace:
   - 2025-02-20
 ---
 
