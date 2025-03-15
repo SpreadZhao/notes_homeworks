@@ -261,6 +261,7 @@ forceStopPackage()
 - [ ] #TODO tasktodo1726763433768 [Implementing SSL](https://commandlinefanatic.com/cgi-bin/showpage.cgi?page=implementingssl) ➕ 2024-09-20 🔼 🆔 ood6fl 
 - [ ] #TODO tasktodo1729785126329 听说，注册一个广播，是监听app启动最早的方法？比attachBaseContext还早？ ➕ 2024-10-24 ⏫ 🆔 d8g94n 
 - [ ] #TODO tasktodo1730907633849 Android 系统锁优化：[Android系统的锁优化](https://mp.weixin.qq.com/s?__biz=MzA3MjMwMDIzNg==&mid=2649080645&idx=1&sn=60e238c451573d9937880b6a008170d3&chksm=860aa5ccac11cdbc81428647e6c589fc51b09194246ab284cd121a1d69df1c7d8d8ada3dc9b0&mpshare=1&scene=24&srcid=1019cTyuQM6byfrQ0pFLG2QI&sharer_shareinfo=cef7c19742973d11cbb9d2da7743afdf&sharer_shareinfo_first=cef7c19742973d11cbb9d2da7743afdf&ascene=14&devicetype=android-34&version=28003052&nettype=WIFI&lang=zh_CN&countrycode=TT&exportkey=n_ChQIAhIQVYRCGb%2BYQzh6nmJnuyGxpBL2AQIE97dBBAEAAAAAANsoE7BiVPEAAAAOpnltbLcz9gKNyK89dVj040pkOEqAYTUx3RWYEUfdBNyJFf0St5aYFkVS43t1udffEGqYLbZpBm%2FM3S0VhAoZyNhmFocYjmJ2m3jroyoifaYndXKjBjl%2FqyQH24DWgHofwpJK7o1LzSnjqa8OQLXLfiH%2BmA%2B8b6%2F6npPDwyYkdqgOWCQRWdNO5T0ckEmNiNFffcdDe2GoqstMqnSq6iMFI5AVt09B6b5HliEAjRvbI0R5Dsiw9oXAtKqCazMVRGIvf3adncwa8YYS4qKVnTRBpdtkTroMMZM9CYBaUb9uEQ%3D%3D&pass_ticket=IQv3lpGWH4BUCTCg%2FrKXo3mSosatxuKsgYsx6Mt9ZUpbb7knksQeio8USQGIJo%2Bd&wx_header=3) ➕ 2024-11-06 ⏫ 🆔 gv7jze 
+- [ ] #TODO tasktodo1742062945637 [Java Singleton Design Pattern Best Practices with Examples | DigitalOcean](https://www.digitalocean.com/community/tutorials/java-singleton-design-pattern-best-practices-examples)找到一篇很好的单例模式文章 ➕ 2025-03-16 🔺 🆔 g4qjcl 
 
 # Classified
 
@@ -270,7 +271,7 @@ forceStopPackage()
 - [x] #TODO  毕设 ➕ 2023-12-01 🛫 2023-12-01 ✅ 2024-06-04
 - [/] #TODO keva ➕ 2024-03-20 🛫 2024-03-20
 - [/] #TODO RTC程序设计 ➕ 2024-03-20 🛫 2024-03-20 
-- [ ] #TODO tasktodo1726590140213 SpreaK在开发的过程中，遇到的一些问题，记录到对应的diary里面。 ➕ 2024-09-18 🔺 🆔 o8xtm9 
+- [P] #TODO tasktodo1726590140213 SpreaK在开发的过程中，遇到的一些问题，记录到对应的diary里面。 🆔 o8xtm9 🔺 ➕ 2024-09-18
 
 ## 计划
 
