@@ -133,7 +133,7 @@ class VolatileExample {
 ```
 
 > [!important]
-:fas_up_long:这是我们这一章最重要的东西！！！
+> 这是我们这一章最重要的东西！！！
 
 因为太重要了，这里我再给出书上的Java版本：
 
