@@ -7,6 +7,8 @@ order: "9"
 
 ## 2.8 Address Spaces
 
+### 2.8.1 Intro
+
 老式的OS，物理内存就是这样子的：
 
 ![[Study Log/os_study/2_virtualization/resources/Pasted image 20250212231356.png|200]]
@@ -48,5 +50,12 @@ order: "9"
 在正式介绍虚拟内存是怎么工作的之前，我们先来具体讨论一下虚拟内存需要实现什么目标：
 
 1. Transparency：就是对进程来说，有这个感觉和没有一样，透明的。具体来说，不能让程序意识到自己的内存是虚拟的。
+2. Efficiency：肯定要有效率，在两方面，时间和空间。不能让程序因为虚拟化了内存，就运行变慢了，也不能让程序因为用了虚拟化内存，就占用太多的内存。在时间方面之后我们会介绍TLB这样的硬件的功能。
+3. Protection：刚刚提到的安全问题就是。这里也提到了isolation，让每个程序的内存空间都是孤立的岛。
+
+接下来，我们就要正式开始学习内存虚拟化了。
+
+> [!note] 你看到的一切都是虚拟地址：
+> 
 
 [[Study Log/os_study/0_ostep_index|Return to Index]]
