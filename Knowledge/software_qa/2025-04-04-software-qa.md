@@ -37,3 +37,5 @@ env QT_SCREEN_SCALE_FACTORS="1.2;1" flameshot gui
 然后就是增加了两个属性，显示在其它窗口上面，还有去掉上面的tool bar。这样之后，pin上去的窗口就和X上没啥区别了。
 
 唯一还没搞定的是，移动这个窗口现在只能先按住Meta键。
+
+另外，截图只能显示在一个显示器上的问题，我试了试Wiki里的解法：[Flameshot - ArchWiki](https://wiki.archlinux.org/title/Flameshot#Flameshot_does_not_work_on_all_monitors_of_a_multi-monitor_setup_in_KDE_Plasma_on_wayland)，不行。这个Window Rule会匹配pin的窗口，导致pin的窗口也固定出现在左上角，还不能移动。而且也没法完全对准两个显示器。
