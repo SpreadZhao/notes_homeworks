@@ -1,25 +1,60 @@
 ---
 num: "101"
-title: Symmetric Tree
+title:
+  - Symmetric Tree
 link: https://leetcode.cn/problems/symmetric-tree/description/
 tags:
   - leetcode/difficulty/easy
 ---
 
-这道题要求我们判断一棵二叉树是否为镜像的（以根结点为对称轴，左右子树对称）
+# 题解
 
-这道题让我想起了之前写的一道InvertBinaryTree的题目，那道题要求我们把一个二叉树反转过去，如下图所示：
+这题算是全靠自己做出来的，但是还是想了有点久。一个easy这么墨迹，有点废物了属于是。
 
-![[Projects/leetcode/resources/Drawing 2023-03-21 14.38.35.excalidraw.png]]
+第一眼想到的，是层序遍历，然后从中间对半匹开看一不一样，但很显然这是一个很蠢的做法。
 
-我们把InvertBinaryTree的算法应用到本题中，如果我们把原二叉树反转过去之后，还能得到这棵树本身，不就能说明这棵树是镜像的了吗
+一定是在遍历的过程中，就能确定下来。
 
-1. 把原本的二叉树复制出一个副本保存下来
-2. 反转原本的二叉树
-3. 比较原本的二叉树与反转后的二叉树
+然后我就想到了，以先序遍历举例子，我们的路径是“根-左-右”。我们记一下这个节点遍历的路径，就不难发现，如果我们再走一遍“根-右-左”的遍历，正好每次走到的节点，都是“根-左-右”遍历的镜像节点。
 
-第一步很简单，先序遍历将每个结点存到一个新二叉树中即可
+因此，这里我们也是先序遍历，但是每次要挪两个节点。一个遵循“根-左-右”，另一个遵循“根-右-左”。这俩节点要么都为空，要么取值必须相等。剩下的情况都是错的。所以，这次我们递归遍历的函数应该有两个参数，一个是“根-左-右”的curr，另一个是“根-右-左”的curr：
 
-第二步也是一样的思想，先序遍历对调每个结点的左右孩子
+```cpp
+static bool traverse(TreeNode *curr1, TreeNode *curr2);
+```
 
-第三步就是最关键的比较，首先定义一个flag用来表示比较的结果，初值为true。然后依旧是先序遍历，如果两树相同位置的值不相等或一边有值而另一边为空，就将flag赋false。这里有一个问题，为什么我们需要定义一个flag而不是直接返回true/false的结果呢？因为二叉树的比较涉及了遍历，我们需要
+在`traverse`里面，比较一下上面说的事情就行了。当然，这里有很多边界case要注意，我做题的时候就没考虑全，必须把一个是空、两个都是空、两个都不是空的情况都考虑到才行。下面是完整代码：
+
+```cpp
+static bool traverse(TreeNode *curr1, TreeNode *curr2) {
+    if (curr1 == nullptr && curr2 == nullptr) {
+        return true;
+    }
+    if (curr1 != nullptr && curr2 == nullptr) {
+        return false;
+    }
+    if (curr1 == nullptr) {
+        return false;
+    }
+    if (curr1->val != curr2->val) {
+        return false;
+    }
+    return traverse(curr1->left, curr2->right) && traverse(curr1->right, curr2->left);
+}
+
+bool Solution::isSymmetric(TreeNode *root) {
+    if (root == nullptr) {
+        return true;
+    }
+    if (root->left == nullptr && root->right == nullptr) {
+        return true;
+    }
+    if (root->left != nullptr && root->right == nullptr) {
+        return false;
+    }
+    if (root->left == nullptr) {
+        return false;
+    }
+    return traverse(root->left, root->right);
+}
+```
