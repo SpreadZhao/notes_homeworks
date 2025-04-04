@@ -11,21 +11,12 @@
 
 - Android Dev Trouble: [[Study Log/android_study/android_diary|android_diary]]
 - C Study Diary: [[Study Log/c_study/c_study|c_study]]
-- Java/Kotlin Study Diary: [[Study Log/java_kotlin_study/java_kotlin_study|java_kotlin_study]]
-- Work Diary: [[Work Diary/README|README]]
-
-## Main Projects
-
-- Data Struct: [[Projects/data_stuct/README|README]]
-- Leetcode: [[Projects/leetcode/0 index|0 index]]
-
-## Study
-
 - Concurrency Art: [[Study Log/java_kotlin_study/concurrency_art|concurrency_art]]
-- OSTEP: [[Study Log/os_study/0_ostep_index|0_ostep_index]]
-
-## Other
-
-- ~~Android Study Log(Legacy): [[Study Log/android_study/aa_android_study|aa_android_study]]~~
-- Techniques: [[Knowledge/techniques|techniques]]
+- Data Struct: [[Projects/data_stuct/README|README]]
+- Java/Kotlin Study Diary: [[Study Log/java_kotlin_study/java_kotlin_study|java_kotlin_study]]
+- Leetcode: [[Projects/leetcode/0 index|0 index]]
 - My pros: [[Study Log/how_good_am_i|how_good_am_i]]
+- OSTEP: [[Study Log/os_study/0_ostep_index|0_ostep_index]]
+- Techniques: [[Knowledge/techniques|techniques]]
+- Work Diary: [[Work Diary/README|README]]
+- ~~Android Study Log(Legacy): [[Study Log/android_study/aa_android_study|aa_android_study]]~~
