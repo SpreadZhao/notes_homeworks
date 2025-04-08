@@ -1,6 +1,6 @@
 ---
 title:
-  - Memory API
+  - "2.9 Interlude: Memory API"
 order: "10"
 ---
 [[Study Log/os_study/0_ostep_index|Return to Index]]
@@ -128,6 +128,84 @@ a分配在栈内存上，也是个数组。但是因为是栈内存，在这个�
 > 
 > 好吧，我感觉这个例子并没说明上面那个问题。这里strlen反而出错了。因为它的工作原理是找到字符串的最后一个`\0`。而str1没有`\0`，所以会继续往后找，导致大于5。 在strlen的man page中，也推荐我们在这种情况使用strnlen，有一个最大值。
 
+然后，`malloc()`的返回值是`void *`类型。最后转换成什么由程序员来决定。
 
+### 2.9.3 free
+
+```c
+int *x = malloc(10 * sizeof(int));
+...
+free(x);
+```
+
+这里要注意的是，free并没有要我们传入free的空间有多大。这是因为这一套内存分配库会自己追踪我们分配的内存。
+
+### 2.9.4 Common Errors
+
+使用Memory API时会犯的常见错误：
+
+1. 忘记分配内存
+
+下面的代码：
+
+```c
+char *src = "hello";
+char *dst;
+strcpy(dst, src);
+```
+
+会直接崩掉。因为dst还没有分配内存。
+
+所以，正确的做法是：
+
+```c
+char *src = "hello";
+char *dst = (char *) malloc(strlen(src) + 1);
+strcpy(dst, src);
+```
+
+或者，也可以借助`strdup()`的力量：
+
+```c
+char *src = "hello";
+char *dst = strdup(src);
+```
+
+malloc在不同平台，不同版本的实现细节都是不一样的。比如，某些情况下，在复制字符串的时候，会在分配空间的末尾再多分配一个字节（比如上面的例子，最后分配的就是`strlen(src) + 2`）。这样的操作一般来讲都是没问题的，也能留一些缓冲。而在另一些情况下，这甚至是系统漏洞的来源（“Survey on Buffer Overflow Attacks and Countermeasures” by T. Werthman. Available）。
+
+2. 忘记初始化分配的内存
+
+这个没啥好说的，分配了内存，总得往里面塞点值。
+
+3. 忘记释放内存
+
+这个就是引起内存泄漏的重要原因。
+
+4. 内存用完之前就释放了
+
+这种类型的指针叫做Dangling Pointer。
+
+> [!note] 程序退出的时候，没有内存会泄漏
+> 
+> 假设你的代码很短，就上上面例子这样。你调用了malloc。那么程序退出之前需要调用free吗？看起来是需要的，但实际上没必要（还是调用更标准一些）。即使不调用，也不会出现内存泄漏。
+> 
+> 原因是，OS中其实有两套内存管理：一套是进程中自己的，包括堆内存，栈内存。也就是malloc，free管理的这些；另一套是操作系统自己管理的。在进程结束之后，不管进程自己有没有释放内存，这些内存都会被操作系统回收回来。注意，是所有内存。
+> 
+> 但是，如果是那种服务器程序，或者那种一直留在手机后台的Android程序，就可能出现这种内存一直留着没回收的状态。
+> 
+> - [ ] #TODO tasktodo1744127756776 有时间看看Android，JVM的内存管理是不是也是这样的。为啥Android程序内存老泄漏呢？handler被泄漏之后，也是这样的逻辑么？ ➕ 2025-04-08 🆔 ubf06h 🔽 
+
+5. 重复释放内存
+6. 错误调用free
+
+比如我随便传了一个乱七八糟的东西：
+
+```c
+free((void *) 1);
+```
+
+这段代码在执行的时候就直接崩了。因为这个1是分配在栈上的，要释放一个栈上的内存，那自然就炸了。
+
+### 2.9.5 Underlying OS Support
 
 [[Study Log/os_study/0_ostep_index|Return to Index]]
