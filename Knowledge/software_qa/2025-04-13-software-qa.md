@@ -1,8 +1,11 @@
 ---
-title: Wayland & Wechat
+title:
+  - Wayland & Wechat
+  - Wayland & LibreOffice
 date: 2025-04-13
-tags: 
-mtrace: 
+tags:
+  - wayland
+mtrace:
   - 2025-04-13
 ---
 
@@ -24,3 +27,15 @@ Terminal=false
 ```
 
 单独给执行命令加上环境变量。
+
+# Wayland & LibreOffice
+
+使用Wayland + KDE + Fractional Scaling之后，LibreOffice在两个屏幕上出现了一个大一个小的情况。还是没有适配好缩放的问题。解决方法：[Xwayland](https://wiki.archlinux.org/title/Xwayland)
+
+启动的时候把Wayland显示的环境变量置空，就能让LibreOffice以XWayland模式启动。这样就没问题了。置空的办法和上面微信是一样的操作：
+
+```
+Exec=env WAYLAND_DISPLAY= libreoffice --calc %U
+```
+
+这里等于号右边什么都没有就是置空了。用这种方式以后，无论是从开始菜单启动，还是直接在dolphin里打开文件，缩放都是正常的了。
