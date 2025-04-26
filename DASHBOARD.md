@@ -20,3 +20,7 @@
 - Techniques: [[Knowledge/techniques|techniques]]
 - Work Diary: [[Work Diary/README|README]]
 - ~~Android Study Log(Legacy): [[Study Log/android_study/aa_android_study|aa_android_study]]~~
+
+## Tags
+
+#java #kotlin #android #blog #basics
