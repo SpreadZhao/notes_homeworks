@@ -1,9 +1,10 @@
 ---
 num: "3"
-title: "Longest Substring Without Repeating Characters"
-link: "https://leetcode.cn/problems/longest-substring-without-repeating-characters/description/"
+title: Longest Substring Without Repeating Characters
+link: https://leetcode.cn/problems/longest-substring-without-repeating-characters/description/
 tags:
   - leetcode/difficulty/medium
+  - algo/slide-window
 ---
 
 # 题解

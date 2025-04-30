@@ -61,6 +61,6 @@ voic func() {
 
 代码存在Program Code，从128地址开始（离0地址很近）。而变量x的值是3000,存在地址15KB。
 
-当这些执行执行时，
+当这些指令执行时，
 
 [[Study Log/os_study/0_ostep_index|Return to Index]]

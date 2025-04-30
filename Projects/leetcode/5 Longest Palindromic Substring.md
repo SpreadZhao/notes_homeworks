@@ -1,9 +1,11 @@
 ---
 num: "5"
-title: "Longest Palindromic Substring"
-link: "https://leetcode.cn/problems/longest-palindromic-substring/description/"
+title: Longest Palindromic Substring
+link: https://leetcode.cn/problems/longest-palindromic-substring/description/
 tags:
   - leetcode/difficulty/medium
+  - algo/dynamic-programming
+  - algo/two-pointers
 ---
 # 题解
 

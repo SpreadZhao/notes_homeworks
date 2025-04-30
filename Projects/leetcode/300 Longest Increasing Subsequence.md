@@ -1,9 +1,10 @@
 ---
 num: "300"
-title: "Longest Increasing Subsequence"
-link: "https://leetcode.cn/problems/longest-increasing-subsequence/description/"
+title: Longest Increasing Subsequence
+link: https://leetcode.cn/problems/longest-increasing-subsequence/description/
 tags:
   - leetcode/difficulty/medium
+  - algo/dynamic-programming
 ---
 
 [最长递增子序列（nlogn 二分法、DAG 模型 和 延伸问题） | 春水煎茶](https://writings.sh/post/longest-increasing-subsequence-revisited)

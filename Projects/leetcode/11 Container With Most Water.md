@@ -1,9 +1,10 @@
 ---
 num: "11"
-title: "Container With Most Water"
-link: "https://leetcode.cn/problems/container-with-most-water/description/"
+title: Container With Most Water
+link: https://leetcode.cn/problems/container-with-most-water/description/
 tags:
   - leetcode/difficulty/medium
+  - algo/two-pointers
 ---
 找到两根棍，围成的面积最大。那显然，面积的计算是：**两根棍里矮的那个的高度$\times$两根棍的距离**。
 
