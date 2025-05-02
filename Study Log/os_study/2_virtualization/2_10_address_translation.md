@@ -137,6 +137,33 @@ base register里存的就是刚刚的32KB。当进程启动的时候，由操作
 
 刚才我们一直在说硬件的职责，现在来说说操作系统的。硬件目前只负责用来翻译地址，执行指令等，其它的操作还得操作系统来。
 
-首先，当进程启动的时候，OS要给它找个地方。
+首先，当进程启动的时候，OS要给它找个地方。因为我们刚刚假设过每一个地址空间都比物理内存小，大小还是一样的，所以只需要把物理内存看成一个数组，去查一下哪块地方能放下就行。这里就是用上面提到的free list就可以。当然，如果地址空间不一样，会稍微复杂一点，这个后面会提到。
+
+然后程序结束的时候（正常结束或者被中途干掉都算），需要回收所有的内存，退回到free list中。
+
+在上下文切换的时候，OS也需要干活。程序结束的时候，需要把base register和bounds register中的值放到内存中，内存中的哪里呢？通常是一个进程独一份的那种地方。比如Process Stucture或者Process Control Block (PCB)。当程序被运行的时候，需要从内存里把这些值load回到寄存器中。
+
+我们需要注意，当程序没在运行（不是运行结束，是被切走）时，OS是可以把这个进程的地址空间给换掉的。做法：
+
+1. 不再调度这个进程（直到切换空间完成）；
+2. 把旧地址空间里的东西拷贝到新的地址空间；
+3. 更新base register指向新的地址。这里要注意，更新的是内存中存这个值的地方而不是寄存器。
+
+下面是两个图，第一个是系统启动之后OS做的事情，第二个是一个进程启动的时候做的事情：
+
+![[Study Log/os_study/2_virtualization/resources/Pasted image 20250502222434.png]]
+
+![[Study Log/os_study/2_virtualization/resources/Pasted image 20250502222458.png]]
+
+上面的图很好看懂，先是OS做准备工作，初始化trap table、free list等。后面A先启动，然后timer interrupt到了，进行上下文切换，切到了B，然后B干了坏事，然后OS给它干掉了。
+
+可以看到，这里还是符合我们[[Study Log/os_study/2_virtualization/2_3_limited_directed_execution#2.3.3.3 Saving and Restoring Context|LDE]]的思路。在大多数情况，操作系统只需要设置好硬件，然后让程序直接运行在CPU上。只有在==系统调用、时钟中断、干坏事==这些情况，才需要操作系统介入。
+
+> [!comment]- 系统调用、时钟中断、干坏事
+> 这里书上用的是"misbehave"这个词，我问了ChatGPT，它也感觉不妥：
+> 
+> 我：如果程序只是发起了一个系统调用，需要操作系统陷入内核态来完成；或者进行上下文切换，操作系统也要介入执行。这两种情况都是操作系统介入的情况，这种也算程序"misbehave"了么
+> 
+> ChatGPT：你提到的这个问题非常好，确实有些细节值得澄清。在 OSTEP 这本书中，"misbehave"（“行为不当”）这个词用得有点“口语化”，并不严格等同于“程序错误”或者“出错”。
 
 [[Study Log/os_study/0_ostep_index|Return to Index]]
