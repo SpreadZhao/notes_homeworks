@@ -374,7 +374,7 @@ forceStopPackage()
 - [ ] [wurensen/TaskScheduler: 基于Kotlin协程以及DAG（有向无环图）实现的Android任务调度框架，可以根据任务间的依赖关系进行调度。 (github.com)](https://github.com/wurensen/TaskScheduler)
 - [ ] [kpali/wolf-flow: wolf-flow是一个简单的、支持有向无环图（DAG）的轻量级作业调度引擎 (github.com)](https://github.com/kpali/wolf-flow)
 - [ ] 为什么 Interface 里的方法必须是 public 的？
-- [ ] 日记：谁的职责就写在谁的类里。FeedFpsSettings.sampleForVideoPlay判断，是block中了实验才加listener而不是director通过实验判断是否应该加listener
+- [-] 日记：谁的职责就写在谁的类里。FeedFpsSettings.sampleForVideoPlay判断，是block中了实验才加listener而不是director通过实验判断是否应该加listener
 - [ ] pdd攻击分享总结一下
 - [ ] #TODO work diary 回滚 经常记录产出 工作日记同步 🔼 ➕ 2024-04-18
 - [ ] #TODO 组合优于继承，有时候你加一个方法，只能在接口里加，导致很多子类有很多空实现。 ➕ 2024-04-18 🔼 
@@ -385,7 +385,7 @@ forceStopPackage()
 - [ ] #TODO tasktodo1722531383729 如何不占用系统状态栏 & 调研SurfaceFlinger是怎么合成状态栏的。 ➕ 2024-08-02 🔼 🆔 z1trn5
 	- [ ] [SurfaceFlinger 图层合成过程分析上 (qq.com)](https://mp.weixin.qq.com/s/J6oyAIsz-kbSllsVd0TGxw)
 - [ ] #TODO tasktodo1722531423113 西瓜的OOM检测原理。native和java都看。 ➕ 2024-08-02 ⏫ 🆔 grvai7
-- [/] #TODO tasktodo1722531454096 开发debug工具在spreadlib，摇一摇打印日志。 ➕ 2024-08-02 🔺 🆔 0cqkq9 🛫 2024-08-23 
+- [x] #TODO tasktodo1722531454096 开发debug工具在spreadlib，摇一摇打印日志。 🆔 0cqkq9 🔺 ➕ 2024-08-02 🛫 2024-08-23 ✅ 2025-05-05
 - [ ] #TODO tasktodo1722531892427 RecyclerView onFling的时候，子View的属性如何？尤其是visibility？这个写到rv的学习目录里，就是毕设的那个。 🆔 cz51hx 🔼 ➕ 2024-08-02
 - [ ] #TODO tasktodo1722531948117 c++的两个踩坑视频： ➕ 2024-08-02 🔼 🆔 ghn6oy
 	- [ ] [C++：指针生而自由。Rust：麻了_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1uK421v7Ub/?spm_id_from=333.999.0.0)
@@ -404,7 +404,7 @@ forceStopPackage()
 - [ ] #TODO tasktodo1724250510907 pintos: [Pintos Projects: Table of Contents](https://web.stanford.edu/class/cs140/projects/pintos/pintos.html) ➕ 2024-08-21 🔽 🆔 eivkfq
 - [ ] #TODO tasktodo1725548165776 西瓜视频基础产品的周会，每个周会有个小讨论。里面的技术点可以学一学。比如之前就介绍过抖音的一个hook方案，排查一个npe的bug ➕ 2024-09-05 ⏫ 🆔 0w0gwj 
 - [ ] #TODO tasktodo1725548220142 wx公众号，动态线程池。这个可以合到[[Study Log/java_kotlin_study/concurrency_art/9_threadpool|9_threadpool]]里面。 [美团二面拷打：如何设计一个动态线程池？](https://mp.weixin.qq.com/s?__biz=Mzg2OTA0Njk0OA==&mid=2247545457&idx=1&sn=e943871bdcdb4e47e9bfafb3d1ddc546&chksm=cf663654bcf8f505dadfb7cf09c10cc9f237af9708f08359420cae84155732733c954bb16fdb#rd) ➕ 2024-09-05 ⏫ 🆔 dyb7pi 
-- [ ] #TODO tasktodo1725548355191 最近处理了一个创作相关的内存泄漏。确实，kotlin的let和apply还有一个之前没考虑过的区别。说一说。 ➕ 2024-09-05 🔺 🆔 ctwy5c  ^950500
+- [x] #TODO tasktodo1725548355191 最近处理了一个创作相关的内存泄漏。确实，kotlin的let和apply还有一个之前没考虑过的区别。说一说。 [[Study Log/java_kotlin_study/java_kotlin_study_diary/2025-04-25-java-kotlin-study|2025-04-25-java-kotlin-study]] 🆔 ctwy5c 🔺 ➕ 2024-09-05 ✅ 2025-04-25 ^950500
 - [ ] #TODO tasktodo1726569023585 为什么java不需要像c++那样考虑拷贝构造函数？[Copy Constructor in C++ - GeeksforGeeks](https://www.geeksforgeeks.org/copy-constructor-in-cpp/) [Copy Constructor in Java - GeeksforGeeks](https://www.geeksforgeeks.org/copy-constructor-in-java/) 🆔 sxb1ew ⏫ ➕ 2024-09-17
 - [ ] #TODO tasktodo1726589872006 LinkedHashMap的实现，为什么是有序的。这个写到[[Study Log/java_kotlin_study/java_kotlin_study|java_kotlin_study]]里面吧。 ➕ 2024-09-18 ⏫ 🆔 r6hvcq 
 - [ ] #TODO tasktodo1726589923185 App退出的工具类。这个已经在SpreadLib里面做了。 ➕ 2024-09-18 🔼 🆔 tty50u 
