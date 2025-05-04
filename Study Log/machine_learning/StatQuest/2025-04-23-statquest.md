@@ -1,12 +1,13 @@
 ---
-title: 1 A Gentle Introduction to Machine Learning
+title: 1 Fundamental Concepts in Machine Learning
 date: 2025-04-23
-tags: 
-mtrace: 
+tags:
+  - machine-learning
+mtrace:
   - 2025-04-23
 ---
 
-# 1 A Gentle Introduction to Machine Learning
+# 1 Fundamental Concepts in Machine Learning
 
 ## 1.1 Two Silly Examples
 
@@ -101,4 +102,30 @@ mtrace:
 
 然后，还是一个人一个人来，等走到最后一步，对比真实情况和我们预测的结果。总之，我们找的人越多，最后校准的结果就应该是越准的。
 
-最后，还有一个问题：这些数据，哪些用作Training Data，哪些用作Testing Data？答案是，有方法确定。当然方法是什么？我们后面会说。
+最后，还有一个问题：这些数据，哪些用作Training Data，哪些用作Testing Data？答案是，有方法确定。当然方法是什么？下一章揭晓。
+
+> [!attention]
+> 下面的内容从视频切换到了书，所以内容会有点不同，但是不影响介绍概念。
+
+接下来是机器学习的一些概念。我们一个一个说。
+
+- Independent and Dependent Variables
+
+什么是变量？我们刚刚统计的横轴和纵轴就是变量。在上面的例子中，吃的东西的数量和速度就是变量。而对于最一开始的例子，我们其实能画成一个表格：每一列就是，是否喜欢机器学习、喜欢xxx？所以，这些是否喜欢xxx也是变量。
+
+![[Study Log/machine_learning/StatQuest/resources/Pasted image 20250505010129.png|500]]
+
+然后，变量有什么不同么？还是上面的例子，纵轴的数据是我们**要预测**的，所以它的变化其实依赖于横轴的变量。所以它叫做**Dependent Variable**；相反，横轴的变量不是我们要预测的，所以它就是一个**Independent Feature**，或者叫**Feature**（特征）。
+
+> [!comment]
+> 感觉就是函数里的因变量和自变量。
+
+在上面的例子中，我们只用了横轴一个变量（视频里是吃的芋头数量，书上是体重）来预测纵轴的值。但实际上，可以有许多个特征来一起预测最终的值。
+
+![[Study Log/machine_learning/StatQuest/resources/Pasted image 20250505010746.png|500]]
+
+---
+
+- Discrete and Continuous Data
+
+离散数据和连续数据。这个其实没啥好说的，上面的表格里，体重就是一个连续的数据，而喜欢的颜色，只有几个取值，所以是离散的数据。
