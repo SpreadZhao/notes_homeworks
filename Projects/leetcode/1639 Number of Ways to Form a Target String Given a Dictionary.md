@@ -189,3 +189,4 @@ int Solution::numWays(vector<string> &words, string target) {
 ```
 
 - [ ] #TODO tasktodo1723976087002 这道题延伸出来的溢出问题，还有打印二维数组的问题。 https://chatgpt.com/share/5ac6fe7f-73b7-48e3-8e52-91991717403e ➕ 2024-08-18 🔽 🆔 0ejpfo
+- [ ] #TODO tasktodo1746896089675 本题的本质是[[Homework/Algorithm/practice3#3.1.2 0/1 Knapsack Problem|01背包]]问题。等做到的时候要总结下 ➕ 2025-05-11 ⏫ 🆔 3j7sqz 

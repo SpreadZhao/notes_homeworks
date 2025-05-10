@@ -14,7 +14,7 @@
 - Concurrency Art: [[Study Log/java_kotlin_study/concurrency_art|concurrency_art]]
 - Data Struct: [[Projects/data_stuct/README|README]]
 - Java/Kotlin Study Diary: [[Study Log/java_kotlin_study/java_kotlin_study|java_kotlin_study]]
-- Leetcode: [[Projects/leetcode/0 index|0 index]]
+- Leetcode: [[Study Log/leetcode_index|leetcode_index]]
 - My pros: [[Study Log/how_good_am_i|how_good_am_i]]
 - OSTEP: [[Study Log/os_study/0_ostep_index|0_ostep_index]]
 - Techniques: [[Knowledge/techniques|techniques]]
