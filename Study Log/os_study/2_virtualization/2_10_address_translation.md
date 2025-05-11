@@ -141,7 +141,7 @@ base register里存的就是刚刚的32KB。当进程启动的时候，由操作
 
 然后程序结束的时候（正常结束或者被中途干掉都算），需要回收所有的内存，退回到free list中。
 
-在上下文切换的时候，OS也需要干活。程序结束的时候，需要把base register和bounds register中的值放到内存中，内存中的哪里呢？通常是一个进程独一份的那种地方。比如Process Stucture或者Process Control Block (PCB)。当程序被运行的时候，需要从内存里把这些值load回到寄存器中。
+在上下文切换的时候，OS也需要干活。程序结束（被切走）的时候，需要把base register和bounds register中的值放到内存中，内存中的哪里呢？通常是一个进程独一份的那种地方。比如Process Stucture或者Process Control Block (PCB)。当程序被运行的时候，需要从内存里把这些值load回到寄存器中。
 
 我们需要注意，当程序没在运行（不是运行结束，是被切走）时，OS是可以把这个进程的地址空间给换掉的。做法：
 
