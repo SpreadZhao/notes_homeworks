@@ -130,6 +130,11 @@ a分配在栈内存上，也是个数组。但是因为是栈内存，在这个�
 
 然后，`malloc()`的返回值是`void *`类型。最后转换成什么由程序员来决定。
 
+> [!note] From Rust Book
+> [What is Ownership? - The Rust Programming Language](https://doc.rust-lang.org/book/ch04-01-what-is-ownership.html)
+> 
+> 这里提到，所有存在栈上的数据必须是已知，固定长度的；所有在**编译期**长度未知，或者长度可能改变的数据必须存在堆上。
+
 ### 2.9.3 free
 
 ```c
