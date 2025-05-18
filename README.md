@@ -1,7 +1,6 @@
 # (Almost) All Things About SpreadZhao
 
-* ~~Introduction: [INTRODUCTION](INTRODUCTION.md)~~ (Deprecated)
-* DashBoard: [DASHBOARD](DASHBOARD.md)
+DashBoard: [DASHBOARD](DASHBOARD.md)
 
 ## How to Use ?
 
@@ -17,7 +16,6 @@ You will find some file content seems like broken. Don't worry, install these pl
 
 * DataView: https://github.com/blacksmithgu/obsidian-dataview
 * Tasks: https://github.com/obsidian-tasks-group/obsidian-tasks
-* ~~Icon Shortcodes: https://github.com/aidenlx/obsidian-icon-shortcodes~~
 
 ## CSS Snippets
 
