@@ -1,9 +1,12 @@
 ---
 num: "17"
-title: "Letter Combinations of a Phone Number"
-link: "https://leetcode.cn/problems/letter-combinations-of-a-phone-number/"
+title: Letter Combinations of a Phone Number
+link: https://leetcode.cn/problems/letter-combinations-of-a-phone-number/
 tags:
   - leetcode/difficulty/medium
+  - algo/hash-table
+  - algo/string
+  - algo/backtraking
 ---
 这题就属于最经典的树型展开。因为要输出的是所有组合，并且是按照输入的字母顺序的组合。
 

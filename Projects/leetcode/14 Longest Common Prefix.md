@@ -1,9 +1,11 @@
 ---
 num: "14"
-title: "Longest Common Prefix"
-link: "https://leetcode.cn/problems/longest-common-prefix/description/"
+title: Longest Common Prefix
+link: https://leetcode.cn/problems/longest-common-prefix/description/
 tags:
   - leetcode/difficulty/easy
+  - algo/trie
+  - algo/string
 ---
 这题太简单了，直接看解析，很好看懂：[14. 最长公共前缀 - 力扣（LeetCode）](https://leetcode.cn/problems/longest-common-prefix/solutions/288575/zui-chang-gong-gong-qian-zhui-by-leetcode-solution/)
 

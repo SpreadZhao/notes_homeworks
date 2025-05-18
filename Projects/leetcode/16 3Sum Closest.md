@@ -1,9 +1,12 @@
 ---
 num: "16"
-title: "3Sum Closest"
-link: "https://leetcode.cn/problems/3sum-closest/description/"
+title: 3Sum Closest
+link: https://leetcode.cn/problems/3sum-closest/description/
 tags:
   - leetcode/difficulty/medium
+  - algo/array
+  - algo/two-pointers
+  - algo/sorting
 ---
 
 # 题解

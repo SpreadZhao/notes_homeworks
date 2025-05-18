@@ -1,9 +1,10 @@
 ---
 num: "7"
-title: "Reverse Integer"
-link: "https://leetcode.cn/problems/reverse-integer/description/"
+title: Reverse Integer
+link: https://leetcode.cn/problems/reverse-integer/description/
 tags:
   - leetcode/difficulty/medium
+  - algo/math
 ---
 
 # 题解

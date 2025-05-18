@@ -1,9 +1,10 @@
 ---
 num: "9"
-title: "Palindrome Number"
-link: "https://leetcode.cn/problems/palindrome-number/description/"
+title: Palindrome Number
+link: https://leetcode.cn/problems/palindrome-number/description/
 tags:
   - leetcode/difficulty/easy
+  - algo/math
 ---
 
 # 题解

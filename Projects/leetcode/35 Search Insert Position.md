@@ -1,9 +1,11 @@
 ---
 num: "35"
-title: "Search Insert Position"
-link: "https://leetcode.cn/problems/search-insert-position/description/"
+title: Search Insert Position
+link: https://leetcode.cn/problems/search-insert-position/description/
 tags:
   - leetcode/difficulty/easy
+  - algo/array
+  - algo/binary-search
 ---
 
 # 题解

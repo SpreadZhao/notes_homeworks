@@ -1,9 +1,11 @@
 ---
 num: "46"
-title: "Permutations"
-link: "https://leetcode.cn/problems/permutations/description/"
+title: Permutations
+link: https://leetcode.cn/problems/permutations/description/
 tags:
   - leetcode/difficulty/medium
+  - algo/array
+  - algo/backtraking
 ---
 
 # 题解
