@@ -1,9 +1,13 @@
 ---
 num: "1319"
-title: "Number of Operations to Make Network Connected"
-link: "https://leetcode.cn/problems/number-of-operations-to-make-network-connected/description/"
+title: Number of Operations to Make Network Connected
+link: https://leetcode.cn/problems/number-of-operations-to-make-network-connected/description/
 tags:
   - leetcode/difficulty/medium
+  - algo/depth-first-search
+  - algo/breadth-first-search
+  - algo/union-find
+  - algo/graph
 ---
 # DFS
 
